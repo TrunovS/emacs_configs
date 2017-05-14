@@ -92,7 +92,7 @@
     ("^[.][^.].*$" "^[.]$" "~$" "[.]elc$" "[.]pyc$" "[.]o$" "[.]bak$" "^_MTN$" "^blib$" "^CVS$" "^RCS$" "^SCCS$" "^_darcs$" "^_sgbak$" "^autom4te.cache$" "^cover_db$" "^_build$" "moc_*" "ui_*")))
  '(package-selected-packages
    (quote
-    (w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
+    (dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
  '(scroll-bar-mode (quote nil))
  '(show-paren-mode t)
  '(standard-indent 4)
