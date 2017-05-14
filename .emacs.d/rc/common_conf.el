@@ -6,7 +6,7 @@
 (defun tserg/ac-config ()
   (setq ac-auto-start nil)
   (setq ac-dwim t)                        ;Do what i mean
-  ;; (setq ac-override-local-map nil)        ;don't override local map
+  (setq ac-override-local-map nil)        ;don't override local map
   (setq ac-fuzzy-enable t)
   ;; (setq ac-auto-show-menu 0.2)
   (setq ac-ignore-case t)
@@ -14,7 +14,7 @@
   (setq ac-use-fuzzy t)
   (setq ac-use-comphist 0)
   (define-key ac-mode-map  [(meta return)] 'ac-complete-filename)
-  (define-key ac-mode-map  [(control return)] 'auto-complete)
+  (local-set-key  [(control return)] 'auto-complete)
   (setq-default ac-sources '(
                              ac-source-abbrev
                              ac-source-dictionary
@@ -112,6 +112,7 @@
  visible-bell t
  inhibit-startup-message t
  scroll-step 1
+ toggle-truncate-lines 1
  make-backup-files nil;; do (not )ot make backup files
  compilation-scroll-output 1)
 
