@@ -112,6 +112,7 @@
  visible-bell t
  inhibit-startup-message t
  scroll-step 1
+ toggle-truncate-lines 1
  make-backup-files nil;; do (not )ot make backup files
  compilation-scroll-output 1
  ;; compilation-scroll-output 'first-error

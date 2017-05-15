@@ -1,3 +1,5 @@
+;; Package-Requires: ((dash "2.13.0"))
+
 ;; For switch between header and source -----------------
  ;; Switch fromm *.<impl> to *.<head> and vice versa
 (defun switch-cc-to-h ()
@@ -26,6 +28,25 @@
  		   ((file-exists-p (concat name ".c"))
  		    (find-file (concat name ".c"))
                     )))))))
+
+(defun my-switch-h-cpp-in-projman-project ()
+  (interactive)
+
+  ;;выделяем имя файла
+  (setq lfname (car (last (split-string buffer-file-name "/"))))
+  (setq fprefix (car (split-string lfname "\\.")))
+  (setq fsuffix (car (last (split-string lfname "\\."))))
+  (setq fsuffix (if (string= "h" fsuffix) "cpp" "h"))
+
+  ;;Составим список всех файлов проекта
+  (setq flist (projman-project-files))
+
+  (setq lfname (car (-filter
+                     (lambda (num)
+                       (string-match (concat fprefix "." fsuffix) num))
+                     flist)))
+  (find-file lfname)
+  )
 
 ;; Auto-comlete C++\C headers -------------------------------------------------
 (defun tserg/ac-c-header-init ()
@@ -144,7 +165,7 @@
 (defun tserg/ac-cc-mode-setup ()
   (setq ac-auto-start nil)
   (setq clang-completion-suppress-error 't)
-  (define-key ac-mode-map  [(control return)] 'ac-complete-clang)
+  (local-set-key [(control return)] 'ac-complete-clang)
   ;; (ac-flyspell-workaround)
   (setq ac-sources (append '(
                              ac-source-abbrev
@@ -211,15 +232,15 @@
   (flyspell-prog-mode)
   (tserg/ac-c-header-init)
   (tserg/ac-cc-mode-setup)
-  (define-key c-mode-base-map  [(control return)] 'ac-complete-clang)
-  (define-key c-mode-base-map  [(control shift)] 'ac-complete)
-  (define-key c-mode-base-map [f2] 'switch-cc-to-h)
+  (define-key c-mode-base-map [f2] 'my-switch-h-cpp-in-projman-project)
   (define-key c-mode-base-map [f5] 'myrefact)
   (define-key c-mode-base-map "\C-j" 'semantic-ia-fast-jump)
   (define-key c-mode-base-map "\C-xj" 'semantic-complete-jump)
   (define-key hs-minor-mode-map "\M-h\M-t" 'hs-toggle-hiding)
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
   (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
+  (define-key c-mode-base-map "\C-xms" 'magit-status)
+  (define-key c-mode-base-map "\C-xml" 'magit-log-all)
   )
 
 ;; (add-hook 'c++-mode-hook 'tserg/ac-c-header-init)
