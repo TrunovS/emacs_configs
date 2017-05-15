@@ -63,18 +63,13 @@
 ;;      (flycheck-add-next-checker 'c/c++-clang
 ;;                                 'c/c++-googlelint 'append)))
 
-;; My Functions ------------------------------------------------------
-
-;; (global-set-key "\M-h\M-t" 'hs-toggle-hiding)
-;; (global-set-key "\M-h\M-a" 'hs-hide-all)
-;; (global-set-key "\M-h\M-s" 'hs-show-all)
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(compilation-scroll-output (quote first-error))
  '(global-hl-line-mode t)
  '(grep-command "grep -nH -e ")
  '(grep-find-command
@@ -95,7 +90,9 @@
     (w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
  '(scroll-bar-mode (quote nil))
  '(show-paren-mode t)
+ '(special-display-buffer-names (quote ("*grep*")))
  '(standard-indent 4)
+ '(truncate-lines t)
  '(whitespace-style
    (quote
     (face tabs spaces trailing indentation empty tab-mark lines))))
@@ -115,6 +112,7 @@
  '(cursor ((t (:background "white"))))
  '(ecb-default-highlight-face ((((class color) (background dark)) (:background "#838592"))))
  '(ecb-tag-header-face ((((class color) (background dark)) (:background "#838592"))))
+ '(flycheck-error-list-highlight ((t (:inherit highlight :background "#504b4b"))))
  '(header-line ((t (:inherit mode-line :background "dim gray" :foreground "grey90" :box nil))))
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
  '(hl-line ((t (:inherit highlight :background "#504b4b"))))

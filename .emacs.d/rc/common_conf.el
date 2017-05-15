@@ -6,7 +6,7 @@
 (defun tserg/ac-config ()
   (setq ac-auto-start nil)
   (setq ac-dwim t)                        ;Do what i mean
-  ;; (setq ac-override-local-map nil)        ;don't override local map
+  (setq ac-override-local-map nil)        ;don't override local map
   (setq ac-fuzzy-enable t)
   ;; (setq ac-auto-show-menu 0.2)
   (setq ac-ignore-case t)
@@ -14,7 +14,7 @@
   (setq ac-use-fuzzy t)
   (setq ac-use-comphist 0)
   (define-key ac-mode-map  [(meta return)] 'ac-complete-filename)
-  (define-key ac-mode-map  [(control return)] 'auto-complete)
+  (local-set-key  [(control return)] 'auto-complete)
   (setq-default ac-sources '(
                              ac-source-abbrev
                              ac-source-dictionary
@@ -113,7 +113,9 @@
  inhibit-startup-message t
  scroll-step 1
  make-backup-files nil;; do (not )ot make backup files
- compilation-scroll-output 1)
+ compilation-scroll-output 1
+ ;; compilation-scroll-output 'first-error
+ )
 
 (setq-default indent-tabs-mode nil)
 (setq nav-width 25)
@@ -166,8 +168,10 @@
 (custom-set-variables
  '(whitespace-style
    (quote
-    (face tabs spaces trailing indentation empty tab-mark lines)))
+    (face tabs trailing empty tab-mark lines)))
  '(grep-highlight-matches (quote auto))
+ '(special-display-buffer-names (quote ("*grep*")))
+ '(special-display-regexps nil)
  '(scroll-bar-mode (quote nil))
  '(show-paren-mode t)
  '(standard-indent 4)
@@ -183,6 +187,7 @@
  '(cursor ((t (:background "white"))))
  '(ecb-default-highlight-face ((((class color) (background dark)) (:background "#838592"))))
  '(ecb-tag-header-face ((((class color) (background dark)) (:background "#838592"))))
+ '(flycheck-error-list-highlight ((t (:inherit highlight :background "#504b4b"))))
  '(header-line ((t (:inherit mode-line :background "dim gray" :foreground "grey90" :box nil))))
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
  '(hl-line ((t (:inherit highlight :background "#504b4b"))))

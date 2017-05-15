@@ -65,11 +65,11 @@
   (let ((dir (cadr (memq :root projman-current-project))))
     ;;Найдем только не повторяющиеся дирректрии
     (setq command1 
-          (concat "find " dir " -iname '*.h' -printf \"%h\n\" | uniq -u")
+          (concat "find " dir " -type d \\( -path " dir "servicePrograms -o -path " dir "registration \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -u")
           )
     ;;теперь повторяющиеся
     (setq command2 
-          (concat "find " dir " -iname '*.h' -printf \"%h\n\" | uniq -d")
+          (concat "find " dir " -type d \\( -path " dir "servicePrograms -o -path " dir "registration \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -d")
           )
     (setq ac1 
           (mapcar (lambda (item)(concat "-I" item))
@@ -94,11 +94,11 @@
   (let ((dir (cadr (memq :root projman-current-project))))
     ;;Найдем только не повторяющиеся дирректрии
     (setq command1 
-          (concat "find " dir " -iname '*.h' -printf \"%h\n\" | uniq -u")
+          (concat "find " dir " -type d \\( -path " dir "servicePrograms -o -path " dir "registration \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -u")
           )
     ;;теперь повторяющиеся
     (setq command2 
-          (concat "find " dir " -iname '*.h' -printf \"%h\n\" | uniq -d")
+          (concat "find " dir " -type d \\( -path " dir "servicePrograms -o -path " dir "registration \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -d")
           )
     (setq ac1 
           (mapcar (lambda (item)(semantic-add-system-include item 'c++-mode))
@@ -148,18 +148,18 @@
   ;; (ac-flyspell-workaround)
   (setq ac-sources (append '(
                              ac-source-abbrev
-                             ac-source-dictionary
-                             ac-source-words-in-same-mode-buffers
-                             ac-source-words-in-buffer
+                             ;; ac-source-dictionary
+                             ;; ac-source-words-in-same-mode-buffers
+                             ;; ac-source-words-in-buffer
                              ;; ac-source-filename
                              ;; ac-source-imenu
-                             ac-source-files-in-current-dir
+                             ;; ac-source-files-in-current-dir
                              ac-source-clang
                              ac-source-yasnippet
                              ;; ac-source-gtags
                              ;; ac-source-semantic
                              ;; ac-source-semantic-raw
-                             ac-source-variables
+                             ;; ac-source-variables
                              ac-source-template
                              ) ac-sources))
   (tserg/set-default-ac-clang-flags)
@@ -181,18 +181,45 @@
   (indent-region (line-beginning-position) (line-end-position))
 )
 
+;; (when (load "flymake" t)
+;;  (defun flymake-pyflakes-init ()
+;;     ; Make sure it's not a remote buffer or flymake would not work
+;;     (when (not (subsetp (list (current-buffer)) (tramp-list-remote-buffers)))
+;;      (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                         'flymake-create-temp-inplace))
+;;             (local-file (file-relative-name
+;;                          temp-file
+;;                          (file-name-directory buffer-file-name))))
+;;        (list "pyflakes" (list local-file)))))
+;;  (add-to-list 'flymake-allowed-file-name-masks
+;;               '("\\.py\\'" flymake-pyflakes-init)))
+
+;; Reuse Compilation ----------------------------------------
+(push '("\\*compilation\\*" . (nil (reusable-frames . t))) display-buffer-alist)
+
 (defun tserg/c-mode-common-hook()
   ;; base-style
-  (c-set-style "gnu")
+  (setq c-set-style "linux"
+        c-basic-offset 4
+        c-indent-level 4
+        c-argdecl-indent 0
+        c-tab-always-indent t)
+  (c-set-offset 'substatement-open 0)
   (ws-butler-mode)
   (whitespace-mode)
   (hs-minor-mode)
+  (flyspell-prog-mode)
   (tserg/ac-c-header-init)
   (tserg/ac-cc-mode-setup)
+  (define-key c-mode-base-map  [(control return)] 'ac-complete-clang)
+  (define-key c-mode-base-map  [(control shift)] 'ac-complete)
   (define-key c-mode-base-map [f2] 'switch-cc-to-h)
   (define-key c-mode-base-map [f5] 'myrefact)
   (define-key c-mode-base-map "\C-j" 'semantic-ia-fast-jump)
   (define-key c-mode-base-map "\C-xj" 'semantic-complete-jump)
+  (define-key hs-minor-mode-map "\M-h\M-t" 'hs-toggle-hiding)
+  (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
+  (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
   )
 
 ;; (add-hook 'c++-mode-hook 'tserg/ac-c-header-init)
