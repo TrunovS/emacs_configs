@@ -43,7 +43,7 @@
 
   (setq lfname (car (-filter
                      (lambda (num)
-                       (string-match (concat fprefix "." fsuffix) num))
+                       (string-match (concat "/" fprefix "." fsuffix) num))
                      flist)))
   (find-file lfname)
   )
@@ -190,7 +190,8 @@
 (defun myrefact()
   (interactive)
   (copy-region-as-kill (line-beginning-position) (line-end-position))
-  (switch-cc-to-h)
+  (my-switch-h-cpp-in-projman-project)
+  (beginning-of-buffer)
   (search-forward "public:")
   (newline)
   (yank)
