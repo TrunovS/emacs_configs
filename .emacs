@@ -91,8 +91,10 @@
  '(scroll-bar-mode (quote nil))
  '(show-paren-mode t)
  '(special-display-buffer-names (quote ("*grep*")))
+ '(special-display-regexps nil)
  '(standard-indent 4)
  '(truncate-lines t)
+ '(whitespace-line-column 90)
  '(whitespace-style
    (quote
     (face tabs spaces trailing indentation empty tab-mark lines))))
