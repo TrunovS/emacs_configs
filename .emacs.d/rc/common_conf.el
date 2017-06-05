@@ -166,6 +166,11 @@
 (global-set-key [f11] 'kmacro-start-macro)
 (global-set-key [f12] 'kmacro-end-macro)
 
+(global-set-key "\C-cms" 'magit-status)
+(global-set-key "\C-cml" 'magit-log-all)
+(global-set-key "\C-xm" nil)
+
+
 (custom-set-variables
  '(whitespace-style
    (quote
