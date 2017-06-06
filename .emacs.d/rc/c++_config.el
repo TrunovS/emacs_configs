@@ -240,8 +240,6 @@
   (define-key hs-minor-mode-map "\M-h\M-t" 'hs-toggle-hiding)
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
   (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
-  (define-key c-mode-base-map "\C-xms" 'magit-status)
-  (define-key c-mode-base-map "\C-xml" 'magit-log-all)
   )
 
 ;; (add-hook 'c++-mode-hook 'tserg/ac-c-header-init)
