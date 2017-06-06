@@ -55,6 +55,9 @@
 (add-to-list 'load-path "~/.emacs.d/emacs-nav-49/")
 (require 'nav)
 
+;;emacs Mercurial--------------------------------------------------
+(require 'ahg)
+
 ;;Background---------------------------------------------------------
 (set-face-background 'default "#353535")
 (set-face-foreground 'default "#efefef")
