@@ -97,7 +97,8 @@
  '(whitespace-line-column 90)
  '(whitespace-style
    (quote
-    (face tabs spaces trailing indentation empty tab-mark lines))))
+    (face tabs trailing indentation empty tab-mark lines)))
+ '(ws-butler-keep-whitespace-before-point nil))
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
@@ -119,4 +120,6 @@
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
  '(hl-line ((t (:inherit highlight :background "#504b4b"))))
  '(powerline-active1 ((t (:inherit mode-line :background "grey22" :foreground "gainsboro"))))
- '(region ((t (:background "#3a9890")))))
+ '(region ((t (:background "#3a9890"))))
+ '(whitespace-line ((t (:underline t))))
+)
