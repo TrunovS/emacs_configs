@@ -18,28 +18,12 @@
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (package-initialize)
 
-;; FlyCheck -------------------------------------------------
-;; (require 'flycheck)
-;; (add-hook 'after-init-hook #'global-flycheck-mode)
-
-;; (when (load "flymake" t)
-;;  (defun flymake-pyflakes-init ()
-;;     ; Make sure it's not a remote buffer or flymake would not work
-;;     (when (not (subsetp (list (current-buffer)) (tramp-list-remote-buffers)))
-;;      (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                         'flymake-create-temp-inplace))
-;;             (local-file (file-relative-name
-;;                          temp-file
-;;                          (file-name-directory buffer-file-name))))
-;;        (list "pyflakes" (list local-file)))))
-;;  (add-to-list 'flymake-allowed-file-name-masks
-;;               '("\\.py\\'" flymake-pyflakes-init)))
-
-
-
+;;Eshell Env----------------------------
+(setenv "PATH" (shell-command-to-string ". ~/.profile; echo -n $PATH"))
 
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
+(load "~/.emacs.d/rc/rust_config.el");; rust configs
 (load "~/.emacs.d/rc/c++_config.el");; c-mode
 (load "~/.emacs.d/rc/qt_config.el");; qt-mode
 (load "~/.emacs.d/rc/qml_config.el");; qml-mode
@@ -87,7 +71,7 @@
     ("^[.][^.].*$" "^[.]$" "~$" "[.]elc$" "[.]pyc$" "[.]o$" "[.]bak$" "^_MTN$" "^blib$" "^CVS$" "^RCS$" "^SCCS$" "^_darcs$" "^_sgbak$" "^autom4te.cache$" "^cover_db$" "^_build$" "moc_*" "ui_*")))
  '(package-selected-packages
    (quote
-    (ahg dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
+    (ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
  '(scroll-bar-mode (quote nil))
  '(show-paren-mode t)
  '(special-display-buffer-names (quote ("*grep*")))
@@ -121,5 +105,4 @@
  '(hl-line ((t (:inherit highlight :background "#504b4b"))))
  '(powerline-active1 ((t (:inherit mode-line :background "grey22" :foreground "gainsboro"))))
  '(region ((t (:background "#3a9890"))))
- '(whitespace-line ((t (:underline t))))
-)
+ '(whitespace-line ((t (:underline t)))))
