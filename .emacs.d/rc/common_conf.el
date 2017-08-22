@@ -28,6 +28,43 @@
 (add-hook 'auto-complete-mode-hook 'ac-common-setup)
 (add-hook 'auto-complete-mode-hook  'tserg/ac-config)
 
+(defun my:force-modes (rule-mode &rest modes)
+  "switch on/off several modes depending of state of
+    the controlling minor mode
+  "
+  (let ((rule-state (if rule-mode 1 -1)
+       ))
+    (mapcar (lambda (k) (funcall k rule-state)) modes)
+  )
+)
+
+(require 'whitespace)
+
+(defvar my:prev-whitespace-mode nil)
+(make-variable-buffer-local 'my:prev-whitespace-mode)
+(defvar my:prev-whitespace-pushed nil)
+(make-variable-buffer-local 'my:prev-whitespace-pushed)
+
+(defun my:push-whitespace (&rest skip)
+  (if my:prev-whitespace-pushed () (progn
+    (setq my:prev-whitespace-mode whitespace-mode)
+    (setq my:prev-whitespace-pushed t)
+    (my:force-modes nil 'whitespace-mode)
+  ))
+)
+
+(defun my:pop-whitespace (&rest skip)
+  (if my:prev-whitespace-pushed (progn
+    (setq my:prev-whitespace-pushed nil)
+    (my:force-modes my:prev-whitespace-mode 'whitespace-mode)
+  ))
+)
+
+(require 'popup)
+
+(advice-add 'popup-draw :before #'my:push-whitespace)
+(advice-add 'popup-delete :after #'my:pop-whitespace)
+
 ;;Yasnippet ----------------------------------------------
 (require 'yasnippet)
 (yas-global-mode 1)
