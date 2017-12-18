@@ -132,7 +132,7 @@ keywords and values.  Valid keywords are:
 ")
 
 (defvar projman-types
-  '((c "C/C++" ("*.[CcHh]" "*.[CcHh][PpXx+][PpXx+]" "*.[Cc][Cc]" "*.[Hh][Hh]"))
+  '((c "C/C++" ("*.[CcHh]" "*.[CcHh][PpXx+][PpXx+]" "*.[Cc][Cc]" "*.[Hh][Hh]" "*.qml" "*.pro" "[Mm]akefile*"))
     (elisp "elisp" ("*.el"))
     (python "Python" ("*.py"))
     (tg "TurboGears" ("*.py" "*.html" "*.kid" "*.js" "*.css"))

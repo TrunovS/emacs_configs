@@ -10,11 +10,8 @@
 
 ;;Package--------------------------------------------------
 (require 'package)
-;; (add-to-list 'package-archives 
-;;     '("marmalade" .
-;;       "http://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (package-initialize)
 
@@ -48,12 +45,18 @@
 ;;                                 'c/c++-googlelint 'append)))
 
 
+(let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
+  (setenv "PATH" path)
+  (setq exec-path 
+        (append
+         (split-string-and-unquote path ":")
+         exec-path)))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(compilation-scroll-output (quote first-error))
  '(global-hl-line-mode t)
  '(grep-command "grep -nH -e ")
  '(grep-find-command
@@ -73,29 +76,27 @@
    (quote
     (ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
  '(scroll-bar-mode (quote nil))
- '(show-paren-mode t)
- '(special-display-buffer-names (quote ("*grep*")))
- '(special-display-regexps nil)
  '(standard-indent 4)
  '(truncate-lines t)
  '(whitespace-line-column 90)
  '(whitespace-style
    (quote
-    (face tabs trailing indentation empty tab-mark lines)))
- '(ws-butler-keep-whitespace-before-point nil))
+    (face tabs trailing empty tab-mark lines)))
+ '(ws-butler-keep-whitespace-before-point nil)
+ '(special-display-buffer-names (quote ("*grep*" "*compilation*" "*clang error*")))
+ '(special-display-regexps nil)
+ '(show-paren-mode t)
+ )
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
-
-(provide '.emacs)
-;;; .emacs ends here
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 98 :width normal))))
+ '(default ((t (:family "Hack" :foundry "unknown" :slant normal :weight normal :height 98 :width normal))))
  '(cursor ((t (:background "white"))))
  '(ecb-default-highlight-face ((((class color) (background dark)) (:background "#838592"))))
  '(ecb-tag-header-face ((((class color) (background dark)) (:background "#838592"))))
@@ -106,3 +107,8 @@
  '(powerline-active1 ((t (:inherit mode-line :background "grey22" :foreground "gainsboro"))))
  '(region ((t (:background "#3a9890"))))
  '(whitespace-line ((t (:underline t)))))
+
+
+(provide '.emacs)
+;;; .emacs ends here
+

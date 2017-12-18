@@ -1,3 +1,11 @@
+;; Setup bash environment variables ----------------------
+(let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
+  (setenv "PATH" path)
+  (setq exec-path 
+        (append
+         (split-string-and-unquote path ":")
+         exec-path)))
+
 ;;Auto-complete ------------------------------------------
 (require 'auto-complete)
 (require 'auto-complete-config)
@@ -94,6 +102,14 @@
 
 ;;emacs Mercurial--------------------------------------------------
 (require 'ahg)
+
+;; Long Lines processing--------------------------------------------
+(defun tserg/compilation-long-hook ()
+  ;; (fundamental-mode)
+  (setq compilation-error-regexp-alist
+      (delete 'maven compilation-error-regexp-alist))
+   )
+(add-hook 'compilation-mode-hook 'tserg/compilation-long-hook)
 
 ;;Background---------------------------------------------------------
 (set-face-background 'default "#353535")
@@ -211,31 +227,35 @@
 (global-set-key "\C-xm" nil)
 
 
-(custom-set-variables
- '(whitespace-style
-   (quote
-    (face tabs trailing empty tab-mark lines)))
- '(grep-highlight-matches (quote auto))
- '(special-display-buffer-names (quote ("*grep*")))
- '(special-display-regexps nil)
- '(scroll-bar-mode (quote nil))
- '(show-paren-mode t)
- '(standard-indent 4)
- '(global-hl-line-mode t)
- )
+;; (custom-set-variables
+;;  '(whitespace-style
+;;    (quote
+;;     (face tabs trailing empty tab-mark lines)))
+;;  '(grep-highlight-matches (quote auto))
+;;  '(special-display-buffer-names (quote ("*grep*" "*compilation*" "*clang error*")))
+;;  '(special-display-regexps nil)
+;;  '(scroll-bar-mode (quote nil))
+;;  '(show-paren-mode t)
+;;  '(standard-indent 4)
+;;  '(global-hl-line-mode t)
+;;  '(so-long-max-lines 1)
+;;  '(so-long-target-modes
+;;    (quote
+;;     (prog-mode css-mode sgml-mode nxml-mode compilation-mode)))
+;;  )
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 98 :width normal))))
- '(cursor ((t (:background "white"))))
- '(ecb-default-highlight-face ((((class color) (background dark)) (:background "#838592"))))
- '(ecb-tag-header-face ((((class color) (background dark)) (:background "#838592"))))
- '(flycheck-error-list-highlight ((t (:inherit highlight :background "#504b4b"))))
- '(header-line ((t (:inherit mode-line :background "dim gray" :foreground "grey90" :box nil))))
- '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
- '(hl-line ((t (:inherit highlight :background "#504b4b"))))
- '(powerline-active1 ((t (:inherit mode-line :background "grey22" :foreground "gainsboro"))))
- '(region ((t (:background "#3a9890")))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(default ((t (:family "Hack" :foundry "unknown" :slant normal :weight normal :height 98 :width normal))))
+;;  '(cursor ((t (:background "white"))))
+;;  '(ecb-default-highlight-face ((((class color) (background dark)) (:background "#838592"))))
+;;  '(ecb-tag-header-face ((((class color) (background dark)) (:background "#838592"))))
+;;  '(flycheck-error-list-highlight ((t (:inherit highlight :background "#504b4b"))))
+;;  '(header-line ((t (:inherit mode-line :background "dim gray" :foreground "grey90" :box nil))))
+;;  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
+;;  '(hl-line ((t (:inherit highlight :background "#504b4b"))))
+;;  '(powerline-active1 ((t (:inherit mode-line :background "grey22" :foreground "gainsboro"))))
+;;  '(region ((t (:background "#3a9890")))))

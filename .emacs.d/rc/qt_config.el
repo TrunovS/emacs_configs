@@ -9,7 +9,7 @@
   (add-to-list 'achead:include-directories '"/usr/include/qt4/QtNetwork")
   (add-to-list 'achead:include-directories '"/usr/include/qt4/Qt")
   (add-to-list 'achead:include-directories '"/usr/include/qt4")
-  (add-to-list 'achead:include-directories '"/usr/include/qwt-qt4")
+  ;; (add-to-list 'achead:include-directories '"/usr/include/qwt-qt4")
   )
 
 
@@ -29,7 +29,6 @@
  /usr/include/qt4/QtNetwork
  /usr/include/qt4/QtCore
  /usr/include/qt4/QtGui
- /usr/include/qwt-qt4
 "
                    ))
            ac-clang-flags))
@@ -48,7 +47,7 @@
 (semantic-add-system-include "/usr/share/qt4/mkspecs/linux-g++" 'c++-mode)
 (semantic-add-system-include "/usr/include/qt4/QtGui" 'c++-mode)
 (semantic-add-system-include "/usr/include/qt4" 'c++-mode)
-(semantic-add-system-include "/usr/include/qwt-qt4" 'c++-mode)
+;; (semantic-add-system-include "/usr/include/qwt-qt4" 'c++-mode)
 
 (add-to-list 'auto-mode-alist (cons qt4-base-dir 'c++-mode))
 (defvar semantic-lex-c-preprocessor-symbol-file '())
@@ -88,9 +87,9 @@
     (set-face-foreground 'qt-keywords-face "#d00db7")
     ;; qt keywords
     (font-lock-add-keywords 'c++-mode
-                            '(("\\<Q_OBJECT\\|Q_UNUSED\\|Q_PROPERTY\\>" . 'qt-keywords-face)))
+                            '(("\\<Q_OBJECT\\|Q_UNUSED\\|Q_PROPERTY\\|Q_DECLARE_METATYPE\\>" . 'qt-keywords-face)))
     (font-lock-add-keywords 'c++-mode
-                            '(("\\<SIGNAL\\|SLOT\\>" . 'qt-keywords-face)))
+                            '(("\\<SIGNAL\\|SLOT\\|QFETCH\\|QCOMPARE\\|QVERIFY\\>" . 'qt-keywords-face)))
     ;; (font-lock-add-keywords 'c++-mode
     ;;                         '(("\\<Q[A-Z][A-Za-z]*" . 'qt-keywords-face)))
     ))

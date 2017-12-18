@@ -52,8 +52,8 @@
 (defun tserg/ac-c-header-init ()
   (require 'auto-complete-c-headers)
   (add-to-list 'ac-sources 'ac-source-c-headers)
-  (add-to-list 'achead:include-directories '"/usr/lib/gcc/i486-linux-gnu/4.6/include")
-  (add-to-list 'achead:include-directories '"/usr/include/c++/4.6")
+  (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.8/include")
+  (add-to-list 'achead:include-directories '"/usr/include/c++/4.8")
   ;; (add-to-list 'achead:include-directories '"/usr/include/qt4/QtGui")
   ;; (add-to-list 'achead:include-directories '"/usr/include/qt4/QtCore")
   ;; (add-to-list 'achead:include-directories '"/usr/include/qt4/Qt")
@@ -149,7 +149,7 @@
  /usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed
  /usr/include/x86_64-linux-gnu
  /usr/include
- /usr/lib/i386-linux-gnu
+ /usr/lib/x86_64-linux-gnu
 "
                    ;; /usr/share/qt4/mkspecs/linux-g++ 
                    ;; /usr/include/qt4
@@ -233,6 +233,30 @@
   (flyspell-prog-mode)
   (tserg/ac-c-header-init)
   (tserg/ac-cc-mode-setup)
+
+  (font-lock-mode t)
+  (setq font-lock-maximum-decoration t)
+
+  (progn
+    ;; integer/float/scientific numbers
+    (font-lock-add-keywords 'c++-mode
+                            '(("\\<[\\-+]*[0-9]*\\.?[0-9]+\\([ulUL]+\\|[eE][\\-+]?[0-9]+\\)?\\>"
+                               . font-lock-constant-face)))
+    ;; ;; user-types (customize!)
+    ;; (font-lock-add-keywords 'c++-mode
+    ;;                         '(("\\<[A-Za-z_]+[A-Za-z_0-9]*_\\(t\\|type\\|ptr\\)\\>" . font-lock-type-face)))
+    ;; ;; Highlighting C++ member function calls
+    ;; (font-lock-add-keywords 'c++-mode
+    ;;                         '((concat
+    ;;                              "\\<[_a-zA-Z][_a-zA-Z0-9]*\\>"       ; Object identifier
+    ;;                              "\\s *"                              ; Optional white space
+    ;;                              "\\(?:\\.\\|->\\)"                   ; Member access
+    ;;                              "\\s *"                              ; Optional white space
+    ;;                              "\\<\\([_a-zA-Z][_a-zA-Z0-9]*\\)\\>" ; Member identifier
+    ;;                              "\\s *"                              ; Optional white space
+    ;;                              "(")                                 ; Paren for method invocation
+    ;;                            . 'font-lock-function-name-face))
+    )
   (define-key c-mode-base-map [f2] 'my-switch-h-cpp-in-projman-project)
   (define-key c-mode-base-map [f5] 'myrefact)
   (define-key c-mode-base-map "\C-j" 'semantic-ia-fast-jump)
