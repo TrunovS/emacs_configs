@@ -6,6 +6,14 @@
          (split-string-and-unquote path ":")
          exec-path)))
 
+;; Compilation color customization
+(require 'ansi-color)
+(defun my/ansi-colorize-buffer ()
+  (let ((buffer-read-only nil))
+    (ansi-color-apply-on-region compilation-filter-start (point-max))))
+(add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
+
+
 ;;Auto-complete ------------------------------------------
 (require 'auto-complete)
 (require 'auto-complete-config)
@@ -179,6 +187,12 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
+;; (cua-selection-mode 1)
+;; (setq cua-delete-selection nil)
+;; (setq cua-enable-cua-keys nil)
+;; ;; (setq cua-mode t nil '(cua-base))
+;; (setq cua-rectangle-mark-key " ") 
+
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
 (global-set-key "\M-n" 'forward-paragraph)

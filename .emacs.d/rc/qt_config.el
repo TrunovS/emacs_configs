@@ -35,6 +35,34 @@
     )
   )
 
+
+(defun tserg/set-ac-qt5-clang-flags()
+  (if (member "-I/usr/include/qt5/." ac-clang-flags) 0
+    (setq ac-clang-flags
+          (append
+           (mapcar(lambda (item)(concat "-I/usr/include/qt5/" item))
+                  (split-string
+                   "
+.
+QtGui
+QtSql
+QtSvg
+QtTest
+QtNetwork
+QtCore
+QtWidgets
+QtQml
+QtQuick
+QtQuickWidgets
+QtQuickControls2
+QtCharts
+"
+                   ))
+           ac-clang-flags))
+    )
+  )
+
+
 ;;SEMANTIC INCLUDES---------------------------------------------------------
 (setq qt4-base-dir "/usr/include/qt4")
 (semantic-add-system-include qt4-base-dir 'c++-mode)
@@ -68,7 +96,7 @@
  Includes support for Qt code (signal, slots and alikes)."
   ;; (flyspell-prog-mode)
   (tserg/ac-qt-header-init)
-  (tserg/set-ac-qt-clang-flags)
+  (tserg/set-ac-qt5-clang-flags)
   ;; qt keywords and stuff ...
   ;; set up indenting correctly for new qt kewords
   (setq c-protection-key (concat "\\<\\(public\\|public slot\\|protected"

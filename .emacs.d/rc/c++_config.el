@@ -149,6 +149,7 @@
  /usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed
  /usr/include/x86_64-linux-gnu
  /usr/include
+ /usr/include/eigen3
  /usr/lib/x86_64-linux-gnu
 "
                    ;; /usr/share/qt4/mkspecs/linux-g++ 
@@ -168,6 +169,8 @@
   (local-set-key [(control return)] 'ac-complete-clang)
   ;; (ac-flyspell-workaround)
   (setq ac-sources (append '(
+                             ac-source-clang
+                             ac-source-yasnippet
                              ac-source-abbrev
                              ;; ac-source-dictionary
                              ;; ac-source-words-in-same-mode-buffers
@@ -175,8 +178,6 @@
                              ;; ac-source-filename
                              ;; ac-source-imenu
                              ;; ac-source-files-in-current-dir
-                             ac-source-clang
-                             ac-source-yasnippet
                              ;; ac-source-gtags
                              ;; ac-source-semantic
                              ;; ac-source-semantic-raw

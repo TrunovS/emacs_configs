@@ -5,6 +5,7 @@
 
 (defun tserg/python-mode-hook()
   (interactive)
+  (cua-mode 0)
   (pymacs-load "ropemacs" "rope-")
   (setq jedi:setup-keys t)                      ; optional
   (setq jedi:complete-on-dot t)                 ; optional
