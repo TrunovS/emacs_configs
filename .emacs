@@ -73,21 +73,20 @@
  '(nav-boring-file-regexps
    (quote
     ("^[.][^.].*$" "^[.]$" "~$" "[.]elc$" "[.]pyc$" "[.]o$" "[.]bak$" "^_MTN$" "^blib$" "^CVS$" "^RCS$" "^SCCS$" "^_darcs$" "^_sgbak$" "^autom4te.cache$" "^cover_db$" "^_build$" "moc_*" "ui_*")))
+ '(org-log-done t)
+ '(org-startup-folded nil)
  '(package-selected-packages
    (quote
     (pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
  '(scroll-bar-mode (quote nil))
+ '(show-paren-mode t)
  '(special-display-buffer-names (quote ("*grep*" "*compilation*" "*clang error")))
  '(special-display-regexps nil)
  '(standard-indent 2)
  '(truncate-lines t)
  '(whitespace-line-column 90)
- '(whitespace-style
-   (quote
-    (face tabs trailing empty tab-mark lines)))
- '(ws-butler-keep-whitespace-before-point nil)
- '(show-paren-mode t)
- )
+ '(whitespace-style (quote (face tabs trailing empty tab-mark lines)))
+ '(ws-butler-keep-whitespace-before-point nil))
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)

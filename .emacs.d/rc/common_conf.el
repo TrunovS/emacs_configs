@@ -88,13 +88,9 @@
 ;; Auto Encode buffer -----------------------------------
 (load-file "~/.emacs.d/unicad.el")
 
-;; PowerLine --------------------------------------------
-(add-to-list 'load-path "~/.emacs.d/el-get/powerline")
-(require 'powerline)
-(powerline-default-theme)
 
 ;;Autopair---------------------------------------------------------
-(load "~/.emacs.d/autopair.el")
+;(load "~/.emacs.d/autopair.el")
 (autopair-global-mode)
 
 ;;EDiff---------------------------------------------------------

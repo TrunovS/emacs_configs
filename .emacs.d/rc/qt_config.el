@@ -37,10 +37,10 @@
 
 
 (defun tserg/set-ac-qt5-clang-flags()
-  (if (member "-I/usr/include/qt5/." ac-clang-flags) 0
+  (if (member "-I/usr/include/x86_64-linux-gnu/qt5/." ac-clang-flags) 0
     (setq ac-clang-flags
           (append
-           (mapcar(lambda (item)(concat "-I/usr/include/qt5/" item))
+           (mapcar(lambda (item)(concat "-I/usr/include/x86_64-linux-gnu/qt5/" item))
                   (split-string
                    "
 .

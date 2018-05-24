@@ -41,6 +41,7 @@
   ;;Составим список всех файлов проекта
   (setq flist (projman-project-files))
 
+  (require 'dash)
   (setq lfname (car (-filter
                      (lambda (num)
                        (string-match (concat "/" fprefix "." fsuffix) num))
@@ -135,18 +136,18 @@
   )
 
 (defun tserg/set-default-ac-clang-flags()
-  (if (member "-I/usr/include/c++/4.9" ac-clang-flags) 0
+  (if (member "-I/usr/include/c++/4.8" ac-clang-flags) 0
     (setq ac-clang-flags
           (append   
            (mapcar(lambda (item)(concat "-I" item))
                   (split-string
                    "
- /usr/include/c++/4.9
- /usr/include/x86_64-linux-gnu/c++/4.9
- /usr/include/c++/4.9/backward
- /usr/lib/gcc/x86_64-linux-gnu/4.9/include
+ /usr/include/c++/4.8
+ /usr/include/x86_64-linux-gnu/c++/4.8
+ /usr/include/c++/4.8/backward
+ /usr/lib/gcc/x86_64-linux-gnu/4.8/include
  /usr/local/include
- /usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed
+ /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed
  /usr/include/x86_64-linux-gnu
  /usr/include
  /usr/include/eigen3
