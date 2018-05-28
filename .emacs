@@ -73,6 +73,7 @@
  '(nav-boring-file-regexps
    (quote
     ("^[.][^.].*$" "^[.]$" "~$" "[.]elc$" "[.]pyc$" "[.]o$" "[.]bak$" "^_MTN$" "^blib$" "^CVS$" "^RCS$" "^SCCS$" "^_darcs$" "^_sgbak$" "^autom4te.cache$" "^cover_db$" "^_build$" "moc_*" "ui_*")))
+ '(org-babel-load-languages (quote ((emacs-lisp . t) (python . t) (latex . t) (R . t))))
  '(org-log-done t)
  '(org-startup-folded nil)
  '(package-selected-packages

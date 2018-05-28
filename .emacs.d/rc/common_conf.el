@@ -111,7 +111,41 @@
 (defun tserg/compilation-long-hook ()
   ;; (fundamental-mode)
   (setq compilation-error-regexp-alist
-      (delete 'maven compilation-error-regexp-alist))
+        (delete 'maven compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'java compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'ada compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'aix compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'ant compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'borland compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'iar compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'ibm compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'irix compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'oracle compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'php compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'rxp compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'sparc-pascal-file compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'sparc-pascal-line compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'sparc-pascal-example compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'sun compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'sun-ada compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'watcom compilation-error-regexp-alist))
    )
 (add-hook 'compilation-mode-hook 'tserg/compilation-long-hook)
 
