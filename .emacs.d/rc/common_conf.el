@@ -99,12 +99,42 @@
 ;;emacs Mercurial--------------------------------------------------
 (require 'ahg)
 
-;; Compilation color customization
-(require 'ansi-color)
-(defun my/ansi-colorize-buffer ()
-  (let ((buffer-read-only nil))
-    (ansi-color-apply-on-region compilation-filter-start (point-max))))
-(add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
+;; Compilation color customization-----------------------------------
+
+(setq compilation-environment '("TERM=xterm-256color"))
+
+(setq comint-output-filter-functions
+      (remove 'ansi-color-process-output comint-output-filter-functions))
+
+(add-hook 'shell-mode-hook
+          (lambda () (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)))
+
+;; You can also use it with eshell (and thus get color output from system ls):
+
+(require 'eshell)
+
+(add-hook 'eshell-before-prompt-hook
+          (lambda ()
+            (setq xterm-color-preserve-properties t)))
+
+(add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
+(setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
+
+;;  Don't forget to setenv TERM xterm-256color
+
+(add-hook 'compilation-start-hook
+          (lambda (proc)
+            ;; We need to differentiate between compilation-mode buffers
+            ;; and running as part of comint (which at this point we assume
+            ;; has been configured separately for xterm-color)
+            (when (eq (process-filter proc) 'compilation-filter)
+              ;; This is a process associated with a compilation-mode buffer.
+              ;; We may call `xterm-color-filter' before its own filter function.
+              (set-process-filter
+               proc
+               (lambda (proc string)
+                 (funcall 'compilation-filter proc
+                          (xterm-color-filter string)))))))
 
 ;; Long Lines processing--------------------------------------------
 

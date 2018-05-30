@@ -78,7 +78,7 @@
  '(org-startup-folded nil)
  '(package-selected-packages
    (quote
-    (pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
+    (xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
  '(scroll-bar-mode (quote nil))
  '(show-paren-mode t)
  '(special-display-buffer-names (quote ("*grep*" "*compilation*" "*clang error")))
