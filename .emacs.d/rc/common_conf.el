@@ -6,14 +6,6 @@
          (split-string-and-unquote path ":")
          exec-path)))
 
-;; Compilation color customization
-(require 'ansi-color)
-(defun my/ansi-colorize-buffer ()
-  (let ((buffer-read-only nil))
-    (ansi-color-apply-on-region compilation-filter-start (point-max))))
-(add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
-
-
 ;;Auto-complete ------------------------------------------
 (require 'auto-complete)
 (require 'auto-complete-config)
@@ -107,9 +99,19 @@
 ;;emacs Mercurial--------------------------------------------------
 (require 'ahg)
 
+;; Compilation color customization
+(require 'ansi-color)
+(defun my/ansi-colorize-buffer ()
+  (let ((buffer-read-only nil))
+    (ansi-color-apply-on-region compilation-filter-start (point-max))))
+(add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
+
 ;; Long Lines processing--------------------------------------------
+
 (defun tserg/compilation-long-hook ()
   ;; (fundamental-mode)
+  (flyspell-mode -1)
+  (yas/minor-mode -1)
   (setq compilation-error-regexp-alist
         (delete 'maven compilation-error-regexp-alist))
   (setq compilation-error-regexp-alist
@@ -146,6 +148,22 @@
         (delete 'sun-ada compilation-error-regexp-alist))
   (setq compilation-error-regexp-alist
         (delete 'watcom compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'cucumber compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'ruby-Test::Unit compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'mips-1 compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'mips-2 compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'perl--Pod::Checker compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'perl--Test compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'perl--Test2 compilation-error-regexp-alist))
+  (setq compilation-error-regexp-alist
+        (delete 'perl--Test::Harness compilation-error-regexp-alist))
    )
 (add-hook 'compilation-mode-hook 'tserg/compilation-long-hook)
 
