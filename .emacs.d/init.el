@@ -1,6 +1,6 @@
 ;;Package--------------------------------------------------
 (require 'package)
-(setq package-list '(xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view auto-complete-clang auto-complete-c-headers))
+(setq package-list '(nav xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view auto-complete-clang auto-complete-c-headers autopair))
 
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
@@ -35,18 +35,8 @@
 (add-hook 'perl-mode-hook       'hs-minor-mode)
 (add-hook 'sh-mode-hook         'hs-minor-mode)
 
-;;Flymake Settings ------------------------------------------------
 
-;; (load "~/.emacs.d/flymake-settings.el")
-;; (eval-after-load 'flycheck
-;;   '(progn
-;;      (require 'flycheck-google-cpplint)
-;;      ;; Add Google C++ Style checker.
-;;      ;; In default, syntax checked by Clang and Cppcheck.
-;;      (flycheck-add-next-checker 'c/c++-clang
-;;                                 'c/c++-googlelint 'append)))
-
-
+;; Set Path----------------------------------
 (let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
   (setenv "PATH" path)
   (setq exec-path 
@@ -77,9 +67,6 @@
  '(org-babel-load-languages (quote ((emacs-lisp . t) (python . t) (latex . t) (R . t))))
  '(org-log-done t)
  '(org-startup-folded nil)
- '(package-selected-packages
-   (quote
-    (xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit yasnippet ws-butler jedi iedit fuzzy flymake-cursor flycheck-google-cpplint ess-R-object-popup ess-R-data-view conkeror-minor-mode auto-complete-clang auto-complete-c-headers)))
  '(scroll-bar-mode (quote nil))
  '(show-paren-mode t)
  '(special-display-buffer-names (quote ("*grep*" "*compilation*" "*clang error")))
