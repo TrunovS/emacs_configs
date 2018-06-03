@@ -272,6 +272,7 @@
 
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
+(global-set-key "\C-c\C-g" 'google-this)
 (global-set-key "\M-n" 'forward-paragraph)
 (global-set-key "\M-p" 'backward-paragraph)
 (global-set-key "\C-xl" 'my-copy-line)
