@@ -117,7 +117,7 @@ QtCharts
     (font-lock-add-keywords 'c++-mode
                             '(("\\<Q_OBJECT\\|Q_UNUSED\\|Q_PROPERTY\\|Q_DECLARE_METATYPE\\>" . 'qt-keywords-face)))
     (font-lock-add-keywords 'c++-mode
-                            '(("\\<SIGNAL\\|SLOT\\|QFETCH\\|QCOMPARE\\|QVERIFY\\>" . 'qt-keywords-face)))
+                            '(("\\<SIGNAL\\|SLOT\\|QFETCH\\|QCOMPARE\\|QVERIFY\\|QTEST_MAIN\\>" . 'qt-keywords-face)))
     ;; (font-lock-add-keywords 'c++-mode
     ;;                         '(("\\<Q[A-Z][A-Za-z]*" . 'qt-keywords-face)))
     ))
