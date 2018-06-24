@@ -92,7 +92,6 @@
 (load-file "~/.emacs.d/mode-projman.el")
 
 ;;emacs-NAV---------------------------------------------------------
-(add-to-list 'load-path "~/.emacs.d/emacs-nav-49/")
 (require 'nav)
 
 ;;emacs Mercurial--------------------------------------------------
