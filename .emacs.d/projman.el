@@ -440,6 +440,7 @@ An option list is a list of alternating :name and value items."
           (message "")))
     state))
 
+
 (defun projman-restore-options (options)
   (setcdr projman-current-project
           (projman-merge-options (cdr projman-current-project)
@@ -452,25 +453,30 @@ An option list is a list of alternating :name and value items."
 (defvar projman-lazy-buffer-create-timer nil)
 
 (defun projman-restore-buffers (buffers)
-  (if (not (projman-get-var 'projman-lazy-load-buffers))
-      ;; load all buffers at once
-      (dolist (finfo buffers)
-        (projman-restore-one-buffer finfo))
-    ;; lazy load buffers
-    ;; move any buffer marked current to the front of the list
-    (let ((bufs buffers))
-      (while bufs
-        (let ((curr (car bufs)))
-          (setq bufs
-                (if (nth 2 curr) ; buffer marked current, move to front and exit
-                    (and (setq buffers (cons curr (delq curr buffers)))
-                         nil)
-                  (cdr bufs))))))
-    ;; load first buffer immediately then load rest in idle timer
-    (setq projman-lazy-buffer-create-stack buffers)
-    (projman-lazy-restore-next-buffer)
-    (setq projman-lazy-buffer-create-timer
-          (run-with-idle-timer 5 t 'projman-lazy-buffer-create-idle-func))))
+  (let ((root-dir (projman-project-root)))
+    (if root-dir
+        (desktop-read root-dir)
+      ))
+  ;; (if (not (projman-get-var 'projman-lazy-load-buffers))
+  ;;     ;; load all buffers at once
+  ;;     (dolist (finfo buffers)
+  ;;       (projman-restore-one-buffer finfo))
+  ;;   ;; lazy load buffers
+  ;;   ;; move any buffer marked current to the front of the list
+  ;;   (let ((bufs buffers))
+  ;;     (while bufs
+  ;;       (let ((curr (car bufs)))
+  ;;         (setq bufs
+  ;;               (if (nth 2 curr) ; buffer marked current, move to front and exit
+  ;;                   (and (setq buffers (cons curr (delq curr buffers)))
+  ;;                        nil)
+  ;;                 (cdr bufs))))))
+  ;;   ;; load first buffer immediately then load rest in idle timer
+  ;;   (setq projman-lazy-buffer-create-stack buffers)
+  ;;   (projman-lazy-restore-next-buffer)
+  ;;   (setq projman-lazy-buffer-create-timer
+  ;;         (run-with-idle-timer 5 t 'projman-lazy-buffer-create-idle-func)))
+  )
 
 (defun projman-lazy-buffer-create-idle-func ()
   (let ((repeat 1))
@@ -531,33 +537,40 @@ An option list is a list of alternating :name and value items."
     (setenv "GTAGSLIBPATH" (mapconcat 'identity gtaglibs ";"))))
 
 (defun projman-capture-active-state ()
+  (let ((root-dir (projman-project-root)))
+    (if root-dir
+        (desktop-save root-dir t t)
+      ))
   (save-current-buffer
     (let ((currbuf (current-buffer)))
       (cons
        ;; project options
        (cdr projman-current-project)
+       ()
        ;; state for each project buffer
-       (append
-        (mapcar
-         #'(lambda (b)
-             (with-current-buffer b
-               (list
-                ;; 1. filepath
-                (if (eq major-mode 'dired-mode)
-                    default-directory
-                  (buffer-file-name))
-                ;; 2. read only?
-                (cond ((and (boundp 'view-mode)
-                            view-mode
-                            (eq view-exit-action 'kill-buffer))
-                       'view)
-                      (buffer-read-only
-                       t))
-                ;; 3. current buffer?
-                (eq b currbuf))))
-         (projman-active-buffers))
-        ;; be sure to include any buffers still waiting to be loaded
-        projman-lazy-buffer-create-stack)))))
+       ;; (append
+       ;;  (mapcar
+       ;;   #'(lambda (b)
+       ;;       (with-current-buffer b
+       ;;         (list
+       ;;          ;; 1. filepath
+       ;;          (if (eq major-mode 'dired-mode)
+       ;;              default-directory
+       ;;            (buffer-file-name))
+       ;;          ;; 2. read only?
+       ;;          (cond ((and (boundp 'view-mode)
+       ;;                      view-mode
+       ;;                      (eq view-exit-action 'kill-buffer))
+       ;;                 'view)
+       ;;                (buffer-read-only
+       ;;                 t))
+       ;;          ;; 3. current buffer?
+       ;;          (eq b currbuf))))
+       ;;   (projman-active-buffers))
+       ;;  ;; be sure to include any buffers still waiting to be loaded
+       ;;  projman-lazy-buffer-create-stack)
+       )
+    )))
 
 (defun projman-save-active-state (projname state)
   (let* ((file (concat (expand-file-name projman-active-directory)
