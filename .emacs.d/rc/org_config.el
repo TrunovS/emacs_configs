@@ -1,8 +1,27 @@
 (custom-set-variables
  '(org-startup-folded nil)
- '(org-log-done t))
+ '(org-log-done t)
+ '(org-src-fontify-natively t)
+ '(org-confirm-babel-evaluate nil)
+ ;; '(org-babel-load-languages (quote ((emacs-lisp . t) (shell . t))))
+ )
 
 (require 'org)
+(require 'ob-python)
+(require 'ob-async)
+
+(org-babel-do-load-languages
+  'org-babel-load-languages
+  '((emacs-lisp . t)
+    (python . t)
+    (ipython . t)
+    (sh . t)
+    (latex . t)
+    (R . t)
+    ))
+
+;; Fix an incompatibility between the ob-async and ob-ipython packages
+(setq ob-async-no-async-languages-alist '("ipython"))
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|/TODO\\)$" . org-mode))
 (add-to-list 'file-coding-system-alist (cons "\\.\\(org\\|org_archive\\|/TODO\\)$"  'utf-8))
@@ -37,4 +56,4 @@
   (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))
   )
   
-  (add-hook 'org-mode-hook 'tserg/org-mode-hook)
+(add-hook 'org-mode-hook 'tserg/org-mode-hook)

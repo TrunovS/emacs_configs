@@ -537,7 +537,7 @@ An option list is a list of alternating :name and value items."
     (setenv "GTAGSLIBPATH" (mapconcat 'identity gtaglibs ";"))))
 
 (defun projman-capture-active-state ()
-  (let ((root-dir (projman-project-root)))
+  (let ((root-dir (projman-project-root-safe)))
     (if root-dir
         (desktop-save root-dir t t)
       ))

@@ -99,7 +99,7 @@
 
 ;; Compilation color customization-----------------------------------
 
-(setq compilation-environment '("TERM=xterm-256color"))
+(setq compilation-environment '("TERM=xterm"))
 
 (setq comint-output-filter-functions
       (remove 'ansi-color-process-output comint-output-filter-functions))
