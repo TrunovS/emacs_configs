@@ -7,10 +7,11 @@
   (interactive)
   (cua-mode 0)
   (pymacs-load "ropemacs" "rope-")
+  (setq python-environment-directory "/home/home_sys/sergey")
+  (setq python-environment-default-root-name "py2_venv")
+  (jedi:setup)
   (setq jedi:setup-keys t)                      ; optional
   (setq jedi:complete-on-dot t)                 ; optional
-  (setq jedi:environment-root "jedi")
-  (print "hhheee")
 
   ;; IPython Setup -----------------------------------------------------
   (setenv "IPY_TEST_SIMPLE_PROMPT" "1")
@@ -25,7 +26,7 @@
    "';'.join(module_completion('''%s'''))\n"
    python-shell-completion-string-code
    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-  (setq python-environment-default-root-name "jedi")
+  (print "hhey ----")
   )
 
 
@@ -36,7 +37,5 @@
    ("pip3" "install" "--upgrade" "git+https://github.com/davidhalter/jedi.git@dev#egg=jedi")))
  )
 
-(add-hook 'python-mode-hook 'auto-complete-mode)
-(add-hook 'python-mode-hook 'jedi:setup)
 (add-hook 'python-mode-hook 'tserg/python-mode-hook)
 

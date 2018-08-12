@@ -17,7 +17,7 @@
     (package-install package)))
 
 ;;Eshell Env----------------------------
-(setenv "PATH" (shell-command-to-string ". ~/.profile; echo -n $PATH"))
+(setenv "PATH" (shell-command-to-string ". ~/.bashrc; echo -n $PATH"))
 
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
@@ -64,9 +64,6 @@
  '(nav-boring-file-regexps
    (quote
     ("^[.][^.].*$" "^[.]$" "~$" "[.]elc$" "[.]pyc$" "[.]o$" "[.]bak$" "^_MTN$" "^blib$" "^CVS$" "^RCS$" "^SCCS$" "^_darcs$" "^_sgbak$" "^autom4te.cache$" "^cover_db$" "^_build$" "moc_*" "ui_*")))
- '(org-babel-load-languages (quote ((emacs-lisp . t) (python . t) (latex . t) (R . t))))
- '(org-log-done t)
- '(org-startup-folded nil)
  '(scroll-bar-mode (quote nil))
  '(show-paren-mode t)
  '(special-display-buffer-names (quote ("*grep*" "*compilation*" "*clang error")))
@@ -79,6 +76,7 @@
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+
 
 
 (custom-set-faces
@@ -98,6 +96,4 @@
  '(region ((t (:background "#3a9890"))))
  '(whitespace-line ((t (:overline t)))))
 
-
-(provide '.emacs)
-;;; .emacs ends here
+(provide 'init)
