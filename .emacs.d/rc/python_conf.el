@@ -1,7 +1,7 @@
 ;; Python SetPath -------------------------------------------
 ;; (setq ropemacs-enable-shortcuts nil)
 ;; (setq ropemacs-local-prefix "C-c C-p")
-(require 'pymacs)
+;; (require 'pymacs)
 
 (defun tserg/python-mode-hook()
   (interactive)

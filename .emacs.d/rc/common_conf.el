@@ -6,6 +6,15 @@
          (split-string-and-unquote path ":")
          exec-path)))
 
+;; IDO mode ----------------------------------------------
+(setq ido-enable-flex-matching nil)
+(setq ido-create-new-buffer `always)
+(setq ido-everywhere 1)
+(ido-mode 1)
+
+(require 'smex)
+(smex-initialize)
+
 ;;Auto-complete ------------------------------------------
 (require 'auto-complete)
 (require 'auto-complete-config)
@@ -271,6 +280,7 @@
 
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
+(global-set-key "\M-x" 'smex)
 (global-set-key "\C-c\C-g" 'google-this)
 (global-set-key "\M-n" 'forward-paragraph)
 (global-set-key "\M-p" 'backward-paragraph)

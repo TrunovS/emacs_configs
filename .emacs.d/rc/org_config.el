@@ -3,7 +3,6 @@
  '(org-log-done t)
  '(org-src-fontify-natively t)
  '(org-confirm-babel-evaluate nil)
- ;; '(org-babel-load-languages (quote ((emacs-lisp . t) (shell . t))))
  )
 
 (require 'org)
@@ -25,6 +24,16 @@
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|/TODO\\)$" . org-mode))
 (add-to-list 'file-coding-system-alist (cons "\\.\\(org\\|org_archive\\|/TODO\\)$"  'utf-8))
+
+
+(defvar org-blocks-hidden nil)
+
+(defun org-toggle-blocks ()
+  (interactive)
+  (if org-blocks-hidden
+      (org-show-block-all)
+    (org-hide-block-all))
+  (setq-local org-blocks-hidden (not org-blocks-hidden)))
 
 ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice) https://stackoverflow.com/a/8836108/789593
 (defun tserg/org-mode-hook ()
@@ -52,8 +61,9 @@
                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
     ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "org-pdfview-open"))
     )
+  (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
   (delete '("\\.pdf\\'" . default) org-file-apps)
   (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))
   )
   
-(add-hook 'org-mode-hook 'tserg/org-mode-hook)
+  (add-hook 'org-mode-hook 'tserg/org-mode-hook)

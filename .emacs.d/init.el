@@ -1,6 +1,6 @@
 ;;Package--------------------------------------------------
 (require 'package)
-(setq package-list '(ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view auto-complete-clang auto-complete-c-headers autopair))
+(setq package-list '(smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view auto-complete-clang auto-complete-c-headers autopair))
 
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
@@ -17,7 +17,7 @@
     (package-install package)))
 
 ;;Eshell Env----------------------------
-(setenv "PATH" (shell-command-to-string ". ~/.bashrc; echo -n $PATH"))
+(setenv "PATH" (shell-command-to-string ". ~/.profile; echo -n $PATH"))
 
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
@@ -37,6 +37,11 @@
 
 
 ;; Set Path----------------------------------
+;; (setenv "LANG" "ru_RU.UTF-8")
+;; (setenv "LC_ALL" "ru_RU.UTF-8") 
+;; (setenv "LC_CTYPE" "ru_RU.UTF-8")
+(setenv "PYTHONIOENCODING" "utf-8")
+
 (let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
   (setenv "PATH" path)
   (setq exec-path 
@@ -76,7 +81,6 @@
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
-
 
 
 (custom-set-faces
