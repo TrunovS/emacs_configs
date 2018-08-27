@@ -40,14 +40,8 @@
 ;; (setenv "LANG" "ru_RU.UTF-8")
 ;; (setenv "LC_ALL" "ru_RU.UTF-8") 
 ;; (setenv "LC_CTYPE" "ru_RU.UTF-8")
+(exec-path-from-shell-initialize)
 (setenv "PYTHONIOENCODING" "utf-8")
-
-(let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
-  (setenv "PATH" path)
-  (setq exec-path 
-        (append
-         (split-string-and-unquote path ":")
-         exec-path)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
