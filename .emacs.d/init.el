@@ -16,9 +16,6 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-;;Eshell Env----------------------------
-(setenv "PATH" (shell-command-to-string ". ~/.profile; echo -n $PATH"))
-
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
 (load "~/.emacs.d/rc/rust_config.el");; rust configs
@@ -37,9 +34,6 @@
 
 
 ;; Set Path----------------------------------
-;; (setenv "LANG" "ru_RU.UTF-8")
-;; (setenv "LC_ALL" "ru_RU.UTF-8") 
-;; (setenv "LC_CTYPE" "ru_RU.UTF-8")
 (exec-path-from-shell-initialize)
 (setenv "PYTHONIOENCODING" "utf-8")
 
