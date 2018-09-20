@@ -925,7 +925,7 @@ Key Bindings:
   (setq options '("-pthread"))
   (let ((dir (cadr (memq :root projman-current-project))))
     (setq fpath (concat dir "/" ".cquery"))
-    (message fpsath)
+    (message fpath)
     (with-temp-file fpath
       (mapcar (lambda(item) (let ((x (concat "%" item "\n")))
                               (insert x)))
