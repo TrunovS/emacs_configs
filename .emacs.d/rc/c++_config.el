@@ -64,7 +64,7 @@
 (require 'auto-complete-clang)
 
 (defun tserg/add-clang-flags-to-project()
-  (let ((dir (cadr (memq :root projman-current-project))))
+   (let ((dir (cadr (memq :root projman-current-project))))
     ;;Найдем только не повторяющиеся дирректрии
     (setq command1 
           (concat "find " dir " -type d \\( -path " dir "servicePrograms -o -path " dir "registration \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -u")
@@ -194,19 +194,15 @@
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
   (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
 
-  (message "cquery init")
-  (projman-cquery-setup-c++-project)
-  (message "cquery init complete")
-
   ;; (setq cquery-project-roots 'projman-project-root)
   (setq cquery-executable "/home/sergey/cquery/build/release/bin/cquery")
   (lsp-cquery-enable)
   (lsp-ui-mode)
-  (eldoc-mode nil)  
-  (global-eldoc-mode -1)
   (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
   (setq lsp-ui-sideline-show-symbol nil)  ; don't show symbol on the right of info
-  (lsp-ui-doc-mode -1)
+  (eldoc-mode nil)  
+  (global-eldoc-mode -1)
+  ;; (lsp-ui-doc-mode -1)
   ;; (lsp-ui-sideline-mode -1)
 
   (define-key c-mode-base-map [(control f7)] 'projman-grep)

@@ -919,11 +919,13 @@ Key Bindings:
          args))
 
 (defun projman-cquery-setup-c++-project ()
+  (interactive)
   "Create cquery file in root dir of project"
   (setq header '("clang" "c -std=gnu11" "cpp -std=gnu++14"))
   (setq options '("-pthread"))
   (let ((dir (cadr (memq :root projman-current-project))))
     (setq fpath (concat dir "/" ".cquery"))
+    (message fpsath)
     (with-temp-file fpath
       (mapcar (lambda(item) (let ((x (concat "%" item "\n")))
                               (insert x)))
@@ -933,11 +935,23 @@ Key Bindings:
                               (insert x)))
               options)
 
-      ;; (insert "\n# Includes\n")
-      ;; (setq third_party '("include/file1" "include/file2" "include2/file1"))
-      ;; (mapcar (lambda(item) (let ((x (concat "-I" item "\n")))
-      ;;                         (insert x)))
-      ;;         third_party) 
+      (insert "\n# Includes\n")
+      ;;Найдем только не повторяющиеся дирректрии
+      (setq command1 
+            (concat "find " dir " -type d \\( -path " dir "\.cquery\_cached\_index -o -path " dir "objects \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -u")
+            )
+      ;;теперь повторяющиеся
+      (setq command2 
+            (concat "find " dir " -type d \\( -path " dir "\.cquery\_cached\_index -o -path " dir "objects \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -d")
+            )
+
+      (mapcar (lambda (item) (let ((x (concat "-I" item "\n")))
+                               (insert x)))
+              (split-string (shell-command-to-string command1)))
+
+      (mapcar (lambda (item) (let ((x (concat "-I" item "\n")))
+                               (insert x)))
+              (split-string (shell-command-to-string command2)))
       )
     )
   )

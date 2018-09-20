@@ -91,6 +91,7 @@
 ;;Projman-------------------------------------------------------
 (load-file "~/.emacs.d/projman.el")
 (load-file "~/.emacs.d/mode-projman.el")
+(projman-mode)
 
 ;;emacs-NAV---------------------------------------------------------
 (require 'nav)
