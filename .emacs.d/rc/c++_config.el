@@ -202,6 +202,7 @@
   (setq lsp-ui-sideline-show-symbol nil)  ; don't show symbol on the right of info
   (eldoc-mode nil)  
   (global-eldoc-mode -1)
+  (setq lsp-ui-doc-position (quote at-point))
   ;; (lsp-ui-doc-mode -1)
   ;; (lsp-ui-sideline-mode -1)
 
