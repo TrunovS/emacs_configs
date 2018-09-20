@@ -918,6 +918,30 @@ Key Bindings:
          :file (expand-file-name rootfile (projman-project-root))
          args))
 
+(defun projman-cquery-setup-c++-project ()
+  "Create cquery file in root dir of project"
+  (setq header '("clang" "c -std=gnu11" "cpp -std=gnu++14"))
+  (setq options '("-pthread"))
+  (let ((dir (cadr (memq :root projman-current-project))))
+    (setq fpath (concat dir "/" ".cquery"))
+    (with-temp-file fpath
+      (mapcar (lambda(item) (let ((x (concat "%" item "\n")))
+                              (insert x)))
+              header)
+
+      (mapcar (lambda(item) (let ((x (concat item "\n")))
+                              (insert x)))
+              options)
+
+      ;; (insert "\n# Includes\n")
+      ;; (setq third_party '("include/file1" "include/file2" "include2/file1"))
+      ;; (mapcar (lambda(item) (let ((x (concat "-I" item "\n")))
+      ;;                         (insert x)))
+      ;;         third_party) 
+      )
+    )
+  )
+
 ;; ecb hooks
 
 (defun projman-ecb-source-path-function ()

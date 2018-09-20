@@ -60,26 +60,6 @@
   ;; (add-to-list 'achead:include-directories '"/usr/include/qt4/Qt")
   )
 
-;;Semantic---------------------------------------------------------
-(require 'cedet)
-(require 'semantic)
-(require 'semantic/ia)
-(require 'semantic/bovine/gcc)
-
-(setq semantic-default-submodes
-      '(global-semantic-idle-scheduler-mode
-        global-semanticdb-minor-mode
-        global-semantic-idle-summary-mode
-        ;; global-semantic-idle-completions-mode
-        global-semantic-highlight-func-mode
-        global-semantic-stickyfunc-mode
-        ;; global-semantic-decoration-mode
-        global-semantic-mru-bookmark-mode))
-
-(setq semanticdb-default-save-directory "~/.semanticdb/"
-      semantic-complete-inline-analyzer-idle-displayor-class 'semantic-displayor-ghost)
-(semantic-mode t)
-
 ;; Auto-complete-clang --------------------------------------------------
 (require 'auto-complete-clang)
 
@@ -112,28 +92,6 @@
     )
   )
 
-(defun tserg/add-semantic-flags-to-project()
-  (let ((dir (cadr (memq :root projman-current-project))))
-    ;;Найдем только не повторяющиеся дирректрии
-    (setq command1 
-          (concat "find " dir " -type d \\( -path " dir "servicePrograms -o -path " dir "registration \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -u")
-          )
-    ;;теперь повторяющиеся
-    (setq command2 
-          (concat "find " dir " -type d \\( -path " dir "servicePrograms -o -path " dir "registration \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -d")
-          )
-    (setq ac1 
-          (mapcar (lambda (item)(semantic-add-system-include item 'c++-mode))
-                  (split-string (shell-command-to-string command1))
-                  )
-          )
-    (setq ac2
-          (mapcar (lambda (item)(semantic-add-system-include item 'c++-mode))
-                  (split-string (shell-command-to-string command2))
-                  )
-          )
-    )
-  )
 
 (defun tserg/set-default-ac-clang-flags()
   (if (member "-I/usr/include/c++/4.8" ac-clang-flags) 0
@@ -166,24 +124,15 @@
 
 (defun tserg/ac-cc-mode-setup ()
   (setq ac-auto-start nil)
+  (setq ac-delay 0)
   (setq clang-completion-suppress-error 't)
   (local-set-key [(control return)] 'ac-complete-clang)
   ;; (ac-flyspell-workaround)
   (setq ac-sources (append '(
                              ac-source-clang
                              ac-source-yasnippet
-                             ac-source-abbrev
-                             ;; ac-source-dictionary
-                             ;; ac-source-words-in-same-mode-buffers
-                             ;; ac-source-words-in-buffer
-                             ;; ac-source-filename
-                             ;; ac-source-imenu
-                             ;; ac-source-files-in-current-dir
-                             ;; ac-source-gtags
-                             ;; ac-source-semantic
-                             ;; ac-source-semantic-raw
-                             ;; ac-source-variables
-                             ac-source-template
+                             ;; ac-source-abbrev
+                             ;; ac-source-template
                              ) ac-sources))
   (tserg/set-default-ac-clang-flags)
   )
@@ -239,38 +188,33 @@
   (font-lock-mode t)
   (setq font-lock-maximum-decoration t)
 
-  (progn
-    ;; integer/float/scientific numbers
-    (font-lock-add-keywords 'c++-mode
-                            '(("\\<[\\-+]*[0-9]*\\.?[0-9]+\\([ulUL]+\\|[eE][\\-+]?[0-9]+\\)?\\>"
-                               . font-lock-constant-face)))
-    ;; ;; user-types (customize!)
-    ;; (font-lock-add-keywords 'c++-mode
-    ;;                         '(("\\<[A-Za-z_]+[A-Za-z_0-9]*_\\(t\\|type\\|ptr\\)\\>" . font-lock-type-face)))
-    ;; ;; Highlighting C++ member function calls
-    ;; (font-lock-add-keywords 'c++-mode
-    ;;                         '((concat
-    ;;                              "\\<[_a-zA-Z][_a-zA-Z0-9]*\\>"       ; Object identifier
-    ;;                              "\\s *"                              ; Optional white space
-    ;;                              "\\(?:\\.\\|->\\)"                   ; Member access
-    ;;                              "\\s *"                              ; Optional white space
-    ;;                              "\\<\\([_a-zA-Z][_a-zA-Z0-9]*\\)\\>" ; Member identifier
-    ;;                              "\\s *"                              ; Optional white space
-    ;;                              "(")                                 ; Paren for method invocation
-    ;;                            . 'font-lock-function-name-face))
-    )
   (define-key c-mode-base-map [f2] 'my-switch-h-cpp-in-projman-project)
   (define-key c-mode-base-map [f5] 'myrefact)
-  (define-key c-mode-base-map "\C-j" 'semantic-ia-fast-jump)
-  (define-key c-mode-base-map "\C-xj" 'semantic-complete-jump)
   (define-key hs-minor-mode-map "\M-h\M-t" 'hs-toggle-hiding)
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
   (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
+
+  (message "cquery init")
+  (projman-cquery-setup-c++-project)
+  (message "cquery init complete")
+
+  ;; (setq cquery-project-roots 'projman-project-root)
+  (setq cquery-executable "/home/sergey/cquery/build/release/bin/cquery")
+  (lsp-cquery-enable)
+  (lsp-ui-mode)
+  (eldoc-mode nil)  
+  (global-eldoc-mode -1)
+  (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
+  (setq lsp-ui-sideline-show-symbol nil)  ; don't show symbol on the right of info
+  (lsp-ui-doc-mode -1)
+  ;; (lsp-ui-sideline-mode -1)
+
+  (define-key c-mode-base-map [(control f7)] 'projman-grep)
+  (define-key c-mode-base-map [f7] 'lsp-ui-peek-find-references)
+  (define-key c-mode-base-map "\C-j" 'xref-find-definitions)
+  (define-key c-mode-base-map "\M-j" 'xref-pop-marker-stack)
   )
 
-;; (add-hook 'c++-mode-hook 'tserg/ac-c-header-init)
-;; (add-hook 'c-mode-common-hook 'tserg/ac-c-header-init)
-;; (add-hook 'c-mode-common-hook 'tserg/ac-cc-mode-setup)
 (add-hook 'c-mode-common-hook 'tserg/c-mode-common-hook)
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
@@ -278,7 +222,6 @@
 
 (defun my-prepare-for-coding()
   (interactive)
-  (tserg/add-semantic-flags-to-project)
   (tserg/add-clang-flags-to-project)
   )
 

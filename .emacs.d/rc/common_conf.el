@@ -1,11 +1,3 @@
-;; Setup bash environment variables ----------------------
-(let ((path (shell-command-to-string ". ~/.bashrc; echo -n $PATH")))
-  (setenv "PATH" path)
-  (setq exec-path 
-        (append
-         (split-string-and-unquote path ":")
-         exec-path)))
-
 ;; IDO mode ----------------------------------------------
 (setq ido-enable-flex-matching nil)
 (setq ido-create-new-buffer `always)
