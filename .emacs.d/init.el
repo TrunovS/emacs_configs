@@ -1,6 +1,6 @@
 ;;Package--------------------------------------------------
 (require 'package)
-(setq package-list '(dockerfile-mode docker smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view auto-complete-clang auto-complete-c-headers autopair))
+(setq package-list '(nova-theme dockerfile-mode docker smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view auto-complete-clang auto-complete-c-headers autopair))
 
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
@@ -32,6 +32,7 @@
 (add-hook 'perl-mode-hook       'hs-minor-mode)
 (add-hook 'sh-mode-hook         'hs-minor-mode)
 
+(load-theme 'nova t)
 
 ;; Set Path----------------------------------
 (exec-path-from-shell-initialize)
@@ -84,9 +85,8 @@
  '(flycheck-error-list-highlight ((t (:inherit highlight :background "#504b4b"))))
  '(header-line ((t (:inherit mode-line :background "dim gray" :foreground "grey90" :box nil))))
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
- '(hl-line ((t (:inherit highlight :background "#504b4b"))))
- '(powerline-active1 ((t (:inherit mode-line :background "grey22" :foreground "gainsboro"))))
- '(region ((t (:background "#3a9890"))))
+ '(hl-line ((t (:inherit nil :background "dim gray"))))
+ '(region ((t (:background "black")))) ;;#504b4b
  '(whitespace-line ((t (:overline t)))))
 
 (provide 'init)

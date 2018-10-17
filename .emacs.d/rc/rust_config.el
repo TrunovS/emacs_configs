@@ -12,7 +12,9 @@
                  (file-name-sans-extension (buffer-file-name))))))
 
 (defun tserg/racer-mode-hook ()
+  ;; cargo install racer
   (setq racer-cmd (expand-file-name "~/.cargo/bin/racer"))
+  ;;  rustup component add rust-src
   (setq racer-rust-src-path (expand-file-name "~/.rustup/toolchains/stable\-x86_64\-unknown\-linux\-gnu/lib/rustlib/src/rust/src"))
   (ac-racer-setup)
 )

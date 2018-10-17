@@ -199,17 +199,17 @@
   (lsp-cquery-enable)
   (lsp-ui-mode)
   (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
-  (setq lsp-ui-sideline-show-symbol nil)  ; don't show symbol on the right of info
+  ;; (setq lsp-ui-sideline-show-symbol nil)  ; don't show symbol on the right of info
   (eldoc-mode nil)  
   (global-eldoc-mode -1)
-  (setq lsp-ui-doc-position (quote at-point))
+  (setq lsp-ui-doc-position (quote top))
   ;; (lsp-ui-doc-mode -1)
-  ;; (lsp-ui-sideline-mode -1)
+
 
   (define-key c-mode-base-map [(control f7)] 'projman-grep)
-  (define-key c-mode-base-map [f7] 'lsp-ui-peek-find-references)
   (define-key c-mode-base-map "\C-j" 'xref-find-definitions)
   (define-key c-mode-base-map "\M-j" 'xref-pop-marker-stack)
+  (define-key c-mode-base-map [f7] 'lsp-ui-peek-find-references)
   )
 
 (add-hook 'c-mode-common-hook 'tserg/c-mode-common-hook)
