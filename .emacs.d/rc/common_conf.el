@@ -260,6 +260,7 @@
  ;; compilation-scroll-output 'first-error
  )
 
+(setq revert-without-query (quote (".*.pdf")))
 (setq-default indent-tabs-mode nil)
 (setq nav-width 25)
 (menu-bar-mode -1)
