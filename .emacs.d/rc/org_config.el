@@ -32,6 +32,11 @@
 
 (defvar org-blocks-hidden nil)
 
+(defun tserg/org-latex-export-to-pdf ()
+  (interactive)
+    (org-open-file (org-latex-export-to-pdf))
+  )
+
 (defun org-toggle-blocks ()
   (interactive)
   (if org-blocks-hidden
@@ -50,6 +55,8 @@
   (flyspell-mode 1)
   (auto-complete-mode 1)
   (ac-flyspell-workaround)
+  (define-key org-mode-map (kbd "<f8>") 'tserg/org-latex-export-to-pdf)
+  (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
   (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
   (define-key org-mode-map (kbd "C-c x") 'org-babel-execute-buffer)
   (toggle-truncate-lines -1)
