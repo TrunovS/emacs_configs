@@ -52,6 +52,7 @@
   (ac-flyspell-workaround)
   (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
   (define-key org-mode-map (kbd "C-c x") 'org-babel-execute-buffer)
+  (toggle-truncate-lines -1)
   (ac-auto-start)
   )
   
