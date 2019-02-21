@@ -86,7 +86,8 @@
  '(header-line ((t (:inherit mode-line :background "dim gray" :foreground "grey90" :box nil))))
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
  '(hl-line ((t (:inherit nil :background "dim gray"))))
- '(region ((t (:background "black")))) ;;#504b4b
+ '(mode-line ((t (:background "#30003ccc4400" :foreground "#7FC1CA" :box (:line-width 2 :color "grey75" :style released-button)))))
+ '(region ((t (:background "black"))))
  '(whitespace-line ((t (:overline t)))))
 
 (provide 'init)
