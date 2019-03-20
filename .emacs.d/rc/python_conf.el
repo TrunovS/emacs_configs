@@ -3,12 +3,14 @@
 ;; (setq ropemacs-local-prefix "C-c C-p")
 ;; (require 'pymacs)
 
+(setenv "PYTHONIOENCODING" "utf-8")
+
 (defun tserg/python-mode-hook()
   (interactive)
   (cua-mode 0)
   (pymacs-load "ropemacs" "rope-")
-  (setq python-environment-directory "/home/home_sys/sergey")
-  (setq python-environment-default-root-name "py2_venv")
+  (setq python-environment-directory "/mnt/888748fb-cfad-4273-95d6-b7ac682911f5/home/sergey")
+  (setq python-environment-default-root-name "py2_env")
   (jedi:setup)
   (setq jedi:setup-keys t)                      ; optional
   (setq jedi:complete-on-dot t)                 ; optional

@@ -1,3 +1,13 @@
+;; Theme--------------------
+(load-theme 'nova t)
+
+;; mode-line-----------------
+(setq sml/theme 'respectful)
+(sml/setup)
+
+;; Set Path----------------------------------
+(exec-path-from-shell-initialize)
+
 ;; IDO mode ----------------------------------------------
 (setq ido-enable-flex-matching nil)
 (setq ido-create-new-buffer `always)
@@ -198,8 +208,8 @@
 (add-hook 'compilation-mode-hook 'tserg/compilation-long-hook)
 
 ;;Background---------------------------------------------------------
-(set-face-background 'default "#353535")
-(set-face-foreground 'default "#efefef")
+;; (set-face-background 'default "#353535")
+;; (set-face-foreground 'default "#efefef")
 
 (defun my-copy-line ()
   (interactive)
