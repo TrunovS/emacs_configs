@@ -277,6 +277,7 @@
  truncate-partial-width-windows nil
  make-backup-files nil;; do (not )ot make backup files
  ;; compilation-scroll-output 1
+ compilation-skip-threshold 2;;skip warnings
  compilation-scroll-output 'first-error
  )
 

@@ -33,7 +33,6 @@
  '(show-paren-mode t)
  '(special-display-buffer-names (quote ("*grep*" "*compilation*" "*clang error")))
  '(special-display-regexps nil)
- '(standard-indent 2)
  '(whitespace-line-column 90)
  '(whitespace-style (quote (face tabs trailing empty tab-mark lines)))
  '(ws-butler-keep-whitespace-before-point nil))
