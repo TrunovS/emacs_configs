@@ -2,8 +2,17 @@
 (load-theme 'nova t)
 
 ;; mode-line-----------------
-(setq sml/theme 'respectful)
+;; (setq sml/theme 'respectful)
+(setq  sml/theme 'automatic
+       sml/mode-width 'full
+       sml/name-width 30
+       sml/shorten-modes t
+       sml/show-frame-identification nil
+       sml/shorten-directory t
+       sml/replacer-regexp-list '((".+" ""))
+       )
 (sml/setup)
+(setq sml/shortener-func (lambda (_dir _max-length) ""))
 
 ;; Set Path----------------------------------
 (exec-path-from-shell-initialize)
@@ -265,9 +274,10 @@
  inhibit-startup-message t
  scroll-step 1
  toggle-truncate-lines 1
+ truncate-partial-width-windows nil
  make-backup-files nil;; do (not )ot make backup files
- compilation-scroll-output 1
- ;; compilation-scroll-output 'first-error
+ ;; compilation-scroll-output 1
+ compilation-scroll-output 'first-error
  )
 
 (setq revert-without-query (quote (".*.pdf")))

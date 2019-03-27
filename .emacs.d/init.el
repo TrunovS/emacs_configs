@@ -90,6 +90,7 @@
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
  '(hl-line ((t (:inherit nil :background "dim gray"))))
  '(region ((t (:background "black"))))
+ '(sml/col-number ((t (:inherit sml/modes))))
  '(whitespace-line ((t (:overline t)))))
 
 (provide 'init)

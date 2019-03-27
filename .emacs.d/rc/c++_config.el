@@ -184,6 +184,8 @@
   (flyspell-prog-mode)
   (tserg/ac-c-header-init)
   (tserg/ac-cc-mode-setup)
+  (toggle-truncate-lines nil)
+  (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
 
   (font-lock-mode t)
   (setq font-lock-maximum-decoration t)
