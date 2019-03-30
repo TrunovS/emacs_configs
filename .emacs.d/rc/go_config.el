@@ -12,7 +12,7 @@
   (font-lock-mode t)
   (setq font-lock-maximum-decoration t)
 
-  (local-set-key [(control return)] 'ac-complete-racer)
+  (local-set-key [(control return)] 'ac-complete)
   (define-key go-mode-map "\C-j" 'godef-jump)
   (define-key go-mode-map "\M-j" 'pop-tag-mark)
   (define-key go-mode-map "\C-hj" 'godoc-at-point)
@@ -24,13 +24,6 @@
   (if (not (string-match "go" compile-command))
       (set (make-local-variable 'compile-command)
            "go build -v && go test -v && go vet"))
-  ;; (lsp-mode)
-  ;; (lsp-ui-mode)
-  ;; (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
-  ;; ;; (setq lsp-ui-sideline-show-symbol nil)  ; don't show symbol on the right of info
-  ;; (eldoc-mode nil)  
-  ;; (global-eldoc-mode -1)
-  ;; (setq lsp-ui-doc-position (quote top))
   )
 
 (add-to-list 'auto-mode-alist (cons "\\.go\\'" 'go-mode))
