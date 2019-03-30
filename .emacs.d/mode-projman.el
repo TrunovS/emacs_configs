@@ -3,7 +3,7 @@
 (add-to-list 'projman-types '(cake "cake" ("*.php" "*.ctp" "*.org" "*.js")))
 (add-to-list 'projman-types '(clojure "clojure" ("*.clj" "*.html" "*.js" "*.css")))
 (add-to-list 'projman-types '(rust "rust" ("*.rs" "Cargo*")))
-(add-to-list 'projman-types '(go "Go" ("*.go")))
+(add-to-list 'projman-types '(go "Go" ("*.go" "*.mod")))
 
 ;; macros for directory local variables(usefull for projects that's why I placed
 ;; them here)
