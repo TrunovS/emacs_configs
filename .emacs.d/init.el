@@ -58,6 +58,7 @@
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
 (load "~/.emacs.d/rc/rust_config.el");; rust configs
+(load "~/.emacs.d/rc/go_config.el");; go configs
 (load "~/.emacs.d/rc/c++_config.el");; c-mode
 (load "~/.emacs.d/rc/qt_config.el");; qt-mode
 (load "~/.emacs.d/rc/qml_config.el");; qml-mode
