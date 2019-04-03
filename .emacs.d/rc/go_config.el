@@ -2,11 +2,11 @@
   (with-eval-after-load 'go-mode
    (require 'go-autocomplete))
 
+  (setq-local tab-width 4)
   (ws-butler-mode)
   (whitespace-mode)
-  ;; stop whitespace being highlighted
   (whitespace-toggle-options '(tabs))
- 
+
   (hs-minor-mode)
   (toggle-truncate-lines nil)
   (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26

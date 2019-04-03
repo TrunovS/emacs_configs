@@ -67,6 +67,11 @@
 )
 
 (require 'whitespace)
+(setq whitespace-style (quote (face tabs trailing empty tab-mark lines)))
+(setq whitespace-display-mappings
+      '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
+(setq whitespace-line-column 90)
+(setq ws-butler-keep-whitespace-before-point nil)
 
 (defvar my:prev-whitespace-mode nil)
 (make-variable-buffer-local 'my:prev-whitespace-mode)

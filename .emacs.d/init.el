@@ -32,10 +32,7 @@
  '(scroll-bar-mode (quote nil))
  '(show-paren-mode t)
  '(special-display-buffer-names (quote ("*grep*" "*compilation*" "*clang error")))
- '(special-display-regexps nil)
- '(whitespace-line-column 90)
- '(whitespace-style (quote (face tabs trailing empty tab-mark lines)))
- '(ws-butler-keep-whitespace-before-point nil))
+ '(special-display-regexps nil))
 
 ;;Package--------------------------------------------------
 (require 'package)
@@ -91,6 +88,8 @@
  '(hl-line ((t (:inherit nil :background "dim gray"))))
  '(region ((t (:background "black"))))
  '(sml/col-number ((t (:inherit sml/modes))))
- '(whitespace-line ((t (:overline t)))))
+ '(whitespace-line ((t (:overline t))))
+ '(whitespace-tab ((t (:foreground "dim gray"))))
+ )
 
 (provide 'init)
