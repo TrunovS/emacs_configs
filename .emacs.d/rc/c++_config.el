@@ -197,11 +197,12 @@
   (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
 
   ;; (setq cquery-project-roots 'projman-project-root)
+  (require 'cquery)
   (setq cquery-executable "/home/sergey/cquery/build/release/bin/cquery")
-  (lsp-cquery-enable)
+  (lsp)
   (lsp-ui-mode)
   (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
-  ;; (setq lsp-ui-sideline-show-symbol nil)  ; don't show symbol on the right of info
+  (setq lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
   (eldoc-mode nil)  
   (global-eldoc-mode -1)
   (setq lsp-ui-doc-position (quote top))
