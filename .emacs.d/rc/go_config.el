@@ -5,7 +5,6 @@
   (setq-local tab-width 4)
   (ws-butler-mode)
   (whitespace-mode)
-  (whitespace-toggle-options '(tabs))
 
   (hs-minor-mode)
   (toggle-truncate-lines nil)
