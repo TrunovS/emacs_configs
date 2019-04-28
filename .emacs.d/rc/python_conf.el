@@ -2,7 +2,7 @@
 ;; (setq ropemacs-enable-shortcuts nil)
 ;; (setq ropemacs-local-prefix "C-c C-p")
 ;; (require 'pymacs)
-
+(setq jedi:install-python-jedi-dev-command `("pip3" "install" "--upgrade" "git+https://github.com/davidhalter/jedi.git@dev#egg=jedi"))
 (setenv "PYTHONIOENCODING" "utf-8")
 
 (defun tserg/python-mode-hook()

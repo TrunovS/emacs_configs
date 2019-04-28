@@ -1,8 +1,31 @@
 ;; Theme--------------------
 (load-theme 'nova t)
+(global-hl-line-mode t)
+(set-scroll-bar-mode nil)
+(show-paren-mode 1)
+(auto-dim-other-buffers-mode t)
+(set-face-background 'auto-dim-other-buffers-face  "#399948f45199")
+(set-face-background 'cursor  "white")
+(set-face-background 'region  "black")
+(set-face-background 'hl-line "dim gray")
+
+(add-to-list 'default-frame-alist '(font . "Hack-10"))
+
+;; grep setup-------------
+(setq grep-command "grep -nH -e "
+      grep-find-command "grep -rnH --exclude=.hg --include=*.{c,cpp,h,R,qml} --include=-e 'pattern'"
+      grep-highlight-matches `auto
+      grep-use-null-device nil
+      grep-template "grep <X> <C> -nH -e <R> <F>"
+      )
+
+;; Load sessions--------------
+(setq desktop-restore-eager 7
+      special-display-buffer-names '("*grep*" "*compilation*" "*clang error")
+      special-display-regexps nil
+      )
 
 ;; mode-line-----------------
-;; (setq sml/theme 'respectful)
 (setq  sml/theme 'automatic
        sml/mode-width 'full
        sml/name-width 30
@@ -17,10 +40,16 @@
 ;; Set Path----------------------------------
 (exec-path-from-shell-initialize)
 
+;; magit github\gitlab integreation
+(with-eval-after-load 'magit
+  (require 'forge))
+
 ;; IDO mode ----------------------------------------------
-(setq ido-enable-flex-matching nil)
-(setq ido-create-new-buffer `always)
-(setq ido-everywhere 1)
+(setq ido-enable-flex-matching nil
+      ido-create-new-buffer `always
+      ido-everywhere 1
+      ido-work-directory-match-only t
+      )
 (ido-mode 1)
 
 (require 'smex)
@@ -56,6 +85,8 @@
 (add-hook 'auto-complete-mode-hook 'ac-common-setup)
 (add-hook 'auto-complete-mode-hook  'tserg/ac-config)
 
+;; whitespace config --------------------------------------------
+
 (defun my:force-modes (rule-mode &rest modes)
   "switch on/off several modes depending of state of
     the controlling minor mode
@@ -67,10 +98,13 @@
 )
 
 (require 'whitespace)
+
 (setq whitespace-style (quote (face tabs trailing empty tab-mark lines)))
 (setq whitespace-display-mappings
       '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
 (setq whitespace-line-column 90)
+(set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
+(set-face-attribute 'whitespace-line nil :foreground nil :overline t)
 (setq ws-butler-keep-whitespace-before-point nil)
 
 (defvar my:prev-whitespace-mode nil)
@@ -119,7 +153,10 @@
 
 ;;emacs-NAV---------------------------------------------------------
 (require 'nav)
-
+(setq nav-boring-file-regexps
+      (quote
+       ("^[.][^.].*$" "^[.]$" "~$" "[.]elc$" "[.]pyc$" "[.]o$" "[.]bak$" "^_MTN$" "^blib$" "^CVS$" "^RCS$" "^SCCS$" "^_darcs$" "^_sgbak$" "^autom4te.cache$" "^cover_db$" "^_build$" "moc_*" "ui_*")))
+      
 ;;emacs Mercurial--------------------------------------------------
 (require 'ahg)
 
@@ -346,37 +383,3 @@
 (global-set-key "\C-cms" 'magit-status)
 (global-set-key "\C-cml" 'magit-log-all)
 (global-set-key "\C-xm" nil)
-
-
-;; (custom-set-variables
-;;  '(whitespace-style
-;;    (quote
-;;     (face tabs trailing empty tab-mark lines)))
-;;  '(grep-highlight-matches (quote auto))
-;;  '(special-display-buffer-names (quote ("*grep*" "*compilation*" "*clang error*")))
-;;  '(special-display-regexps nil)
-;;  '(scroll-bar-mode (quote nil))
-;;  '(show-paren-mode t)
-;;  '(standard-indent 4)
-;;  '(global-hl-line-mode t)
-;;  '(so-long-max-lines 1)
-;;  '(so-long-target-modes
-;;    (quote
-;;     (prog-mode css-mode sgml-mode nxml-mode compilation-mode)))
-;;  )
-
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(default ((t (:family "Hack" :foundry "unknown" :slant normal :weight normal :height 98 :width normal))))
-;;  '(cursor ((t (:background "white"))))
-;;  '(ecb-default-highlight-face ((((class color) (background dark)) (:background "#838592"))))
-;;  '(ecb-tag-header-face ((((class color) (background dark)) (:background "#838592"))))
-;;  '(flycheck-error-list-highlight ((t (:inherit highlight :background "#504b4b"))))
-;;  '(header-line ((t (:inherit mode-line :background "dim gray" :foreground "grey90" :box nil))))
-;;  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
-;;  '(hl-line ((t (:inherit highlight :background "#504b4b"))))
-;;  '(powerline-active1 ((t (:inherit mode-line :background "grey22" :foreground "gainsboro"))))
-;;  '(region ((t (:background "#3a9890")))))

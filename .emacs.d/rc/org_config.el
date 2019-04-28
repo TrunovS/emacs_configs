@@ -1,11 +1,3 @@
-(custom-set-variables
- '(org-startup-folded nil)
- '(org-log-done t)
- '(org-src-fontify-natively t)
- '(org-confirm-babel-evaluate nil)
- '(org-directory "~/org-docs")
- )
-
 (require 'org)
 (require 'ob-python)
 (require 'ob-async)
@@ -21,11 +13,15 @@
     (R . t)
     ))
 
-;; Fix an incompatibility between the ob-async and ob-ipython packages
-(setq ob-async-no-async-languages-alist '("ipython"))
-
-(setq org-export-odt-preferred-output-format "docx")
-(setq org-odt-preferred-output-format "docx")
+(setq ob-async-no-async-languages-alist '("ipython") ;; Fix an incompatibility ob-async and ob-ipython packages
+      org-export-odt-preferred-output-format "docx"
+      org-odt-preferred-output-format "docx"
+      org-startup-folded nil
+      org-log-done t
+      org-src-fontify-natively t
+      org-confirm-babel-evaluate nil
+      org-directory "~/org-docs"
+      )
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|/TODO\\)$" . org-mode))
 (add-to-list 'file-coding-system-alist (cons "\\.\\(org\\|org_archive\\|/TODO\\)$"  'utf-8))
