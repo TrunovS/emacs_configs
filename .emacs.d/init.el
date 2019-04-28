@@ -53,7 +53,6 @@
  ;; If there is more than one, they won't work right.
  '(flycheck-error-list-highlight ((t (:inherit highlight :background "#504b4b"))))
  ;; '(header-line ((t (:inherit mode-line :background "dim gray" :foreground "grey90" :box nil))))
- '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#c4c4c4"))))
  '(sml/col-number ((t (:inherit sml/modes))))
  )
 

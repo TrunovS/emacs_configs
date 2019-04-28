@@ -7,7 +7,8 @@
 (set-face-background 'auto-dim-other-buffers-face  "#399948f45199")
 (set-face-background 'cursor  "white")
 (set-face-background 'region  "black")
-(set-face-background 'hl-line "dim gray")
+(set-face-attribute 'hl-line nil :foreground nil :background "dim gray")
+(set-face-attribute 'highlight nil :foreground nil :background (color-darken-name (face-background 'default) 10))
 
 (add-to-list 'default-frame-alist '(font . "Hack-10"))
 
