@@ -56,10 +56,10 @@
 (require 'smex)
 (smex-initialize)
 
-;;Auto-complete ------------------------------------------
+;;Auto-complete ------------------------in process of deprecating
 (require 'auto-complete)
 (require 'auto-complete-config)
-(ac-config-default)
+;(ac-config-default)
 
 (defun tserg/ac-config ()
   (setq ac-auto-start nil)
@@ -71,8 +71,9 @@
   (setq ac-delay 0)
   (setq ac-use-fuzzy t)
   (setq ac-use-comphist 0)
-  (define-key ac-mode-map  [(meta return)] 'ac-complete-filename)
-  (local-set-key  [(control return)] 'auto-complete)
+  (define-key ac-complete-mode-map  "\t" nil)
+;  (define-key ac-mode-map  [(meta return)] 'ac-complete-filename)
+  ;(local-set-key  [(control return)] 'auto-complete)
   (setq-default ac-sources '(
                              ac-source-abbrev
                              ac-source-dictionary
@@ -85,6 +86,12 @@
 (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
 (add-hook 'auto-complete-mode-hook 'ac-common-setup)
 (add-hook 'auto-complete-mode-hook  'tserg/ac-config)
+
+;; Company complete --------------------------------------------
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(define-key global-map [(meta return)] 'company-files)
+(define-key global-map [(control return)] 'company-complete)
 
 ;; whitespace config --------------------------------------------
 

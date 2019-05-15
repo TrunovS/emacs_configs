@@ -49,95 +49,6 @@
   (find-file lfname)
   )
 
-;; Auto-comlete C++\C headers -------------------------------------------------
-(defun tserg/ac-c-header-init ()
-  (require 'auto-complete-c-headers)
-  (add-to-list 'ac-sources 'ac-source-c-headers)
-  (add-to-list 'achead:include-directories '"/usr/lib/gcc/x86_64-linux-gnu/4.8/include")
-  (add-to-list 'achead:include-directories '"/usr/include/c++/4.8")
-  ;; (add-to-list 'achead:include-directories '"/usr/include/qt4/QtGui")
-  ;; (add-to-list 'achead:include-directories '"/usr/include/qt4/QtCore")
-  ;; (add-to-list 'achead:include-directories '"/usr/include/qt4/Qt")
-  )
-
-;; Auto-complete-clang --------------------------------------------------
-(require 'auto-complete-clang)
-
-(defun tserg/add-clang-flags-to-project()
-   (let ((dir (cadr (memq :root projman-current-project))))
-    ;;Найдем только не повторяющиеся дирректрии
-    (setq command1 
-          (concat "find " dir " -type d \\( -path " dir "servicePrograms -o -path " dir "registration \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -u")
-          )
-    ;;теперь повторяющиеся
-    (setq command2 
-          (concat "find " dir " -type d \\( -path " dir "servicePrograms -o -path " dir "registration \\) -prune -o -iname '*.h' -printf \"%h\n\" | uniq -d")
-          )
-    (setq ac1 
-          (mapcar (lambda (item)(concat "-I" item))
-                  (split-string (shell-command-to-string command1))
-                  )
-          )
-    (setq ac2
-          (mapcar (lambda (item)(concat "-I" item))
-                  (split-string (shell-command-to-string command2))
-                  )
-          )
-    (setq ac-clang-flags (append  
-                          ac1
-                          ac2 
-                          ac-clang-flags
-                                   ) 
-          )
-    )
-  )
-
-
-(defun tserg/set-default-ac-clang-flags()
-  (if (member "-I/usr/include/c++/4.8" ac-clang-flags) 0
-    (setq ac-clang-flags
-          (append   
-           (mapcar(lambda (item)(concat "-I" item))
-                  (split-string
-                   "
- /usr/include/c++/4.8
- /usr/include/x86_64-linux-gnu/c++/4.8
- /usr/include/c++/4.8/backward
- /usr/lib/gcc/x86_64-linux-gnu/4.8/include
- /usr/local/include
- /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed
- /usr/include/x86_64-linux-gnu
- /usr/include
- /usr/include/eigen3
- /usr/lib/x86_64-linux-gnu
-"
-                   ;; /usr/share/qt4/mkspecs/linux-g++ 
-                   ;; /usr/include/qt4
-                   ;; /usr/include/qt4/Qt
-                   ;; /usr/include/qt4/QtCore
-                   ;; /usr/include/qt4/QtGui
-                   ;; /usr/include/qwt-qt4
-                   ))
-           ac-clang-flags))
-    )
-  )
-
-(defun tserg/ac-cc-mode-setup ()
-  (setq ac-auto-start nil)
-  (setq ac-delay 0)
-  (setq clang-completion-suppress-error 't)
-  (local-set-key [(control return)] 'ac-complete-clang)
-  ;; (ac-flyspell-workaround)
-  (setq ac-sources (append '(
-                             ac-source-clang
-                             ac-source-yasnippet
-                             ;; ac-source-abbrev
-                             ;; ac-source-template
-                             ) ac-sources))
-  (tserg/set-default-ac-clang-flags)
-  )
-
-
 (defun myrefact()
   (interactive)
   (copy-region-as-kill (line-beginning-position) (line-end-position))
@@ -182,8 +93,6 @@
   (whitespace-mode)
   (hs-minor-mode)
   (flyspell-prog-mode)
-  (tserg/ac-c-header-init)
-  (tserg/ac-cc-mode-setup)
   (toggle-truncate-lines nil)
   (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
 
@@ -196,8 +105,8 @@
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
   (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
 
-  ;; (setq cquery-project-roots 'projman-project-root)
   (require 'cquery)
+  ;; (setq cquery-project-roots 'projman-project-root)
   (setq cquery-executable "/home/sergey/cquery/build/release/bin/cquery")
   (lsp)
   (lsp-ui-mode)
@@ -206,9 +115,17 @@
   (eldoc-mode nil)  
   (global-eldoc-mode -1)
   (setq lsp-ui-doc-position (quote top))
+  
+  
+  (require 'company-lsp)
+  (push 'company-lsp company-backends)
+  (company-quickhelp-mode)
+  (add-to-list 'company-backends 'company-c-headers)
+;  (local-set-key [(control return)] 'company-complete)
+
   ;; (lsp-ui-doc-mode -1)
 
-
+  ;; (define-key c-mode-base-map [(control return)] 'company-complete)
   (define-key c-mode-base-map [(control f7)] 'projman-grep)
   (define-key c-mode-base-map "\C-j" 'xref-find-definitions)
   (define-key c-mode-base-map "\M-j" 'xref-pop-marker-stack)
@@ -220,18 +137,18 @@
 (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.cxx\\'" . c++-mode))
 
-(defun my-prepare-for-coding()
-  (interactive)
-  (tserg/add-clang-flags-to-project)
-  )
+;; (defun my-prepare-for-coding()
+;;   (interactive)
+;; ;  (tserg/add-clang-flags-to-project)
+;;   )
 
-(defun my-set-c11()
-  (interactive)
-  (setq ac-clang-flags
-        (append '("-std=c++11") ac-clang-flags))
-  )
+;; (defun my-set-c11()
+;;   (interactive)
+;;   (setq ac-clang-flags
+;;         (append '("-std=c++11") ac-clang-flags))
+;;   )
 
-(defun my-drop-clang-flags ()
-  (interactive)
-  (setq ac-clang-flags '())
-  )
+;; (defun my-drop-clang-flags ()
+;;   (interactive)
+;;   (setq ac-clang-flags '())
+;;   )
