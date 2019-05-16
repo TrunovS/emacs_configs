@@ -136,19 +136,3 @@
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.cxx\\'" . c++-mode))
-
-;; (defun my-prepare-for-coding()
-;;   (interactive)
-;; ;  (tserg/add-clang-flags-to-project)
-;;   )
-
-;; (defun my-set-c11()
-;;   (interactive)
-;;   (setq ac-clang-flags
-;;         (append '("-std=c++11") ac-clang-flags))
-;;   )
-
-;; (defun my-drop-clang-flags ()
-;;   (interactive)
-;;   (setq ac-clang-flags '())
-;;   )
