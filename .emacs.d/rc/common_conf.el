@@ -3,12 +3,19 @@
 (global-hl-line-mode t)
 (set-scroll-bar-mode nil)
 (show-paren-mode 1)
+(set-face-attribute 'default nil :background "#353535")
 (auto-dim-other-buffers-mode t)
-(set-face-background 'auto-dim-other-buffers-face  "#399948f45199")
+(set-face-attribute 'auto-dim-other-buffers-face nil
+                    :foreground (color-darken-name (face-foreground 'default) 5)
+                    :background (color-darken-name (face-background 'default) 2))
 (set-face-background 'cursor  "white")
-(set-face-background 'region  "black")
+(set-face-attribute 'region nil
+                    :foreground nil
+                    :background (color-darken-name (face-background 'default) 10)); "#399948f45199"
 (set-face-attribute 'hl-line nil :foreground nil :background "dim gray")
-(set-face-attribute 'highlight nil :foreground nil :background (color-darken-name (face-background 'default) 10))
+(set-face-attribute 'highlight nil
+                    :foreground nil
+                    :background (color-darken-name (face-background 'default) 10))
 
 (add-to-list 'default-frame-alist '(font . "Hack-10"))
 
