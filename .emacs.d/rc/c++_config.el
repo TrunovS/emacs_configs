@@ -118,9 +118,10 @@
   
   
   (require 'company-lsp)
-  (push 'company-lsp company-backends)
+  ;; (add-to-list 'company-backends '(company-lsp company-dabbrev))
+  (push '(company-lsp company-dabbrev company-c-headers) company-backends)
   (company-quickhelp-mode)
-  (add-to-list 'company-backends 'company-c-headers)
+  ;; (add-to-list 'company-backends 'company-c-headers)
 ;  (local-set-key [(control return)] 'company-complete)
 
   ;; (lsp-ui-doc-mode -1)
