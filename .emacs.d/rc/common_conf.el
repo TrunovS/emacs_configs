@@ -3,21 +3,22 @@
 (global-hl-line-mode t)
 (set-scroll-bar-mode nil)
 (show-paren-mode 1)
-(set-face-attribute 'default nil :background "#353535")
+;(set-face-attribute 'default nil :background "#353535")
+(set-face-background 'default "#353535")
 (auto-dim-other-buffers-mode t)
 (set-face-attribute 'auto-dim-other-buffers-face nil
                     :foreground (color-darken-name (face-foreground 'default) 5)
                     :background (color-darken-name (face-background 'default) 2))
-(set-face-background 'cursor  "white")
 (set-face-attribute 'region nil
                     :foreground nil
-                    :background (color-darken-name (face-background 'default) 10)); "#399948f45199"
+                    :background "#399948f45199")
 (set-face-attribute 'hl-line nil :foreground nil :background "dim gray")
 (set-face-attribute 'highlight nil
                     :foreground nil
                     :background (color-darken-name (face-background 'default) 10))
+(set-face-attribute 'cursor  nil :foreground nil :background "white")
 
-(add-to-list 'default-frame-alist '(font . "Hack-10"))
+;(add-to-list 'default-frame-alist '(font . "Hack-10"))
 
 ;; grep setup-------------
 (setq grep-command "grep -nH -e "
@@ -49,8 +50,8 @@
 (exec-path-from-shell-initialize)
 
 ;; magit github\gitlab integreation
-(with-eval-after-load 'magit
-  (require 'forge))
+;(with-eval-after-load 'magit
+;  (require 'forge))
 
 ;; IDO mode ----------------------------------------------
 (setq ido-enable-flex-matching nil
@@ -114,12 +115,18 @@
 
 (require 'whitespace)
 
-(setq whitespace-style (quote (face tabs trailing empty tab-mark lines)))
-(setq whitespace-display-mappings
-      '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
-(setq whitespace-line-column 90)
-(set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
-(set-face-attribute 'whitespace-line nil :foreground nil :overline t)
+(defun tserg/whitespace-mode ()
+  (interactive "P")
+  (setq whitespace-style (quote (face tabs trailing empty tab-mark)));lines
+  (setq whitespace-display-mappings
+        '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
+  (setq whitespace-line-column 90)
+  (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
+; (set-face-attribute 'whitespace-line nil :foreground nil :overline t)
+  )
+
+(add-hook 'whitespace-mode-hook 'tserg/whitespace-mode)
+
 (setq ws-butler-keep-whitespace-before-point nil)
 
 (defvar my:prev-whitespace-mode nil)
@@ -339,7 +346,7 @@
  )
 
 (setq revert-without-query (quote (".*.pdf")))
-(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode t)
 (setq nav-width 25)
 (menu-bar-mode -1)
 (tool-bar-mode -1)

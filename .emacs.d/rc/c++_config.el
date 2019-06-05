@@ -84,11 +84,12 @@
 (defun tserg/c-mode-common-hook()
   ;; base-style
   (setq c-set-style "linux"
-        c-basic-offset 4
-        c-indent-level 4
+        c-basic-offset 2
+        c-indent-level 2
         c-argdecl-indent 0
-        c-tab-always-indent t)
+        c-tab-always-indent nil)
   (c-set-offset 'substatement-open 0)
+  (setq default-tab-width 2)
   (ws-butler-mode)
   (whitespace-mode)
   (hs-minor-mode)
