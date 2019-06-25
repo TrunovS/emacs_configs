@@ -124,7 +124,9 @@
   (require 'company-lsp)
   ;; (add-to-list 'company-backends '(company-lsp company-dabbrev))
   (add-to-list (make-local-variable 'company-backends)
-                         '(company-lsp company-dabbrev company-c-headers))
+               '(company-lsp company-c-headers company-files
+                             company-abbrev company-dabbrev
+                             company-keywords))
 ;  (push '(company-lsp company-dabbrev company-c-headers) company-backends)
   (company-quickhelp-mode)
 	;;	(local-set-key [(meta return)] 'company-complete)

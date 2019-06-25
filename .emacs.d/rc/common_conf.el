@@ -20,12 +20,12 @@
 
 (defun update-diff-colors ()
   "update the colors for diff faces"
-  ;; (set-face-attribute 'diff-added nil
-  ;;                     :foreground "white" :background "DarkGreen")
-  ;; (set-face-attribute 'diff-removed nil
-  ;;                     :foreground "white" :background "DarkRed")
-  ;; (set-face-attribute 'diff-changed nil
-  ;;                     :foreground "white" :background "dim gray")
+  (set-face-attribute 'diff-added nil
+                      :foreground "white" :background "DarkGreen")
+  (set-face-attribute 'diff-removed nil
+                      :foreground "white" :background "DarkRed")
+  (set-face-attribute 'diff-changed nil
+                      :foreground "white" :background "dim gray")
   )
 (eval-after-load "diff-mode"
   '(update-diff-colors))
