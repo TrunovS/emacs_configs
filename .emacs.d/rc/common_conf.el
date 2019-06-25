@@ -18,7 +18,20 @@
                     :background (color-darken-name (face-background 'default) 10))
 (set-face-attribute 'cursor  nil :foreground nil :background "white")
 
+(defun update-diff-colors ()
+  "update the colors for diff faces"
+  ;; (set-face-attribute 'diff-added nil
+  ;;                     :foreground "white" :background "DarkGreen")
+  ;; (set-face-attribute 'diff-removed nil
+  ;;                     :foreground "white" :background "DarkRed")
+  ;; (set-face-attribute 'diff-changed nil
+  ;;                     :foreground "white" :background "dim gray")
+  )
+(eval-after-load "diff-mode"
+  '(update-diff-colors))
+
 ;(add-to-list 'default-frame-alist '(font . "Hack-10"))
+(setq-default indent-tabs-mode nil)
 
 ;; grep setup-------------
 (setq grep-command "grep -nH -e "
@@ -30,12 +43,13 @@
 
 ;; Load sessions--------------
 (setq desktop-restore-eager 7
-      special-display-buffer-names '("*grep*" "*compilation*" "*clang error")
+      desktop-load-locked-desktop t
+      special-display-buffer-names nil;'("*grep*" "*compilation*" "*clang error")
       special-display-regexps nil
       )
 
 ;; mode-line-----------------
-(setq  sml/theme 'automatic
+(setq  sml/theme 'dark
        sml/mode-width 'full
        sml/name-width 30
        sml/shorten-modes t
@@ -97,9 +111,23 @@
 
 ;; Company complete --------------------------------------------
 (require 'company)
+
+;; set default `company-backends'
+(setq company-backends
+      '((company-files          ; files & directory
+         company-keywords       ; keywords
+         company-capf
+         company-yasnippet
+         )
+        (company-abbrev company-dabbrev)
+        ))
+
 (add-hook 'after-init-hook 'global-company-mode)
-(define-key global-map [(meta return)] 'company-files)
-(define-key global-map [(control return)] 'company-complete)
+(setq company-dabbrev-downcase nil)
+;(define-key global-map [(meta return)] 'company-files)
+;(define-key global-map [(meta return)] 'company-complete)
+(define-key global-map [(meta .)] 'company-complete)
+;(global-set-key (kbd "C-") 'company-complete)
 
 ;; whitespace config --------------------------------------------
 
@@ -195,6 +223,11 @@
 ;; You can also use it with eshell (and thus get color output from system ls):
 
 (require 'eshell)
+
+(defun eshell-new()
+  "Open a new instance of eshell."
+  (interactive)
+  (eshell 'N))
 
 (add-hook 'eshell-before-prompt-hook
           (lambda ()
@@ -346,7 +379,6 @@
  )
 
 (setq revert-without-query (quote (".*.pdf")))
-(setq-default indent-tabs-mode t)
 (setq nav-width 25)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -356,6 +388,20 @@
 ;; (setq cua-enable-cua-keys nil)
 ;; ;; (setq cua-mode t nil '(cua-base))
 ;; (setq cua-rectangle-mark-key " ") 
+
+;;
+;; base64 and utf8 functions
+;;
+(defun tserg/base64-encode ()
+  (interactive)
+	(encode-coding-region (region-beginning) (region-end) 'binary)
+	(base64-encode-region (region-beginning) (region-end) 1)
+)
+(defun tserg/base64-decode ()
+  (interactive)
+	(base64-decode-region (region-beginning) (region-end))
+	(decode-coding-region (region-beginning) (region-end) 'utf-8)
+ )
 
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
@@ -394,7 +440,7 @@
 (global-set-key [(shift left)] 'windmove-left)
 
 (global-set-key [f3] 'nav)
-(global-set-key [f4] 'eshell)
+(global-set-key [f4] 'eshell-new)
 (global-set-key [f7] 'projman-grep)
 (global-set-key [f8] 'compile)
 (global-set-key [f9] 'replace-string)

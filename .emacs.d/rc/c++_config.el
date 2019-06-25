@@ -82,14 +82,17 @@
 (push '("\\*compilation\\*" . (nil (reusable-frames . t))) display-buffer-alist)
 
 (defun tserg/c-mode-common-hook()
+  (setq indent-tabs-mode t)
   ;; base-style
   (setq c-set-style "linux"
         c-basic-offset 2
-        c-indent-level 2
         c-argdecl-indent 0
-        c-tab-always-indent nil)
+        )
+  (setq default-tab-width 2) ;A TAB is equivilent to 2 spaces
   (c-set-offset 'substatement-open 0)
-  (setq default-tab-width 2)
+  (c-set-offset 'block-close 0)
+  (smart-tabs-insinuate 'c++)
+
   (ws-butler-mode)
   (whitespace-mode)
   (hs-minor-mode)
@@ -120,14 +123,15 @@
   
   (require 'company-lsp)
   ;; (add-to-list 'company-backends '(company-lsp company-dabbrev))
-  (push '(company-lsp company-dabbrev company-c-headers) company-backends)
+  (add-to-list (make-local-variable 'company-backends)
+                         '(company-lsp company-dabbrev company-c-headers))
+;  (push '(company-lsp company-dabbrev company-c-headers) company-backends)
   (company-quickhelp-mode)
-  ;; (add-to-list 'company-backends 'company-c-headers)
-;  (local-set-key [(control return)] 'company-complete)
+	;;	(local-set-key [(meta return)] 'company-complete)
 
   ;; (lsp-ui-doc-mode -1)
 
-  ;; (define-key c-mode-base-map [(control return)] 'company-complete)
+;  (define-key c-mode-base-map [(control return)] 'company-complete)
   (define-key c-mode-base-map [(control f7)] 'projman-grep)
   (define-key c-mode-base-map "\C-j" 'xref-find-definitions)
   (define-key c-mode-base-map "\M-j" 'xref-pop-marker-stack)
