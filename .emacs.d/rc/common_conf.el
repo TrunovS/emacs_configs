@@ -33,6 +33,11 @@
 ;(add-to-list 'default-frame-alist '(font . "Hack-10"))
 (setq-default indent-tabs-mode nil)
 
+;; fixing some perfomance issues with long lines of base64 text
+(setq-default auto-window-vscroll nil)
+(setq-default bidi-display-reordering nil)
+(setq-default line-move-visual nil)
+
 ;; grep setup-------------
 (setq grep-command "grep -nH -e "
       grep-find-command "grep -rnH --exclude=.hg --include=*.{c,cpp,h,R,qml} --include=-e 'pattern'"
