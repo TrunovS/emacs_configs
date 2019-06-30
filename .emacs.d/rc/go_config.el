@@ -1,7 +1,4 @@
 (defun tserg/go-mode-hook()
-  (with-eval-after-load 'go-mode
-   (require 'go-autocomplete))
-
   (setq-local tab-width 4)
   (ws-butler-mode)
   (whitespace-mode)
@@ -13,10 +10,28 @@
   (setq font-lock-maximum-decoration t)
   (setq godoc-at-point-function (quote godoc-gogetdoc))
 
+
+  (lsp)
+  (lsp-ui-mode)
+  (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
+  (setq lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
+  (eldoc-mode nil)  
+  (global-eldoc-mode -1)
+  (setq lsp-ui-doc-position (quote top))
+  
+  
+  (require 'company-lsp)
+  ;; (add-to-list (make-local-variable 'company-backends)
+  ;;              ')
+                            
+  (company-quickhelp-mode)
+
   (add-hook 'before-save-hook 'gofmt-before-save)
-  (local-set-key [(control return)] 'ac-complete)
-  (define-key go-mode-map "\C-j" 'godef-jump)
-  (define-key go-mode-map "\M-j" 'pop-tag-mark)
+
+  (define-key go-mode-map [(control f7)] 'projman-grep)
+  (define-key c-mode-base-map [f7] 'lsp-ui-peek-find-references)
+  (define-key c-mode-base-map "\C-j" 'xref-find-definitions)
+  (define-key c-mode-base-map "\M-j" 'xref-pop-marker-stack)
   (define-key go-mode-map "\C-hj" 'godoc-at-point)
   (define-key hs-minor-mode-map "\M-h\M-t" 'hs-toggle-hiding)
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
