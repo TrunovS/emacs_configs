@@ -18,6 +18,31 @@
                     :background (color-darken-name (face-background 'default) 10))
 (set-face-attribute 'cursor  nil :foreground nil :background "white")
 
+(defun find-file-at-point-with-line()
+  "if file has an attached line num goto that line, ie boom.rb:12"
+  (interactive)
+  (setq line-num 0)
+  (save-excursion
+    (search-forward-regexp "[^ ]:" (point-max) t)
+    (if (looking-at "[0-9]+")
+         (setq line-num (string-to-number (buffer-substring (match-beginning 0) (match-end 0))))))
+  (find-file-at-point)
+  (if (not (equal line-num 0))
+      (goto-line line-num)))
+
+(setq logview-additional-level-mappings
+      '(("test-log-level"
+         (error "error" "ERROR")
+         (warning "warning" "WARNING")
+         (information "info" "INFO")
+         (debug "debug")
+         (trace "trace"))))
+
+(setq logview-additional-submodes
+      '(("Test"
+         (format . "TIMESTAMP LEVEL [NAME] MESSAGE")
+         (levels . "test-log-level"))))
+
 (defun update-diff-colors ()
   "update the colors for diff faces"
   (set-face-attribute 'diff-added nil
