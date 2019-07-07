@@ -10,7 +10,7 @@
 
 ;;Package--------------------------------------------------
 (require 'package)
-(setq package-list '(logview company company-c-headers company-quickhelp company-lsp flycheck go-eldoc lsp-mode lsp-ui cquery auto-dim-other-buffers smart-mode-line nova-theme dockerfile-mode docker smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view auto-complete-clang auto-complete-c-headers autopair))
+(setq package-list '(smart-tabs-mode logview company company-c-headers company-quickhelp company-lsp flycheck go-eldoc lsp-mode lsp-ui cquery auto-dim-other-buffers smart-mode-line nova-theme dockerfile-mode docker smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view auto-complete-clang auto-complete-c-headers autopair))
 
 (add-to-list 'package-archives '("melpa" . "https://elpa.zilongshanren.com/melpa/") t)
 ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
@@ -27,6 +27,7 @@
     (package-install package)))
 
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
+(load "~/.emacs.d/rc/compilation_config.el");; compilation-mode
 (load "~/.emacs.d/rc/logs_config.el");; logs-mode
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
 (load "~/.emacs.d/rc/rust_config.el");; rust configs

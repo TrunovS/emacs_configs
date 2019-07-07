@@ -78,8 +78,6 @@
 ;;  (add-to-list 'flymake-allowed-file-name-masks
 ;;               '("\\.py\\'" flymake-pyflakes-init)))
 
-;; Reuse Compilation ----------------------------------------
-(push '("\\*compilation\\*" . (nil (reusable-frames . t))) display-buffer-alist)
 
 (defun tserg/c-mode-common-hook()
   (setq indent-tabs-mode t)
