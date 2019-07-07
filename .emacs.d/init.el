@@ -6,7 +6,7 @@
  '(custom-safe-themes
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default)))
-)
+ )
 
 ;;Package--------------------------------------------------
 (require 'package)
@@ -27,6 +27,7 @@
     (package-install package)))
 
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
+(load "~/.emacs.d/rc/logs_config.el");; logs-mode
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
 (load "~/.emacs.d/rc/rust_config.el");; rust configs
 (load "~/.emacs.d/rc/go_config.el");; go configs
