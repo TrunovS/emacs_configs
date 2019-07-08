@@ -4,15 +4,15 @@
 
 (setq-default logview-additional-level-mappings
       '(("log-levels"
-         (error "error" "ERROR")
+         (error "error" "error   " "ERROR")
          (warning "warning" "WARNING")
-         (information "info" "INFO")
-         (debug "debug" "DEBUG")
+         (information "info" "info    " "INFO" )
+         (debug "debug" "debug   " "DEBUG")
          (trace "trace" "TRACE"))))
 
 (setq-default logview-additional-submodes
       '(("UPG"
-         (format . "[NAME][TIMESTAMP][LEVEL][NAME]")
+         (format . "[NAME][TIMESTAMP][THREAD][LEVEL][NAME][IGNORED][MESSAGE")
          (levels . "log-levels")
          )))
 

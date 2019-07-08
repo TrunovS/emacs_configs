@@ -1,3 +1,7 @@
+;;date time zone----------------
+(setq-default datetime-timezone 'Europe/Moscow)
+
+
 ;; Theme--------------------
 (load-theme 'nova t)
 (global-hl-line-mode t)
