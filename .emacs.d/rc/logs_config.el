@@ -14,7 +14,14 @@
       '(("UPG"
          (format . "[NAME][TIMESTAMP][THREAD][LEVEL][NAME][IGNORED][MESSAGE")
          (levels . "log-levels")
-         )))
+         )
+        ("UPGSP"
+         (format . "[NAME][TIMESTAMP][THREAD][LEVEL][MESSAGE")
+         (levels . "log-levels")
+         )
+        ))
+
+
 
 (defun tserg/find-file-at-point-with-line()
   "if file has an attached line num goto that line, ie boom.rb:12"

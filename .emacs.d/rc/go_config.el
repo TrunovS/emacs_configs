@@ -1,5 +1,5 @@
 (defun tserg/go-mode-hook()
-  (setq-local tab-width 4)
+  (setq-local tab-width 2)
   (ws-butler-mode)
   (whitespace-mode)
 
@@ -15,7 +15,7 @@
   (lsp-ui-mode)
   (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
   (setq lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
-  (eldoc-mode nil)  
+  (eldoc-mode nil)
   (global-eldoc-mode -1)
   (setq lsp-ui-doc-position (quote top))
   
@@ -29,9 +29,9 @@
   (add-hook 'before-save-hook 'gofmt-before-save)
 
   (define-key go-mode-map [(control f7)] 'projman-grep)
-  (define-key c-mode-base-map [f7] 'lsp-ui-peek-find-references)
-  (define-key c-mode-base-map "\C-j" 'xref-find-definitions)
-  (define-key c-mode-base-map "\M-j" 'xref-pop-marker-stack)
+  (define-key go-mode-map [f7] 'lsp-ui-peek-find-references)
+  (define-key go-mode-map "\C-j" 'xref-find-definitions)
+  (define-key go-mode-map "\M-j" 'xref-pop-marker-stack)
   (define-key go-mode-map "\C-hj" 'godoc-at-point)
   (define-key hs-minor-mode-map "\M-h\M-t" 'hs-toggle-hiding)
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)

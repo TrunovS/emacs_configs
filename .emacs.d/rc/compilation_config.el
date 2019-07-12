@@ -2,6 +2,12 @@
 
 (setq compilation-environment '("TERM=xterm"))
 
+(setq  ;; compilation-scroll-output 1
+ compilation-skip-threshold 2;;skip warnings
+ compilation-scroll-output 'first-error
+ )
+
+
 (add-hook 'compilation-start-hook
           (lambda (proc)
             ;; We need to differentiate between compilation-mode buffers
@@ -22,6 +28,7 @@
   ;; (fundamental-mode)
   (flyspell-mode -1)
   (yas/minor-mode -1)
+  (toggle-truncate-lines 0)
   (setq compilation-error-regexp-alist
         (delete 'maven compilation-error-regexp-alist))
   (setq compilation-error-regexp-alist

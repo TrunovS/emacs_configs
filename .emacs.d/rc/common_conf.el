@@ -72,9 +72,16 @@
 ;; Set Path----------------------------------
 (exec-path-from-shell-initialize)
 
-;; magit github\gitlab integreation
-;(with-eval-after-load 'magit
-;  (require 'forge))
+;; magit --------------------------------------------
+(with-eval-after-load 'magit
+  ;  (require 'forge)
+  (set-face-attribute 'magit-diff-context-highlight nil
+                      :foreground "nil" :background "nil")
+  (set-face-attribute 'magit-diff-context nil
+                      :foreground "nil" :background "nil")
+  ;; (set-face-attribute 'magit-diff-added-highlight nil
+  ;;                     :background "")
+  )
 
 ;; IDO mode ----------------------------------------------
 (setq ido-enable-flex-matching nil
@@ -198,17 +205,11 @@
 ;; Auto Encode buffer -----------------------------------
 (load-file "~/.emacs.d/unicad.el")
 
-
 ;;Autopair---------------------------------------------------------
 (autopair-global-mode)
 
 ;;EDiff---------------------------------------------------------
 (setq ediff-split-window-function 'split-window-horizontally)
-
-;;Projman-------------------------------------------------------
-(load-file "~/.emacs.d/projman.el")
-(load-file "~/.emacs.d/mode-projman.el")
-(projman-mode)
 
 ;;emacs-NAV---------------------------------------------------------
 (require 'nav)
@@ -300,12 +301,9 @@
  visible-bell t
  inhibit-startup-message t
  scroll-step 1
- toggle-truncate-lines 1
+ toggle-truncate-lines 0 ;; dont fit long line in buffer
  truncate-partial-width-windows nil
  make-backup-files nil;; do (not )ot make backup files
- ;; compilation-scroll-output 1
- compilation-skip-threshold 2;;skip warnings
- compilation-scroll-output 'first-error
  )
 
 (setq revert-without-query (quote (".*.pdf")))
@@ -320,7 +318,7 @@
 ;; (setq cua-rectangle-mark-key " ") 
 
 ;;
-;; base64 and utf8 functions
+;; base64 and utf8 functions -----------------------------
 ;;
 (defun tserg/base64-encode ()
   (interactive)
@@ -333,6 +331,17 @@
 	(decode-coding-region (region-beginning) (region-end) 'utf-8)
  )
 
+;; xml pretty print----------------------------------------
+(defun xml-pretty-print (beg end &optional arg)
+  "Reformat the region between BEG and END.
+    With optional ARG, also auto-fill."
+  (interactive "*r\nP")
+  (let ((fill (or (bound-and-true-p auto-fill-function) -1)))
+    (sgml-mode)
+    (when arg (auto-fill-mode))
+    (sgml-pretty-print beg end)
+    (nxml-mode)
+    (auto-fill-mode fill)))
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
 (global-set-key "\M-x" 'smex)
@@ -341,6 +350,7 @@
 (global-set-key "\M-p" 'backward-paragraph)
 (global-set-key "\C-xl" 'my-copy-line)
 (global-set-key "\C-xd" 'my-kill-line)
+(global-set-key "\C-x\C-d" 'dired)
 (global-set-key "\C-xcr" 'revert-buffer)
 (global-set-key "\C-xcc" 'mywithcp1251)
 (global-set-key "\C-xcu" 'mywithutf8)
