@@ -50,6 +50,16 @@
       grep-template "grep <X> <C> -nH -e <R> <F>"
       )
 
+(add-to-list 'display-buffer-alist
+             `(,(rx bos "*grep*" eos)
+               (display-buffer-reuse-window
+                display-buffer-in-side-window)
+               (reusable-frames . visible)
+               (side            . top)
+               (window-height   . 0.3)))
+
+
+
 ;; Load sessions--------------
 (setq desktop-restore-eager 7
       desktop-load-locked-desktop t
@@ -301,8 +311,8 @@
  visible-bell t
  inhibit-startup-message t
  scroll-step 1
- toggle-truncate-lines 0 ;; dont fit long line in buffer
- truncate-partial-width-windows nil
+ toggle-truncate-lines t ;; dont fit long line in buffer
+ truncate-partial-width-windows t
  make-backup-files nil;; do (not )ot make backup files
  )
 
