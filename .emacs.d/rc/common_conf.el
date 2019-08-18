@@ -3,6 +3,14 @@
 
 ;; undo tree mode
 (global-undo-tree-mode)
+(add-to-list 'display-buffer-alist
+             `(,"*undo-tree*"
+               (display-buffer-reuse-window
+                display-buffer-in-side-window)
+               (reusable-frames . visible)
+               (side            . left)
+               (window-width   . 0.1)))
+
 
 ;; Theme--------------------
 (load-theme 'nova t)
