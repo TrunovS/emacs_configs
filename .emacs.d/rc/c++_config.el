@@ -112,23 +112,25 @@
   (setq cquery-executable "/home/sergey/cquery/build/release/bin/cquery")
   (lsp)
   (lsp-ui-mode)
-  (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
-  (setq lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
+  (setq lsp-ui-doc-include-signature nil  ; don't include type signature in the child frame
+        lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
   (eldoc-mode nil)  
   (global-eldoc-mode -1)
   (setq lsp-ui-doc-position (quote top))
   
   
   (require 'company-lsp)
-  ;; (add-to-list 'company-backends '(company-lsp company-dabbrev))
   (add-to-list (make-local-variable 'company-backends)
                '(company-lsp company-c-headers company-files
                              company-abbrev company-dabbrev
                              company-keywords))
-  (company-quickhelp-mode)
-	;;	(local-set-key [(meta return)] 'company-complete)
 
-  ;; (lsp-ui-doc-mode -1)
+  ;; Disable client-side cache because the LSP server does a better job.
+  (setq company-transformers nil
+        company-lsp-async t
+        company-lsp-cache-candidates nil)
+  
+  (company-quickhelp-mode)
 
 ;  (define-key c-mode-base-map [(control return)] 'company-complete)
   (define-key c-mode-base-map [(control f7)] 'projman-grep)
