@@ -1,6 +1,8 @@
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
 
+;; undo tree mode
+(global-undo-tree-mode)
 
 ;; Theme--------------------
 (load-theme 'nova t)
