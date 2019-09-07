@@ -86,7 +86,7 @@
         c-basic-offset 2
         c-argdecl-indent 0
         )
-  (setq default-tab-width 2) ;A TAB is equivilent to 2 spaces
+  (setq-default tab-width 2) ;A TAB is equivilent to 2 spaces
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'block-close 0)
   (smart-tabs-insinuate 'c++)
