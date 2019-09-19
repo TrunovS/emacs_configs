@@ -1,8 +1,7 @@
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
 
-;; undo tree mode
-(global-undo-tree-mode)
+;; undo tree mode --------------
 (add-to-list 'display-buffer-alist
              `(,"*undo-tree*"
                (display-buffer-reuse-window
@@ -10,7 +9,6 @@
                (reusable-frames . visible)
                (side            . left)
                (window-width   . 0.1)))
-
 
 ;; Theme--------------------
 (load-theme 'nova t)
@@ -371,15 +369,16 @@
 (global-set-key "\C-xl" 'my-copy-line)
 (global-set-key "\C-xd" 'my-kill-line)
 (global-set-key "\C-x\C-d" 'dired)
+(global-set-key "\C-xvu" 'undo-tree-visualize)
 (global-set-key "\C-xcr" 'revert-buffer)
 (global-set-key "\C-xcc" 'mywithcp1251)
 (global-set-key "\C-xcu" 'mywithutf8)
 (global-set-key "\C-xp" 'goto-match-paren)
+(global-set-key "\C-xj" 'dumb-jump-go)
 (global-set-key "\C-x\C-f" 'ido-find-file)
 (global-set-key "\M-o" 'other-window)
 (global-set-key "\C-xa" 'align)
 (global-set-key "\M-q" 'kill-buffer-and-window)
-(global-set-key "\M-j" 'pop-global-mark)
 (global-set-key "\M-c" 'clipboard-kill-ring-save)
 (global-set-key "\C-k" 'kill-region)
 (global-set-key "\M-d" 'delete-region)

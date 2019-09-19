@@ -5,15 +5,17 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default))
-   )
- )
+    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default)))
+)
 
 ;;Package--------------------------------------------------
 (require 'package)
-(setq package-list '(undo-tree uuidgen smart-tabs-mode logview company company-c-headers company-quickhelp company-lsp flycheck go-eldoc lsp-mode lsp-ui cquery auto-dim-other-buffers smart-mode-line nova-theme dockerfile-mode docker smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view auto-complete-clang auto-complete-c-headers autopair))
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(setq package-list '(dumb-jump undo-tree uuidgen smart-tabs-mode logview company company-c-headers company-quickhelp company-lsp flycheck go-eldoc lsp-mode lsp-ui cquery auto-dim-other-buffers smart-mode-line nova-theme dockerfile-mode docker smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view auto-complete-clang auto-complete-c-headers autopair))
 
-(add-to-list 'package-archives '("melpa" . "https://elpa.zilongshanren.com/melpa/") t)
+;; (add-to-list 'package-archives '("melpa" . "https://elpa.zilongshanren.com/melpa/") t)
+;;(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 ;; (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (package-initialize)
