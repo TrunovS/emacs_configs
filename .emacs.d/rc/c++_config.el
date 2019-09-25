@@ -80,6 +80,8 @@
 
 
 (defun tserg/c-mode-common-hook()
+  (flycheck-mode -1)
+  (flymake-mode -1)
   (setq indent-tabs-mode t)
   ;; base-style
   (setq c-set-style "linux"
@@ -107,9 +109,6 @@
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
   (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
 
-  (require 'cquery)
-  ;; (setq cquery-project-roots 'projman-project-root)
-  (setq cquery-executable "/home/sergey/cquery/build/release/bin/cquery")
   (lsp)
   (lsp-ui-mode)
   (setq lsp-ui-doc-include-signature nil  ; don't include type signature in the child frame

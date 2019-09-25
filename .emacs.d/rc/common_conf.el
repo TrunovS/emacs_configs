@@ -2,6 +2,7 @@
 (setq-default datetime-timezone 'Europe/Moscow)
 
 ;; undo tree mode --------------
+(undo-tree-mode)
 (add-to-list 'display-buffer-alist
              `(,"*undo-tree*"
                (display-buffer-reuse-window
@@ -13,7 +14,7 @@
 ;; Theme--------------------
 (load-theme 'nova t)
 (global-hl-line-mode t)
-(set-scroll-bar-mode nil)
+;(set-scroll-bar-mode nil)
 (show-paren-mode 1)
 ;(set-face-attribute 'default nil :background "#353535")
 (set-face-background 'default "#353535")
@@ -179,7 +180,7 @@
 
 (defun tserg/whitespace-mode ()
   (interactive "P")
-  (setq whitespace-style (quote (face tabs trailing empty tab-mark)));lines
+  (setq-local whitespace-style (quote (face tabs trailing empty tab-mark)));lines
   (setq whitespace-display-mappings
         '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
   (setq whitespace-line-column 90)
@@ -237,6 +238,21 @@
       
 ;;emacs Mercurial--------------------------------------------------
 (require 'ahg)
+(add-to-list 'display-buffer-alist
+             `(,(rx "*hg")
+               (display-buffer-reuse-window
+                display-buffer-in-side-window)
+               (reusable-frames . visible)
+               (side            . right)
+               (window-width   . 0.3)))
+
+(add-to-list 'display-buffer-alist
+             `(,(rx "*aHg")
+               (display-buffer-reuse-window
+                display-buffer-in-side-window)
+               (reusable-frames . visible)
+               (side            . right)
+               (window-width   . 0.3)))
 
 ;; shell color customization------------------------------------------
 (setq comint-output-filter-functions
@@ -369,6 +385,7 @@
 (global-set-key "\C-xl" 'my-copy-line)
 (global-set-key "\C-xd" 'my-kill-line)
 (global-set-key "\C-x\C-d" 'dired)
+(global-set-key "\C-xu" 'undo-tree-undo)
 (global-set-key "\C-xvu" 'undo-tree-visualize)
 (global-set-key "\C-xcr" 'revert-buffer)
 (global-set-key "\C-xcc" 'mywithcp1251)
@@ -380,7 +397,6 @@
 (global-set-key "\C-xa" 'align)
 (global-set-key "\M-q" 'kill-buffer-and-window)
 (global-set-key "\M-c" 'clipboard-kill-ring-save)
-(global-set-key "\C-k" 'kill-region)
 (global-set-key "\M-d" 'delete-region)
 (global-set-key "\C-xg" 'universal-coding-system-argument)
 (global-set-key "\C-xr" 'regexp-builder)

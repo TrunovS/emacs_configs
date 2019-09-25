@@ -21,12 +21,17 @@
   
   
   (require 'company-lsp)
-  ;; (add-to-list (make-local-variable 'company-backends)
-  ;;              ')
-                            
+  (add-to-list (make-local-variable 'company-backends)
+               '(company-lsp company-files company-abbrev company-dabbrev
+                             company-keywords))
+
+  (setq company-transformers nil
+        company-lsp-async t
+        company-lsp-cache-candidates nil)
+  
   (company-quickhelp-mode)
 
-  (add-hook 'before-save-hook 'gofmt-before-save)
+;  (add-hook 'before-save-hook 'gofmt-before-save)
 
   (define-key go-mode-map [(control f7)] 'projman-grep)
   (define-key go-mode-map [f7] 'lsp-ui-peek-find-references)
