@@ -50,6 +50,7 @@
 (setq-default auto-window-vscroll nil)
 (setq-default bidi-display-reordering nil)
 (setq-default line-move-visual nil)
+(global-so-long-mode 1)
 
 ;; grep setup-------------
 (setq grep-command "grep -nH -e "
@@ -180,12 +181,12 @@
 
 (defun tserg/whitespace-mode ()
   (interactive "P")
-  (setq-local whitespace-style (quote (face tabs trailing empty tab-mark)));lines
+  (setq whitespace-style (quote (face tabs trailing empty tab-mark)));lines
   (setq whitespace-display-mappings
         '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
   (setq whitespace-line-column 90)
   (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
-; (set-face-attribute 'whitespace-line nil :foreground nil :overline t)
+  (set-face-attribute 'whitespace-line nil :foreground nil :overline t)
   )
 
 (add-hook 'whitespace-mode-hook 'tserg/whitespace-mode)
@@ -229,6 +230,11 @@
 
 ;;EDiff---------------------------------------------------------
 (setq ediff-split-window-function 'split-window-horizontally)
+
+;;Dired-----------------------------------------------------------
+(setq dired-listing-switches "-lt");;-lt
+(setq directory-free-space-program nil)
+
 
 ;;emacs-NAV---------------------------------------------------------
 (require 'nav)

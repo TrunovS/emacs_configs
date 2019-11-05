@@ -11,6 +11,7 @@
     (shell . t)
     (latex . t)
     (R . t)
+    (http . t)
     ))
 
 (setq ob-async-no-async-languages-alist '("ipython") ;; Fix an incompatibility ob-async and ob-ipython packages
@@ -27,6 +28,13 @@
 (add-to-list 'file-coding-system-alist (cons "\\.\\(org\\|org_archive\\|/TODO\\)$"  'utf-8))
 
 (defvar org-blocks-hidden nil)
+
+(set-face-attribute 'org-block nil
+                    :foreground nil
+                    :background (color-darken-name (face-background 'default) 4))
+(set-face-attribute 'org-code nil
+                    :foreground nil
+                    :background (color-darken-name (face-background 'default) 4))
 
 (defun tserg/org-latex-export-to-pdf ()
   (interactive)

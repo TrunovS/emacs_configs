@@ -12,6 +12,7 @@
 (require 'package)
 ;(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (setq package-list '(dumb-jump undo-tree uuidgen smart-tabs-mode logview company company-c-headers company-quickhelp company-lsp flycheck go-eldoc lsp-mode lsp-ui cquery auto-dim-other-buffers smart-mode-line nova-theme dockerfile-mode docker smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view autopair))
+(setq package-list '(ob-http dumb-jump undo-tree uuidgen smart-tabs-mode logview company company-c-headers company-quickhelp company-lsp flycheck go-eldoc lsp-mode lsp-ui cquery auto-dim-other-buffers smart-mode-line nova-theme dockerfile-mode docker smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view autopair))
 
 ;; (add-to-list 'package-archives '("melpa" . "https://elpa.zilongshanren.com/melpa/") t)
 ;; (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
