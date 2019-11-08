@@ -234,6 +234,7 @@
 ;;Dired-----------------------------------------------------------
 (setq dired-listing-switches "-lt");;-lt
 (setq directory-free-space-program nil)
+(setq-default dired-dwim-target 1)
 
 
 ;;emacs-NAV---------------------------------------------------------
