@@ -78,6 +78,15 @@
 ;;  (add-to-list 'flymake-allowed-file-name-masks
 ;;               '("\\.py\\'" flymake-pyflakes-init)))
 
+;; lsp remote ----------------------------
+;; (require 'lsp)
+;; (lsp-register-client
+;;  (make-lsp-client :new-connection (lsp-tramp-connection
+;; 				                           "/")
+;;                   :major-modes '(c-mode c++-mode)
+;;                       :remote? t
+;;                       :server-id 'clangd-remote))
+
 
 (defun tserg/c-mode-common-hook()
   (flycheck-mode -1)
@@ -120,9 +129,8 @@
   
   (require 'company-lsp)
   (add-to-list (make-local-variable 'company-backends)
-               '(company-lsp company-c-headers company-files
-                             company-abbrev company-dabbrev
-                             company-keywords))
+               '(company-lsp company-c-headers
+                             company-files company-dabbrev))
 
   ;; Disable client-side cache because the LSP server does a better job.
   (setq company-transformers nil
@@ -131,8 +139,7 @@
   
   (company-quickhelp-mode)
 
-;  (define-key c-mode-base-map [(control return)] 'company-complete)
-  (define-key c-mode-base-map [(control f7)] 'projman-grep)
+  (define-key c-mode-base-map [(control f7)] 'projectile-ripgrep)
   (define-key c-mode-base-map "\C-j" 'xref-find-definitions)
   (define-key c-mode-base-map "\M-j" 'xref-pop-marker-stack)
   (define-key c-mode-base-map [f7] 'lsp-ui-peek-find-references)

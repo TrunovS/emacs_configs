@@ -43,32 +43,25 @@
 (eval-after-load "diff-mode"
   '(update-diff-colors))
 
-;(add-to-list 'default-frame-alist '(font . "Hack-10"))
+(add-to-list 'default-frame-alist '(font . "Hack-10"))
 (setq-default indent-tabs-mode nil)
 
 ;; fixing some perfomance issues with long lines of base64 text
 (setq-default auto-window-vscroll nil)
 (setq-default bidi-display-reordering nil)
 (setq-default line-move-visual nil)
-(global-so-long-mode 1)
+
+(when (require 'so-long nil :noerror)
+   (global-so-long-mode 1))
 
 ;; grep setup-------------
-(setq grep-command "grep -nH -e "
-      grep-find-command "grep -rnH --exclude=.hg --include=*.{c,cpp,h,R,qml} --include=-e 'pattern'"
-      grep-highlight-matches `auto
-      grep-use-null-device nil
-      grep-template "grep <X> <C> -nH -e <R> <F>"
-      )
-
 (add-to-list 'display-buffer-alist
-             `(,(rx bos "*grep*" eos)
+             `(,(rx bos "*[A-Za-z]*grep-?[A-Za-z]*\\*$" eos)
                (display-buffer-reuse-window
                 display-buffer-in-side-window)
                (reusable-frames . visible)
                (side            . top)
                (window-height   . 0.3)))
-
-
 
 ;; Load sessions--------------
 (setq desktop-restore-eager 7
@@ -92,6 +85,32 @@
 ;; Set Path----------------------------------
 (exec-path-from-shell-initialize)
 
+;; Project manager --------------------------
+(projectile-mode 1)
+
+;; IVY competition --------------------------
+(require 'ivy-posframe)
+(ivy-mode 1)
+(ivy-posframe-mode 1)
+
+(setq-default ivy-use-virtual-buffers t)
+(setq-default ivy-count-format "(%d/%d) ")
+;; (setq-default ivy-initial-inputs-alist nil)
+(setq-default ivy-re-builders-alist
+              '((t . ivy--regex-fuzzy)))
+(setq-default ivy-posframe-display-functions-alist
+              '((t . ivy-posframe-display-at-frame-top-center)))
+
+;; counsel set up --------------------
+(require 'counsel)
+(setq-default counsel-grep-base-command
+      "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+
+;; Dumb jump ---------------------------------
+(setq-default dumb-jump-max-find-time 10)
+(setq-default dumb-jump-prefer-searcher 'rg)
+(setq-default dumb-jump-selector 'ivy)
+
 ;; magit --------------------------------------------
 (with-eval-after-load 'magit
   ;  (require 'forge)
@@ -102,17 +121,6 @@
   ;; (set-face-attribute 'magit-diff-added-highlight nil
   ;;                     :background "")
   )
-
-;; IDO mode ----------------------------------------------
-(setq ido-enable-flex-matching nil
-      ido-create-new-buffer `always
-      ido-everywhere 1
-      ido-work-directory-match-only t
-      )
-(ido-mode 1)
-
-(require 'smex)
-(smex-initialize)
 
 ;;Auto-complete ------------------------in process of deprecating
 (require 'auto-complete)
@@ -151,19 +159,20 @@
 ;; set default `company-backends'
 (setq company-backends
       '((company-files          ; files & directory
-         company-keywords       ; keywords
-         company-capf
          company-yasnippet
-         )
-        (company-abbrev company-dabbrev)
+         company-dabbrev)
         ))
 
-(add-hook 'after-init-hook 'global-company-mode)
+(setq company-dabbrev-ignore-case 1)
 (setq company-dabbrev-downcase nil)
-;(define-key global-map [(meta return)] 'company-files)
-;(define-key global-map [(meta return)] 'company-complete)
+(setq company-dabbrev-char-regexp "\\sw\\|\\s_")
+
+(setq dabbrev-case-distinction '1)
+(setq dabbrev-case-fold-search 'nil)
+(setq dabbrev-case-replace 'nil)
+
+(add-hook 'after-init-hook 'global-company-mode)
 (define-key global-map [(meta .)] 'company-complete)
-;(global-set-key (kbd "C-") 'company-complete)
 
 ;; whitespace config --------------------------------------------
 
@@ -351,6 +360,7 @@
 (setq nav-width 25)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
+(scroll-bar-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 ;; (cua-selection-mode 1)
 ;; (setq cua-delete-selection nil)
@@ -385,7 +395,7 @@
     (auto-fill-mode fill)))
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
-(global-set-key "\M-x" 'smex)
+(global-set-key "\M-x" 'counsel-M-x)
 (global-set-key "\C-c\C-g" 'google-this)
 (global-set-key "\M-n" 'forward-paragraph)
 (global-set-key "\M-p" 'backward-paragraph)
@@ -399,15 +409,13 @@
 (global-set-key "\C-xcu" 'mywithutf8)
 (global-set-key "\C-xp" 'goto-match-paren)
 (global-set-key "\C-xj" 'dumb-jump-go)
-(global-set-key "\C-x\C-f" 'ido-find-file)
 (global-set-key "\M-o" 'other-window)
 (global-set-key "\C-xa" 'align)
 (global-set-key "\M-q" 'kill-buffer-and-window)
 (global-set-key "\M-c" 'clipboard-kill-ring-save)
 (global-set-key "\M-d" 'delete-region)
 (global-set-key "\C-xg" 'universal-coding-system-argument)
-(global-set-key "\C-xr" 'regexp-builder)
-(global-set-key "\C-cf" 'projman-find-file)
+(global-set-key "\C-cf" 'projectile-find-file)
 (global-set-key "\M-/" 'comment-or-uncomment-region)
 (define-key global-map (kbd "C-c ;") 'iedit-mode)
 
@@ -423,7 +431,7 @@
 
 (global-set-key [f3] 'nav)
 (global-set-key [f4] 'eshell-new)
-(global-set-key [f7] 'projman-grep)
+(global-set-key [f7] 'projectile-ripgrep)
 (global-set-key [f8] 'compile)
 (global-set-key [f9] 'replace-string)
 (global-set-key [f10] 'kmacro-end-and-call-macro)

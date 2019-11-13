@@ -10,8 +10,45 @@
 
 ;;Package--------------------------------------------------
 (require 'package)
-;(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-(setq package-list '(ob-http dumb-jump undo-tree uuidgen smart-tabs-mode logview company company-c-headers company-quickhelp company-lsp flycheck go-eldoc lsp-mode lsp-ui cquery auto-dim-other-buffers smart-mode-line nova-theme dockerfile-mode docker smex ob-async ob-ipython pyvenv yasnippet yasnippet-snippets yasnippet-classic-snippets nav google-this xterm-color pdf-tools interleave qt-pro-mode ac-racer racer exec-path-from-shell rust-mode eww-lnum ahg dash w3m company-qml qml-mode magit ws-butler jedi iedit fuzzy flymake-cursor ess ess-R-data-view autopair))
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
+(setq package-list '(;;theme specific
+                     auto-dim-other-buffers smart-mode-line nova-theme
+
+                     ;;project management
+                     projectile projectile-ripgrep counsel-projectile
+
+                     ;;ui complete
+                     ivy ivy-posframe counsel
+                     company
+
+                     ;;common utils
+                     uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy autopair
+                     pdf-tools flymake-cursor smart-tabs-mode
+                     yasnippet yasnippet-snippets yasnippet-classic-snippets
+                     dumb-jump nav xterm-color interleave
+                     flycheck
+
+                     ;;VCS management
+                     ahg magit
+
+                     ;;custom modes
+                     logview dockerfile-mode undo-tree
+                     qt-pro-mode qml-mode ;Qt
+                     rust-mode ;Rust
+                     lsp-mode lsp-ui ;Language Server Protocol
+
+                     ;;code complete
+                     company-quickhelp company-lsp
+                     company-c-headers ;C
+                     company-qml ;QML
+                     ac-racer racer ;Rust
+                     pyvenv jedi ;Python
+                     go-eldoc ;go docs
+                     ess ess-R-data-view ;R
+                     ;; org mode babels
+                     ob-async ob-http ob-ipython
+                     dash))
 
 ;; (add-to-list 'package-archives '("melpa" . "https://elpa.zilongshanren.com/melpa/") t)
 ;; (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
@@ -28,11 +65,6 @@
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
-
-;;Projman-------------------------------------------------------
-(load-file "~/.emacs.d/projman.el")
-(load-file "~/.emacs.d/mode-projman.el")
-(projman-mode)
 
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
 (load "~/.emacs.d/rc/compilation_config.el");; compilation-mode
