@@ -1,3 +1,13 @@
+;; Packages list needed--------------------------
+(setq package-list '(;;custom modes
+                     logview
+                     ))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
 (setq-default logview-additional-timestamp-formats
       '((("yyyy-MMM-dd HH:mm:ss.SSSSSS"
           (regexp . "[0-9]\\{4\\}-[A-Za-z]\\{3\\}-[0-9]\\{2\\} [0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}.[0-9]\\{6\\}")))))
@@ -20,8 +30,6 @@
          (levels . "log-levels")
          )
         ))
-
-
 
 (defun tserg/find-file-at-point-with-line()
   "if file has an attached line num goto that line, ie boom.rb:12"

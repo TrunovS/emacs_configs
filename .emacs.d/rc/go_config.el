@@ -1,3 +1,21 @@
+;; Packages list needed--------------------------
+(setq package-list '(;;ui complete
+                     company
+
+                     ;;common utils
+                     ws-butler
+
+                     ;;code complete
+                     company-lsp company-quickhelp
+                     go-eldoc ;go docs
+                     ))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+
 (defun tserg/go-mode-hook()
   (setq-local tab-width 2)
   (ws-butler-mode)
@@ -11,15 +29,15 @@
   (setq godoc-at-point-function (quote godoc-gogetdoc))
 
 
-  (lsp)
-  (lsp-ui-mode)
+  (lsp 1)
+  (lsp-ui-mode 1)
   (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
   (setq lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
   (eldoc-mode nil)
   (global-eldoc-mode -1)
   (setq lsp-ui-doc-position (quote top))
-  
-  
+
+
   (require 'company-lsp)
   (add-to-list (make-local-variable 'company-backends)
                '(company-lsp company-files company-abbrev company-dabbrev
@@ -28,7 +46,7 @@
   (setq company-transformers nil
         company-lsp-async t
         company-lsp-cache-candidates nil)
-  
+
   (company-quickhelp-mode)
 
 ;  (add-hook 'before-save-hook 'gofmt-before-save)

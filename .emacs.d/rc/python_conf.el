@@ -1,3 +1,17 @@
+;; Packages list needed--------------------------
+(setq package-list '(
+                     ;;common utils
+                     exec-path-from-shell
+
+                     ;;code complete
+                     pyvenv jedi
+                     ))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
 ;; Python SetPath -------------------------------------------
 ;; (setq ropemacs-enable-shortcuts nil)
 ;; (setq ropemacs-local-prefix "C-c C-p")
@@ -40,4 +54,3 @@
  )
 
 (add-hook 'python-mode-hook 'tserg/python-mode-hook)
-

@@ -12,61 +12,18 @@
 (require 'package)
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
-(setq package-list '(;;theme specific
-                     auto-dim-other-buffers smart-mode-line nova-theme
-
-                     ;;project management
-                     projectile projectile-ripgrep counsel-projectile
-
-                     ;;ui complete
-                     ivy ivy-posframe counsel
-                     company
-
-                     ;;common utils
-                     uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy autopair
-                     pdf-tools flymake-cursor smart-tabs-mode
-                     yasnippet yasnippet-snippets yasnippet-classic-snippets
-                     dumb-jump nav xterm-color interleave
-                     flycheck
-
-                     ;;VCS management
-                     ahg magit
-
-                     ;;custom modes
-                     logview dockerfile-mode undo-tree
-                     qt-pro-mode qml-mode ;Qt
-                     rust-mode ;Rust
-                     lsp-mode lsp-ui ;Language Server Protocol
-
-                     ;;code complete
-                     company-quickhelp company-lsp
-                     company-c-headers ;C
-                     company-qml ;QML
-                     ac-racer racer ;Rust
-                     pyvenv jedi ;Python
-                     go-eldoc ;go docs
-                     ess ess-R-data-view ;R
-                     ;; org mode babels
-                     ob-async ob-http ob-ipython
-                     dash))
-
 ;; (add-to-list 'package-archives '("melpa" . "https://elpa.zilongshanren.com/melpa/") t)
 ;; (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 (package-initialize)
-
-; fetch the list of packages available 
+; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
 
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
-
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
+(load "~/.emacs.d/rc/elisp_conf.el");; elisp-mode
 (load "~/.emacs.d/rc/compilation_config.el");; compilation-mode
 (load "~/.emacs.d/rc/logs_config.el");; logs-mode
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
@@ -78,8 +35,8 @@
 (load "~/.emacs.d/rc/latex_config.el");; latex-mode
 (load "~/.emacs.d/rc/fb_config.el");; fbread-mode
 (load "~/.emacs.d/rc/org_config.el");; org-mode
+(load "~/.emacs.d/rc/R_config.el");; R-lang-mode
 
-(add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
 (add-hook 'java-mode-hook       'hs-minor-mode)
 (add-hook 'lisp-mode-hook       'hs-minor-mode)
 (add-hook 'perl-mode-hook       'hs-minor-mode)

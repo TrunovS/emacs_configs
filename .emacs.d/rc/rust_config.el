@@ -1,3 +1,18 @@
+;; Packages list needed--------------------------
+(setq package-list '(rust-mode
+
+                     ;;common utils
+                     ws-butler
+
+                     ;;code complete
+                     ac-racer racer
+                     ))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
 (require 'rust-mode)
 
 ;; (eval-after-load 'flycheck

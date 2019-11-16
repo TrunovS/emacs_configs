@@ -1,10 +1,42 @@
+;; Packages list needed--------------------------
+(setq package-list '(;;theme specific
+                     auto-dim-other-buffers smart-mode-line nova-theme
+
+                     ;;project management
+                     projectile projectile-ripgrep counsel-projectile
+
+                     ;;ui complete
+                     ivy ivy-posframe counsel
+                     company
+
+                     ;;common utils
+                     uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy autopair
+                     yasnippet yasnippet-snippets yasnippet-classic-snippets
+                     dumb-jump xterm-color interleave
+
+                     ;;VCS management
+                     ahg magit
+
+                     ;;custom modes
+                     dockerfile-mode undo-tree
+
+                     ;;code complete
+                     company-quickhelp
+                     ))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
 
 ;; undo tree mode --------------
 (undo-tree-mode)
 (add-to-list 'display-buffer-alist
-             `(,"*undo-tree*"
+             `("*undo-tree*"
                (display-buffer-reuse-window
                 display-buffer-in-side-window)
                (reusable-frames . visible)
@@ -79,8 +111,25 @@
        sml/shorten-directory t
        sml/replacer-regexp-list '((".+" ""))
        )
+
 (sml/setup)
 (setq sml/shortener-func (lambda (_dir _max-length) ""))
+(dolist (item '(" ivy-posframe"
+                " company"
+                " ivy"
+                " hs"
+                " yas"
+                " pair"
+                " Dim"
+                " Fly*"
+                " Fly"
+                " Abbrev"
+                " ws"
+                " wb"
+                ))
+  (add-to-list 'rm-blacklist item)
+  )
+
 
 ;; Set Path----------------------------------
 (exec-path-from-shell-initialize)
@@ -96,8 +145,8 @@
 (setq-default ivy-use-virtual-buffers t)
 (setq-default ivy-count-format "(%d/%d) ")
 ;; (setq-default ivy-initial-inputs-alist nil)
-(setq-default ivy-re-builders-alist
-              '((t . ivy--regex-fuzzy)))
+;; (setq-default ivy-re-builders-alist
+;;               '((t . ivy--regex-fuzzy)))
 (setq-default ivy-posframe-display-functions-alist
               '((t . ivy-posframe-display-at-frame-top-center)))
 
@@ -121,37 +170,6 @@
   ;; (set-face-attribute 'magit-diff-added-highlight nil
   ;;                     :background "")
   )
-
-;;Auto-complete ------------------------in process of deprecating
-(require 'auto-complete)
-(require 'auto-complete-config)
-;(ac-config-default)
-
-(defun tserg/ac-config ()
-  (setq ac-auto-start nil)
-  (setq ac-dwim t)                        ;Do what i mean
-  (setq ac-override-local-map nil)        ;don't override local map
-  (setq ac-fuzzy-enable t)
-  ;; (setq ac-auto-show-menu 0.2)
-  (setq ac-ignore-case t)
-  (setq ac-delay 0)
-  (setq ac-use-fuzzy t)
-  (setq ac-use-comphist 0)
-  (define-key ac-complete-mode-map  "\t" nil)
-;  (define-key ac-mode-map  [(meta return)] 'ac-complete-filename)
-  ;(local-set-key  [(control return)] 'auto-complete)
-  (setq-default ac-sources '(
-                             ac-source-abbrev
-                             ac-source-dictionary
-                             ac-source-words-in-same-mode-buffers 
-                             ac-source-files-in-current-dir
-                             )
-                )
-  )
-  
-(add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
-(add-hook 'auto-complete-mode-hook 'ac-common-setup)
-(add-hook 'auto-complete-mode-hook  'tserg/ac-config)
 
 ;; Company complete --------------------------------------------
 (require 'company)
@@ -223,7 +241,6 @@
 )
 
 (require 'popup)
-
 (advice-add 'popup-draw :before #'my:push-whitespace)
 (advice-add 'popup-delete :after #'my:pop-whitespace)
 
@@ -245,13 +262,6 @@
 (setq directory-free-space-program nil)
 (setq-default dired-dwim-target 1)
 
-
-;;emacs-NAV---------------------------------------------------------
-(require 'nav)
-(setq nav-boring-file-regexps
-      (quote
-       ("^[.][^.].*$" "^[.]$" "~$" "[.]elc$" "[.]pyc$" "[.]o$" "[.]bak$" "^_MTN$" "^blib$" "^CVS$" "^RCS$" "^SCCS$" "^_darcs$" "^_sgbak$" "^autom4te.cache$" "^cover_db$" "^_build$" "moc_*" "ui_*")))
-      
 ;;emacs Mercurial--------------------------------------------------
 (require 'ahg)
 (add-to-list 'display-buffer-alist
@@ -312,14 +322,14 @@
 )
 
 (defun mywithcp1251()
-(interactive)
-(revert-buffer-with-coding-system 'cp1251)
-)
+  (interactive)
+  (revert-buffer-with-coding-system 'cp1251)
+  )
 
 (defun mywithutf8()
-(interactive)
-(revert-buffer-with-coding-system 'utf-8)
-)
+  (interactive)
+  (revert-buffer-with-coding-system 'utf-8)
+  )
 
 (defun goto-match-paren (arg)
   "Go to the matching parenthesis if on parenthesis. Else go to the
@@ -347,30 +357,22 @@
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
 (setq show-paren-style 'expression
- column-number-mode t
- visible-bell t
- inhibit-startup-message t
- scroll-step 1
- toggle-truncate-lines t ;; dont fit long line in buffer
- truncate-partial-width-windows t
- make-backup-files nil;; do (not )ot make backup files
- )
+      column-number-mode t
+      visible-bell t
+      inhibit-startup-message t
+      scroll-step 1
+      toggle-truncate-lines t ;; dont fit long line in buffer
+      truncate-partial-width-windows t
+      make-backup-files nil;; do (not )ot make backup files
+      )
 
 (setq revert-without-query (quote (".*.pdf")))
-(setq nav-width 25)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
-;; (cua-selection-mode 1)
-;; (setq cua-delete-selection nil)
-;; (setq cua-enable-cua-keys nil)
-;; ;; (setq cua-mode t nil '(cua-base))
-;; (setq cua-rectangle-mark-key " ") 
 
-;;
 ;; base64 and utf8 functions -----------------------------
-;;
 (defun tserg/base64-encode ()
   (interactive)
 	(encode-coding-region (region-beginning) (region-end) 'binary)
@@ -415,7 +417,7 @@
 (global-set-key "\M-c" 'clipboard-kill-ring-save)
 (global-set-key "\M-d" 'delete-region)
 (global-set-key "\C-xg" 'universal-coding-system-argument)
-(global-set-key "\C-cf" 'projectile-find-file)
+(global-set-key "\C-cf" 'counsel-projectile)
 (global-set-key "\M-/" 'comment-or-uncomment-region)
 (define-key global-map (kbd "C-c ;") 'iedit-mode)
 
@@ -429,7 +431,6 @@
 (global-set-key [(shift right)] 'windmove-right)
 (global-set-key [(shift left)] 'windmove-left)
 
-(global-set-key [f3] 'nav)
 (global-set-key [f4] 'eshell-new)
 (global-set-key [f7] 'projectile-ripgrep)
 (global-set-key [f8] 'compile)

@@ -84,7 +84,6 @@
   )
 
 ;; Reuse Compilation ----------------------------------------
-;; (push '("\\*compilation\\*" . (nil (reusable-frames . t))) display-buffer-alist)
 (add-to-list 'display-buffer-alist
              `(,(rx bos "*compilation*" eos)
                (display-buffer-reuse-window
@@ -92,6 +91,5 @@
                (reusable-frames . visible)
                (side            . right)
                (window-width   . 0.4)))
-
 
 (add-hook 'compilation-mode-hook 'tserg/compilation-long-hook)

@@ -1,3 +1,14 @@
+(setq package-list '(;; org mode babels
+                     ob-async ob-http ob-ipython
+                     ))
+
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+
 (require 'org)
 (require 'ob-python)
 (require 'ob-async)

@@ -1,33 +1,58 @@
 ;; Package-Requires: ((dash "2.13.0"))
 
+;; Packages list needed--------------------------
+(setq package-list '(;;project management
+                     projectile
+
+                     ;;ui complete
+                     company
+
+                     ;;common utils
+                     ws-butler iedit smart-tabs-mode
+
+                     ;;code complete
+                     lsp-mode lsp-ui
+                     company-quickhelp
+                     company-lsp
+                     company-c-headers ;C
+
+                     dash
+                     ))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
 ;; For switch between header and source -----------------
- ;; Switch fromm *.<impl> to *.<head> and vice versa
+;; Switch fromm *.<impl> to *.<head> and vice versa
+(require 'projectile)
 (defun switch-cc-to-h ()
-  (interactive)
   (when (string-match "^\\(.*\\)\\.\\([^.]*\\)$" buffer-file-name)
     (let ((name (match-string 1 buffer-file-name))
- 	  (suffix (match-string 2 buffer-file-name)))
+          (suffix (match-string 2 buffer-file-name)))
       (cond ((string-match suffix "c\\|cc\\|C\\|cpp")
- 	     (cond ((file-exists-p (concat name ".h"))
- 		    (find-file (concat name ".h"))
+             (cond ((file-exists-p (concat name ".h"))
+                    (find-file (concat name ".h"))
                     )
- 		   ((file-exists-p (concat name ".hh"))
- 		    (find-file (concat name ".hh"))
+                   ((file-exists-p (concat name ".hh"))
+                    (find-file (concat name ".hh"))
                     )
                    ))
- 	    ((string-match suffix "h\\|hh")
- 	     (cond ((file-exists-p (concat name ".cc"))
- 		    (find-file (concat name ".cc"))
+            ((string-match suffix "h\\|hh")
+             (cond ((file-exists-p (concat name ".cc"))
+                    (find-file (concat name ".cc"))
                     )
- 		   ((file-exists-p (concat name ".C"))
- 		    (find-file (concat name ".C"))
+                   ((file-exists-p (concat name ".C"))
+                    (find-file (concat name ".C"))
                     )
- 		   ((file-exists-p (concat name ".cpp"))
- 		    (find-file (concat name ".cpp"))
+                   ((file-exists-p (concat name ".cpp"))
+                    (find-file (concat name ".cpp"))
                     )
- 		   ((file-exists-p (concat name ".c"))
- 		    (find-file (concat name ".c"))
+                   ((file-exists-p (concat name ".c"))
+                    (find-file (concat name ".c"))
                     )))))))
+
 
 (defun my-switch-h-cpp-in-projman-project ()
   (interactive)
@@ -39,8 +64,11 @@
   (setq fsuffix (if (string= "h" fsuffix) "cpp" "h"))
 
   ;;Составим список всех файлов проекта
-  (setq flist (projman-project-files))
+  (require 'projectile)
+  (setq project-root (projectile-ensure-project (projectile-project-root)))
 
+  ;;Составим список всех файлов проекта
+  (setq flist (projectile-project-files project-root))
   (require 'dash)
   (setq lfname (car (-filter
                      (lambda (num)
@@ -89,15 +117,13 @@
 
 
 (defun tserg/c-mode-common-hook()
-  (flycheck-mode -1)
-  (flymake-mode -1)
-  (setq indent-tabs-mode t)
+  (setq-local indent-tabs-mode t)
   ;; base-style
   (setq c-set-style "linux"
-        c-basic-offset 2
-        c-argdecl-indent 0
-        )
-  (setq-default tab-width 2) ;A TAB is equivilent to 2 spaces
+              c-basic-offset 2
+              c-argdecl-indent 0
+              )
+  (setq-local tab-width 2) ;A TAB is equivilent to 2 spaces
   (c-set-offset 'substatement-open 0)
   (c-set-offset 'block-close 0)
   (smart-tabs-insinuate 'c++)
@@ -118,15 +144,16 @@
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
   (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
 
-  (lsp)
-  (lsp-ui-mode)
+  (lsp 1)
+  (lsp-ui-mode 1)
+  (setq-local lsp-prefer-flymake 'nil)
   (setq lsp-ui-doc-include-signature nil  ; don't include type signature in the child frame
         lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
-  (eldoc-mode nil)  
+  (eldoc-mode nil)
   (global-eldoc-mode -1)
-  (setq lsp-ui-doc-position (quote top))
-  
-  
+  (flymake-mode -1)
+  (setq-local lsp-ui-doc-position (quote top))
+
   (require 'company-lsp)
   (add-to-list (make-local-variable 'company-backends)
                '(company-lsp company-c-headers
@@ -136,10 +163,10 @@
   (setq company-transformers nil
         company-lsp-async t
         company-lsp-cache-candidates nil)
-  
-  (company-quickhelp-mode)
 
-  (define-key c-mode-base-map [(control f7)] 'projectile-ripgrep)
+  (company-quickhelp-mode 1)
+
+  (define-key c-mode-base-map [(control f7)] 'projectile-grep)
   (define-key c-mode-base-map "\C-j" 'xref-find-definitions)
   (define-key c-mode-base-map "\M-j" 'xref-pop-marker-stack)
   (define-key c-mode-base-map [f7] 'lsp-ui-peek-find-references)
