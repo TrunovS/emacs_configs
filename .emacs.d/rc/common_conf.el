@@ -251,6 +251,15 @@
 ;; Auto Encode buffer -----------------------------------
 (load-file "~/.emacs.d/unicad.el")
 
+;;Cygwin customize ---------------------------------
+(cond ((eq system-type 'cygwin)
+       (load "~/.emacs.d/cygwin-mount.el")
+       (load "~/.emacs.d/windows-path.el")
+       (require 'windows-path)
+       (windows-path-activate)
+       )
+      )
+
 ;;Autopair---------------------------------------------------------
 (autopair-global-mode)
 
