@@ -88,12 +88,20 @@
 
 ;; grep setup-------------
 (add-to-list 'display-buffer-alist
-             `(,(rx bos "*[A-Za-z]*grep-?[A-Za-z]*\\*$" eos)
+             `("^\\*[A-Za-z ]*grep.*\\*$"
                (display-buffer-reuse-window
                 display-buffer-in-side-window)
                (reusable-frames . visible)
                (side            . top)
                (window-height   . 0.3)))
+
+(add-to-list 'display-buffer-alist
+             `("^\\*[A-Za-z ]*search.*\\*$"
+               (display-buffer-reuse-window
+                display-buffer-in-side-window)
+               (reusable-frames . visible)
+               (side            . top)
+               (window-width   . 0.3)))
 
 ;; Load sessions--------------
 (setq desktop-restore-eager 7
@@ -136,6 +144,10 @@
 
 ;; Project manager --------------------------
 (projectile-mode 1)
+(setq-default projectile-completion-system 'ivy)
+(setq-default projectile-mode-line-function
+              '(lambda ()
+                 (format " Proj[%s]" (projectile-project-name))))
 
 ;; IVY competition --------------------------
 (require 'ivy-posframe)
@@ -440,9 +452,11 @@
 (global-set-key [(shift right)] 'windmove-right)
 (global-set-key [(shift left)] 'windmove-left)
 
+(global-set-key [f3] 'projectile-dired)
 (global-set-key [f4] 'eshell-new)
 (global-set-key [f7] 'projectile-ripgrep)
 (global-set-key [f8] 'compile)
+(global-set-key [f8] 'projectile-compile-project)
 (global-set-key [f9] 'replace-string)
 (global-set-key [f10] 'kmacro-end-and-call-macro)
 (global-set-key [f11] 'kmacro-start-macro)

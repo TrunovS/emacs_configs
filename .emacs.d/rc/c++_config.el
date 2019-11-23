@@ -159,6 +159,8 @@
                '(company-lsp company-c-headers
                              company-files company-dabbrev))
 
+  (setq-local my-project-root (projectile-ensure-project (projectile-project-root)))
+  (setq-local company-c-headers-path-user (cons my-project-root '()))
   ;; Disable client-side cache because the LSP server does a better job.
   (setq company-transformers nil
         company-lsp-async t

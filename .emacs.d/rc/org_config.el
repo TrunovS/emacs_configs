@@ -68,14 +68,11 @@
     )
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
   (flyspell-mode 1)
-  (auto-complete-mode 1)
-  (ac-flyspell-workaround)
   (define-key org-mode-map (kbd "<f8>") 'tserg/org-latex-export-to-pdf)
   (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
   (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
   (define-key org-mode-map (kbd "C-c x") 'org-babel-execute-buffer)
   (toggle-truncate-lines -1)
-  (ac-auto-start)
   )
-  
+ 
 (add-hook 'org-mode-hook 'tserg/org-mode-hook)
