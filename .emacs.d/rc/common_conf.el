@@ -12,7 +12,7 @@
                      ;;common utils
                      uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy autopair
                      yasnippet yasnippet-snippets yasnippet-classic-snippets
-                     dumb-jump xterm-color interleave
+                     dumb-jump xterm-color interleave dired-narrow
 
                      ;;VCS management
                      ahg magit
@@ -282,6 +282,7 @@
 (setq dired-listing-switches "-lt");;-lt
 (setq directory-free-space-program nil)
 (setq-default dired-dwim-target 1)
+(define-key dired-mode-map "N" 'dired-narrow-fuzzy)
 
 ;;emacs Mercurial--------------------------------------------------
 (require 'ahg)
