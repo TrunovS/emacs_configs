@@ -18,7 +18,7 @@
                      ahg magit
 
                      ;;custom modes
-                     dockerfile-mode undo-tree
+                     dockerfile-mode docker-compose-mode undo-tree yaml-mode
 
                      ;;code complete
                      company-quickhelp
@@ -142,13 +142,6 @@
 ;; Set Path----------------------------------
 (exec-path-from-shell-initialize)
 
-;; Project manager --------------------------
-(projectile-mode 1)
-(setq-default projectile-completion-system 'ivy)
-(setq-default projectile-mode-line-function
-              '(lambda ()
-                 (format " Proj[%s]" (projectile-project-name))))
-
 ;; IVY competition --------------------------
 (require 'ivy-posframe)
 (ivy-mode 1)
@@ -160,12 +153,21 @@
 ;; (setq-default ivy-re-builders-alist
 ;;               '((t . ivy--regex-fuzzy)))
 (setq-default ivy-posframe-display-functions-alist
-              '((t . ivy-posframe-display-at-frame-top-center)))
+              '((t . ivy-posframe-display-at-frame-center)))
 
 ;; counsel set up --------------------
 (require 'counsel)
+(counsel-mode 1)
 (setq-default counsel-grep-base-command
       "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+
+
+;; Project manager --------------------------
+(projectile-mode 1)
+(setq-default projectile-completion-system 'ivy)
+(setq-default projectile-mode-line-function
+              '(lambda ()
+                 (format " Proj[%s]" (projectile-project-name))))
 
 ;; Dumb jump ---------------------------------
 (setq-default dumb-jump-max-find-time 10)
@@ -456,8 +458,7 @@
 (global-set-key [f3] 'projectile-dired)
 (global-set-key [f4] 'eshell-new)
 (global-set-key [f7] 'projectile-ripgrep)
-(global-set-key [f8] 'compile)
-(global-set-key [f8] 'projectile-compile-project)
+(global-set-key [f8] 'counsel-compile)
 (global-set-key [f9] 'replace-string)
 (global-set-key [f10] 'kmacro-end-and-call-macro)
 (global-set-key [f11] 'kmacro-start-macro)
