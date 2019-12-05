@@ -72,7 +72,18 @@
   (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
   (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
   (define-key org-mode-map (kbd "C-c x") 'org-babel-execute-buffer)
+
+  (define-key org-mode-map (kbd "<S-left>") nil)
+  (define-key org-mode-map (kbd "<S-right>") nil)
+  (define-key org-mode-map (kbd "<S-up>") nil)
+  (define-key org-mode-map (kbd "<S-down>") nil)
+
+  (define-key org-mode-map (kbd "<M-left>") nil)
+  (define-key org-mode-map (kbd "<M-right>") nil)
+  (define-key org-mode-map (kbd "<M-up>") nil)
+  (define-key org-mode-map (kbd "<M-down>") nil)
+
   (toggle-truncate-lines -1)
   )
- 
+
 (add-hook 'org-mode-hook 'tserg/org-mode-hook)

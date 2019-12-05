@@ -12,7 +12,7 @@
                      ;;common utils
                      uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy autopair
                      yasnippet yasnippet-snippets yasnippet-classic-snippets
-                     dumb-jump xterm-color interleave dired-narrow
+                     dumb-jump xterm-color interleave dired-narrow smex
 
                      ;;VCS management
                      ahg magit
@@ -75,7 +75,7 @@
 (eval-after-load "diff-mode"
   '(update-diff-colors))
 
-(add-to-list 'default-frame-alist '(font . "Hack-10"))
+(add-to-list 'default-frame-alist '(font . "Hack-9"))
 (setq-default indent-tabs-mode nil)
 
 ;; fixing some perfomance issues with long lines of base64 text
@@ -226,6 +226,7 @@
   (setq whitespace-display-mappings
         '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
   (setq whitespace-line-column 90)
+  (set-face-attribute 'whitespace-trailing nil :foreground "black" :background nil)
   (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
   (set-face-attribute 'whitespace-line nil :foreground nil :overline t)
   )
@@ -271,6 +272,7 @@
        (load "~/.emacs.d/windows-path.el")
        (require 'windows-path)
        (windows-path-activate)
+       (set-file-name-coding-system 'utf-8)
        )
       )
 
@@ -423,6 +425,7 @@
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
 (global-set-key "\M-x" 'counsel-M-x)
 (global-set-key "\C-c\C-g" 'google-this)
+(global-set-key "\C-cb" 'switch-to-buffer-other-frame)
 (global-set-key "\M-n" 'forward-paragraph)
 (global-set-key "\M-p" 'backward-paragraph)
 (global-set-key "\C-xl" 'my-copy-line)
@@ -457,8 +460,10 @@
 
 (global-set-key [f3] 'projectile-dired)
 (global-set-key [f4] 'eshell-new)
-(global-set-key [f7] 'projectile-ripgrep)
-(global-set-key [f8] 'counsel-compile)
+(global-set-key [(control f7)] 'projectile-grep)
+(global-set-key [f7] 'projectile-ag)
+(global-set-key [(control f8)] 'compile)
+(global-set-key [f8] 'projectile-compile-project)
 (global-set-key [f9] 'replace-string)
 (global-set-key [f10] 'kmacro-end-and-call-macro)
 (global-set-key [f11] 'kmacro-start-macro)

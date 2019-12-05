@@ -18,10 +18,13 @@
 
 (defun tserg/go-mode-hook()
   (setq-local tab-width 2)
-  (ws-butler-mode)
-  (whitespace-mode)
+  (setq-local indent-tabs-mode t)
+  (ws-butler-mode 1)
+  (whitespace-mode 1)
 
-  (hs-minor-mode)
+  (smart-tabs-insinuate 'c++)
+
+  (hs-minor-mode 1)
   (toggle-truncate-lines nil)
   (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
   (font-lock-mode t)
@@ -53,6 +56,7 @@
 
   (define-key go-mode-map [(control f7)] 'projman-grep)
   (define-key go-mode-map [f7] 'lsp-ui-peek-find-references)
+  (define-key go-mode-map [(control f7)] 'projectile-grep)
   (define-key go-mode-map "\C-j" 'xref-find-definitions)
   (define-key go-mode-map "\M-j" 'xref-pop-marker-stack)
   (define-key go-mode-map "\C-hj" 'godoc-at-point)
