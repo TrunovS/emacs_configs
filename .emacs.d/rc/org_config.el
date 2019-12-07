@@ -33,6 +33,7 @@
       org-src-fontify-natively t
       org-confirm-babel-evaluate nil
       org-directory "~/org-docs"
+      org-babel-remote-temporary-directory "~/org_tmp"
       )
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|/TODO\\)$" . org-mode))

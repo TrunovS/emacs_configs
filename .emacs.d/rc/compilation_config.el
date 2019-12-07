@@ -7,7 +7,6 @@
  compilation-scroll-output 'first-error
  )
 
-
 (add-hook 'compilation-start-hook
           (lambda (proc)
             ;; We need to differentiate between compilation-mode buffers

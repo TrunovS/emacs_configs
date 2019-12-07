@@ -33,6 +33,11 @@
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
 
+;; do not create trash files ---------------------
+(setq-default make-backup-files nil)
+(setq-default create-lockfiles nil)
+
+
 ;; undo tree mode --------------
 (undo-tree-mode)
 (add-to-list 'display-buffer-alist
@@ -75,7 +80,7 @@
 (eval-after-load "diff-mode"
   '(update-diff-colors))
 
-(add-to-list 'default-frame-alist '(font . "Hack-9"))
+(add-to-list 'default-frame-alist '(font . "Hack-10"))
 (setq-default indent-tabs-mode nil)
 
 ;; fixing some perfomance issues with long lines of base64 text
@@ -163,7 +168,8 @@
 
 
 ;; Project manager --------------------------
-(projectile-mode 1)
+(projectile-mode +1)
+(setq-default projectile-indexing-method 'alien);;hybrid
 (setq-default projectile-completion-system 'ivy)
 (setq-default projectile-mode-line-function
               '(lambda ()
@@ -283,7 +289,7 @@
 (setq ediff-split-window-function 'split-window-horizontally)
 
 ;;Dired-----------------------------------------------------------
-(setq dired-listing-switches "-lt");;-lt
+(setq dired-listing-switches "-lta");;-lt
 (setq directory-free-space-program nil)
 (setq-default dired-dwim-target 1)
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
@@ -401,14 +407,15 @@
 ;; base64 and utf8 functions -----------------------------
 (defun tserg/base64-encode ()
   (interactive)
-	(encode-coding-region (region-beginning) (region-end) 'binary)
-	(base64-encode-region (region-beginning) (region-end) 1)
-)
+  (encode-coding-region (region-beginning) (region-end) 'binary)
+  (base64-encode-region (region-beginning) (region-end) 1)
+  )
+
 (defun tserg/base64-decode ()
   (interactive)
-	(base64-decode-region (region-beginning) (region-end))
-	(decode-coding-region (region-beginning) (region-end) 'utf-8)
- )
+  (base64-decode-region (region-beginning) (region-end))
+  (decode-coding-region (region-beginning) (region-end) 'utf-8)
+  )
 
 ;; xml pretty print----------------------------------------
 (defun xml-pretty-print (beg end &optional arg)
