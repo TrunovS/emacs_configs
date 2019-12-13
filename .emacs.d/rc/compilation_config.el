@@ -1,3 +1,15 @@
+;; Packages list needed--------------------------
+(setq package-list '(multi-compile))
+
+; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+;; multi-compile-----------------------------
+(require 'multi-compile)
+(setq-default multi-compile-completion-system 'ivy)
+
 ;; Compilation color customization-----------------------------------
 
 (setq compilation-environment '("TERM=xterm"))
@@ -92,3 +104,5 @@
                (window-width   . 0.4)))
 
 (add-hook 'compilation-mode-hook 'tserg/compilation-long-hook)
+
+(global-set-key [f8] 'multi-compile-run)
