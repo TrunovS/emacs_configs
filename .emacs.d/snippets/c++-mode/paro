@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: paro
+# key: paro
+# --
+//! \param [out] $1 - $0.

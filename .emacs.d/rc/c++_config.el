@@ -138,7 +138,7 @@
   (font-lock-mode t)
   (setq font-lock-maximum-decoration t)
 
-  (define-key c-mode-base-map [f2] 'my-switch-h-cpp-in-projman-project)
+  (define-key c-mode-base-map [f2] 'projectile-find-other-file)
   (define-key c-mode-base-map [f5] 'myrefact)
   (define-key hs-minor-mode-map "\M-h\M-t" 'hs-toggle-hiding)
   (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)

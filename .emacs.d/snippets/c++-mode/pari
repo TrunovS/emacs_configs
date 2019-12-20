@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: pari
+# key: pari
+# --
+//! \param [in] $1 - $0.
