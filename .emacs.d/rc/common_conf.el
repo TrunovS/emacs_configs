@@ -33,11 +33,6 @@
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
 
-;; do not create trash files ---------------------
-(setq-default make-backup-files nil)
-(setq-default create-lockfiles nil)
-
-
 ;; undo tree mode --------------
 (undo-tree-mode)
 (add-to-list 'display-buffer-alist
