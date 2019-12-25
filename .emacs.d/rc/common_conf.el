@@ -391,6 +391,7 @@
       toggle-truncate-lines t ;; dont fit long line in buffer
       truncate-partial-width-windows t
       make-backup-files nil;; do (not )ot make backup files
+      create-lockfiles nil
       )
 
 (setq revert-without-query (quote (".*.pdf")))
