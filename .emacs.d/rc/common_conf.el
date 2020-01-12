@@ -34,7 +34,7 @@
 (setq-default datetime-timezone 'Europe/Moscow)
 
 ;; undo tree mode --------------
-(undo-tree-mode)
+(global-undo-tree-mode 1)
 (add-to-list 'display-buffer-alist
              `("*undo-tree*"
                (display-buffer-reuse-window
@@ -226,9 +226,10 @@
   (setq whitespace-display-mappings
         '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
   (setq whitespace-line-column 90)
-  (set-face-attribute 'whitespace-trailing nil :foreground "black" :background nil)
-  (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
+
   (set-face-attribute 'whitespace-line nil :foreground nil :overline t)
+  (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
+  (set-face-attribute 'whitespace-trailing nil :foreground "black" :background nil)
   )
 
 (setq ws-butler-keep-whitespace-before-point nil)
@@ -289,7 +290,7 @@
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
 
 ;;emacs Mercurial--------------------------------------------------
-(with-eval-after-load 'ahg 
+(with-eval-after-load 'ahg
   (add-to-list 'display-buffer-alist
                `(,(rx "*hg")
                  (display-buffer-reuse-window
@@ -434,7 +435,6 @@
 (global-set-key "\C-xd" 'my-kill-line)
 (global-set-key "\C-x\C-d" 'dired)
 (global-set-key "\C-xu" 'undo-tree-undo)
-(global-set-key "\C-xvu" 'undo-tree-visualize)
 (global-set-key "\C-xcr" 'revert-buffer)
 (global-set-key "\C-xcc" 'mywithcp1251)
 (global-set-key "\C-xcu" 'mywithutf8)
