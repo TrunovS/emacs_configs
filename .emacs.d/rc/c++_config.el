@@ -133,7 +133,7 @@
   (hs-minor-mode)
   (flyspell-prog-mode)
   (toggle-truncate-lines nil)
-  (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
+  ;; (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
 
   (font-lock-mode t)
   (setq font-lock-maximum-decoration t)

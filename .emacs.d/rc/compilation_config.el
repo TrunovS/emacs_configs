@@ -40,6 +40,7 @@
   (flyspell-mode -1)
   (yas/minor-mode -1)
   (toggle-truncate-lines 0)
+  (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
   (setq compilation-error-regexp-alist
         (delete 'maven compilation-error-regexp-alist))
   (setq compilation-error-regexp-alist
