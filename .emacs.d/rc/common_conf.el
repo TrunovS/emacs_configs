@@ -143,24 +143,24 @@
 (exec-path-from-shell-initialize)
 
 ;; IVY competition --------------------------
-(require 'ivy-posframe)
-(ivy-mode 1)
-(ivy-posframe-mode 1)
+(with-eval-after-load 'ivy
+  (ivy-mode 1)
+  (ivy-posframe-mode 1)
 
-(setq-default ivy-use-virtual-buffers t)
-(setq-default ivy-count-format "(%d/%d) ")
-;; (setq-default ivy-initial-inputs-alist nil)
-;; (setq-default ivy-re-builders-alist
-;;               '((t . ivy--regex-fuzzy)))
-(setq-default ivy-posframe-display-functions-alist
-              '((t . ivy-posframe-display-at-frame-center)))
+  (setq-default ivy-use-virtual-buffers t)
+  (setq-default ivy-count-format "(%d/%d) ")
+  ;; (setq-default ivy-initial-inputs-alist nil)
+  ;; (setq-default ivy-re-builders-alist
+  ;;               '((t . ivy--regex-fuzzy)))
+  (setq-default ivy-posframe-display-functions-alist
+                '((t . ivy-posframe-display-at-frame-center)))
+  )
 
 ;; counsel set up --------------------
 (require 'counsel)
 (counsel-mode 1)
 (setq-default counsel-grep-base-command
-      "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
-
+              "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
 
 ;; Project manager --------------------------
 (projectile-mode +1)
@@ -187,25 +187,27 @@
   )
 
 ;; Company complete --------------------------------------------
-(require 'company)
+(with-eval-after-load 'company
 
-;; set default `company-backends'
-(setq company-backends
-      '((company-files          ; files & directory
-         company-yasnippet
-         company-dabbrev)
-        ))
+  ;; set default `company-backends'
+  (setq company-backends
+        '((company-files          ; files & directory
+           company-yasnippet
+           company-dabbrev)
+          ))
 
-(setq company-dabbrev-ignore-case 1)
-(setq company-dabbrev-downcase nil)
-(setq company-dabbrev-char-regexp "\\sw\\|\\s_")
+  (setq company-dabbrev-ignore-case 1)
+  (setq company-dabbrev-downcase nil)
+  (setq company-dabbrev-char-regexp "\\sw\\|\\s_")
 
-(setq dabbrev-case-distinction '1)
-(setq dabbrev-case-fold-search 'nil)
-(setq dabbrev-case-replace 'nil)
+  (setq dabbrev-case-distinction '1)
+  (setq dabbrev-case-fold-search 'nil)
+  (setq dabbrev-case-replace 'nil)
+
+  (define-key global-map [(meta .)] 'company-complete)
+  )
 
 (add-hook 'after-init-hook 'global-company-mode)
-(define-key global-map [(meta .)] 'company-complete)
 
 ;; whitespace config --------------------------------------------
 
@@ -219,10 +221,7 @@
   )
 )
 
-(require 'whitespace)
-
-(defun tserg/whitespace-mode ()
-  (interactive "P")
+(with-eval-after-load 'whitespace
   (setq whitespace-style (quote (face tabs trailing empty tab-mark)));lines
   (setq whitespace-display-mappings
         '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
@@ -231,8 +230,6 @@
   (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
   (set-face-attribute 'whitespace-line nil :foreground nil :overline t)
   )
-
-(add-hook 'whitespace-mode-hook 'tserg/whitespace-mode)
 
 (setq ws-butler-keep-whitespace-before-point nil)
 
@@ -256,13 +253,15 @@
   ))
 )
 
-(require 'popup)
-(advice-add 'popup-draw :before #'my:push-whitespace)
-(advice-add 'popup-delete :after #'my:pop-whitespace)
+(with-eval-after-load 'popup
+  (advice-add 'popup-draw :before #'my:push-whitespace)
+  (advice-add 'popup-delete :after #'my:pop-whitespace)
+  )
 
 ;;Yasnippet ----------------------------------------------
-(require 'yasnippet)
-(yas-global-mode 1)
+(with-eval-after-load 'yasnippet
+  (yas-global-mode 1)
+  )
 
 ;; Auto Encode buffer -----------------------------------
 (load-file "~/.emacs.d/unicad.el")
@@ -290,22 +289,23 @@
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
 
 ;;emacs Mercurial--------------------------------------------------
-(require 'ahg)
-(add-to-list 'display-buffer-alist
-             `(,(rx "*hg")
-               (display-buffer-reuse-window
-                display-buffer-in-side-window)
-               (reusable-frames . visible)
-               (side            . right)
-               (window-width   . 0.3)))
+(with-eval-after-load 'ahg 
+  (add-to-list 'display-buffer-alist
+               `(,(rx "*hg")
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (reusable-frames . visible)
+                 (side            . right)
+                 (window-width   . 0.3)))
 
-(add-to-list 'display-buffer-alist
-             `(,(rx "*aHg")
-               (display-buffer-reuse-window
-                display-buffer-in-side-window)
-               (reusable-frames . visible)
-               (side            . right)
-               (window-width   . 0.3)))
+  (add-to-list 'display-buffer-alist
+               `(,(rx "*aHg")
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (reusable-frames . visible)
+                 (side            . right)
+                 (window-width   . 0.3)))
+  )
 
 ;; shell color customization------------------------------------------
 (setq comint-output-filter-functions
@@ -316,20 +316,19 @@
 
 ;; You can also use it with eshell (and thus get color output from system ls):
 
-(require 'eshell)
+(with-eval-after-load 'eshell
+  (add-hook 'eshell-before-prompt-hook
+            (lambda ()
+              (setq xterm-color-preserve-properties t)))
+
+  (add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
+  (setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
+  )
 
 (defun eshell-new()
   "Open a new instance of eshell."
   (interactive)
   (eshell 'N))
-
-(add-hook 'eshell-before-prompt-hook
-          (lambda ()
-            (setq xterm-color-preserve-properties t)))
-
-(add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
-(setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
-
 
 ;;Background---------------------------------------------------------
 ;; (set-face-background 'default "#353535")

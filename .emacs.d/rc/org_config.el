@@ -8,45 +8,47 @@
   (unless (package-installed-p package)
     (package-install package)))
 
+(autoload 'org-mode "org")
 
-(require 'org)
-(require 'ob-python)
-(require 'ob-async)
-(require 'ox-latex)
+(with-eval-after-load 'org
+  (require 'ob-python)
+  (require 'ob-async)
+  (require 'ox-latex)
 
-(org-babel-do-load-languages
-  'org-babel-load-languages
-  '((emacs-lisp . t)
-    (python . t)
-    (ipython . t)
-    (shell . t)
-    (latex . t)
-    (R . t)
-    (http . t)
-    ))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (ipython . t)
+     (shell . t)
+     (latex . t)
+     (R . t)
+     (http . t)
+     ))
 
-(setq ob-async-no-async-languages-alist '("ipython") ;; Fix an incompatibility ob-async and ob-ipython packages
-      org-export-odt-preferred-output-format "docx"
-      org-odt-preferred-output-format "docx"
-      org-startup-folded nil
-      org-log-done t
-      org-src-fontify-natively t
-      org-confirm-babel-evaluate nil
-      org-directory "~/org-docs"
-      org-babel-remote-temporary-directory "~/org_tmp"
-      )
+  (setq ob-async-no-async-languages-alist '("ipython") ;; Fix an incompatibility ob-async and ob-ipython packages
+        org-export-odt-preferred-output-format "docx"
+        org-odt-preferred-output-format "docx"
+        org-startup-folded nil
+        org-log-done t
+        org-src-fontify-natively t
+        org-confirm-babel-evaluate nil
+        org-directory "~/org-docs"
+        org-babel-remote-temporary-directory "~/org_tmp"
+        )
 
-(add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|/TODO\\)$" . org-mode))
-(add-to-list 'file-coding-system-alist (cons "\\.\\(org\\|org_archive\\|/TODO\\)$"  'utf-8))
+  (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|/TODO\\)$" . org-mode))
+  (add-to-list 'file-coding-system-alist (cons "\\.\\(org\\|org_archive\\|/TODO\\)$"  'utf-8))
 
-(defvar org-blocks-hidden nil)
+  (defvar org-blocks-hidden nil)
 
-(set-face-attribute 'org-block nil
-                    :foreground nil
-                    :background (color-darken-name (face-background 'default) 4))
-(set-face-attribute 'org-code nil
-                    :foreground nil
-                    :background (color-darken-name (face-background 'default) 4))
+  (set-face-attribute 'org-block nil
+                      :foreground nil
+                      :background (color-darken-name (face-background 'default) 4))
+  (set-face-attribute 'org-code nil
+                      :foreground nil
+                      :background (color-darken-name (face-background 'default) 4))
+  )
 
 (defun tserg/org-latex-export-to-pdf ()
   (interactive)
