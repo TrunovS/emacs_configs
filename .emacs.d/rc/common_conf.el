@@ -55,13 +55,11 @@
                     :foreground (color-darken-name (face-foreground 'default) 5)
                     :background (color-darken-name (face-background 'default) 2))
 (set-face-attribute 'region nil
-                    :foreground nil
                     :background "#399948f45199")
-(set-face-attribute 'hl-line nil :foreground nil :background "dim gray")
+(set-face-attribute 'hl-line nil :background "dim gray")
 (set-face-attribute 'highlight nil
-                    :foreground nil
                     :background (color-darken-name (face-background 'default) 10))
-(set-face-attribute 'cursor  nil :foreground nil :background "white")
+(set-face-attribute 'cursor  nil :background "white")
 
 (defun update-diff-colors ()
   "update the colors for diff faces"
@@ -143,17 +141,20 @@
 (exec-path-from-shell-initialize)
 
 ;; IVY competition --------------------------
-(with-eval-after-load 'ivy
-  (ivy-mode 1)
-  (ivy-posframe-mode 1)
+(eval-after-load "ivy"
+  '(progn
+     (ivy-mode 1)
+     (ivy-posframe-mode 1)
 
-  (setq-default ivy-use-virtual-buffers t)
-  (setq-default ivy-count-format "(%d/%d) ")
-  ;; (setq-default ivy-initial-inputs-alist nil)
-  ;; (setq-default ivy-re-builders-alist
-  ;;               '((t . ivy--regex-fuzzy)))
-  (setq-default ivy-posframe-display-functions-alist
-                '((t . ivy-posframe-display-at-frame-center)))
+     (setq-default ivy-use-virtual-buffers t)
+     (setq-default ivy-count-format "(%d/%d) ")
+     ;; (setq-default ivy-initial-inputs-alist nil)
+     ;; (setq-default ivy-re-builders-alist
+     ;;               '((t . ivy--regex-fuzzy)))
+     (setq-default ivy-posframe-display-functions-alist
+                   '((t . ivy-posframe-display-at-frame-center)))
+
+     )
   )
 
 ;; counsel set up --------------------
@@ -161,6 +162,7 @@
 (counsel-mode 1)
 (setq-default counsel-grep-base-command
               "rg -i -M 120 --no-heading --line-number --color never '%s' %s")
+
 
 ;; Project manager --------------------------
 (projectile-mode +1)
@@ -174,40 +176,41 @@
 (setq-default dumb-jump-max-find-time 10)
 (setq-default dumb-jump-prefer-searcher 'rg)
 (setq-default dumb-jump-selector 'ivy)
-
 ;; magit --------------------------------------------
-(with-eval-after-load 'magit
-  ;  (require 'forge)
-  (set-face-attribute 'magit-diff-context-highlight nil
-                      :foreground "nil" :background "nil")
-  (set-face-attribute 'magit-diff-context nil
-                      :foreground "nil" :background "nil")
-  ;; (set-face-attribute 'magit-diff-added-highlight nil
-  ;;                     :background "")
+(eval-after-load "magit"
+  '(progn
+                                        ;  (require 'forge)
+     (set-face-attribute 'magit-diff-context-highlight nil
+                         :foreground "nil" :background "nil")
+     (set-face-attribute 'magit-diff-context nil
+                         :foreground "nil" :background "nil")
+     ;; (set-face-attribute 'magit-diff-added-highlight nil
+     ;;                     :foreground "red" :background "nil")
+     )
   )
 
 ;; Company complete --------------------------------------------
-(with-eval-after-load 'company
-
-  ;; set default `company-backends'
-  (setq company-backends
-        '((company-files          ; files & directory
-           company-yasnippet
-           company-dabbrev)
-          ))
-
-  (setq company-dabbrev-ignore-case 1)
-  (setq company-dabbrev-downcase nil)
-  (setq company-dabbrev-char-regexp "\\sw\\|\\s_")
-
-  (setq dabbrev-case-distinction '1)
-  (setq dabbrev-case-fold-search 'nil)
-  (setq dabbrev-case-replace 'nil)
-
-  (define-key global-map [(meta .)] 'company-complete)
-  )
-
 (add-hook 'after-init-hook 'global-company-mode)
+(eval-after-load "company"
+  '(progn
+
+     ;; set default `company-backends'
+     (setq company-backends
+           '((company-files          ; files & directory
+              company-yasnippet
+              company-dabbrev)
+             ))
+
+     (setq company-dabbrev-ignore-case 1)
+     (setq company-dabbrev-downcase nil)
+     (setq company-dabbrev-char-regexp "\\sw\\|\\s_")
+
+     (setq dabbrev-case-distinction '1)
+     (setq dabbrev-case-fold-search 'nil)
+     (setq dabbrev-case-replace 'nil)
+
+     (define-key global-map [(meta .)] 'company-complete)
+     ))
 
 ;; whitespace config --------------------------------------------
 
@@ -221,47 +224,53 @@
   )
 )
 
-(with-eval-after-load 'whitespace
-  (setq whitespace-style (quote (face tabs trailing empty tab-mark)));lines
-  (setq whitespace-display-mappings
-        '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
-  (setq whitespace-line-column 90)
+(eval-after-load "whitespace"
+  '(progn
+     (setq whitespace-style (quote (face tabs trailing empty tab-mark)));lines
+     (setq whitespace-display-mappings
+           '((tab-mark 9 [124 9] [92 9]))) ; 124 is the ascii ID for '\|'
+     (setq whitespace-line-column 90)
 
-  (set-face-attribute 'whitespace-line nil :foreground nil :overline t)
-  (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
-  (set-face-attribute 'whitespace-trailing nil :foreground "black" :background nil)
+     (set-face-attribute 'whitespace-line nil :foreground "nil" :overline t)
+     (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background "nil")
+     (set-face-attribute 'whitespace-trailing nil :foreground "black" :background "nil")
+
+     (setq ws-butler-keep-whitespace-before-point nil)
+     )
   )
 
-(setq ws-butler-keep-whitespace-before-point nil)
+(eval-after-load "popup"
+  '(progn
+     (defvar my:prev-whitespace-mode nil)
+     (make-variable-buffer-local 'my:prev-whitespace-mode)
+     (defvar my:prev-whitespace-pushed nil)
+     (make-variable-buffer-local 'my:prev-whitespace-pushed)
 
-(defvar my:prev-whitespace-mode nil)
-(make-variable-buffer-local 'my:prev-whitespace-mode)
-(defvar my:prev-whitespace-pushed nil)
-(make-variable-buffer-local 'my:prev-whitespace-pushed)
+     (defun my:push-whitespace (&rest skip)
+       (if my:prev-whitespace-pushed () (progn
+                                          (setq my:prev-whitespace-mode whitespace-mode)
+                                          (setq my:prev-whitespace-pushed t)
+                                          (my:force-modes nil 'whitespace-mode)
+                                          ))
+       )
 
-(defun my:push-whitespace (&rest skip)
-  (if my:prev-whitespace-pushed () (progn
-    (setq my:prev-whitespace-mode whitespace-mode)
-    (setq my:prev-whitespace-pushed t)
-    (my:force-modes nil 'whitespace-mode)
-  ))
-)
+     (defun my:pop-whitespace (&rest skip)
+       (if my:prev-whitespace-pushed (progn
+                                       (setq my:prev-whitespace-pushed nil)
+                                       (my:force-modes my:prev-whitespace-mode 'whitespace-mode)
+                                       ))
+       )
 
-(defun my:pop-whitespace (&rest skip)
-  (if my:prev-whitespace-pushed (progn
-    (setq my:prev-whitespace-pushed nil)
-    (my:force-modes my:prev-whitespace-mode 'whitespace-mode)
-  ))
-)
-
-(with-eval-after-load 'popup
-  (advice-add 'popup-draw :before #'my:push-whitespace)
-  (advice-add 'popup-delete :after #'my:pop-whitespace)
+     (advice-add 'popup-draw :before #'my:push-whitespace)
+     (advice-add 'popup-delete :after #'my:pop-whitespace)
+     )
   )
 
 ;;Yasnippet ----------------------------------------------
-(with-eval-after-load 'yasnippet
-  (yas-global-mode 1)
+(eval-after-load "yasnippet"
+  '(progn
+     (yas-global-mode 1)
+     )
   )
 
 ;; Auto Encode buffer -----------------------------------
@@ -290,8 +299,8 @@
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
 
 ;;emacs Mercurial--------------------------------------------------
-(with-eval-after-load 'ahg
-  (add-to-list 'display-buffer-alist
+(require 'ahg)
+(add-to-list 'display-buffer-alist
                `(,(rx "*hg")
                  (display-buffer-reuse-window
                   display-buffer-in-side-window)
@@ -299,14 +308,13 @@
                  (side            . right)
                  (window-width   . 0.3)))
 
-  (add-to-list 'display-buffer-alist
+(add-to-list 'display-buffer-alist
                `(,(rx "*aHg")
                  (display-buffer-reuse-window
                   display-buffer-in-side-window)
                  (reusable-frames . visible)
                  (side            . right)
                  (window-width   . 0.3)))
-  )
 
 ;; shell color customization------------------------------------------
 (setq comint-output-filter-functions
@@ -317,19 +325,19 @@
 
 ;; You can also use it with eshell (and thus get color output from system ls):
 
-(with-eval-after-load 'eshell
-  (add-hook 'eshell-before-prompt-hook
-            (lambda ()
-              (setq xterm-color-preserve-properties t)))
+(eval-after-load "eshell"
+  '(progn
+     (add-hook 'eshell-before-prompt-hook
+               (lambda ()
+                 (setq xterm-color-preserve-properties t)))
+     (add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
+     (setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
 
-  (add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
-  (setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
-  )
-
-(defun eshell-new()
-  "Open a new instance of eshell."
-  (interactive)
-  (eshell 'N))
+     (defun eshell-new()
+       "Open a new instance of eshell."
+       (interactive)
+       (eshell 'N))
+     ))
 
 ;;Background---------------------------------------------------------
 ;; (set-face-background 'default "#353535")
