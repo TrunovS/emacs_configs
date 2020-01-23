@@ -1,17 +1,16 @@
-(setq package-list '(;; org mode babels
-                     ob-async ob-http ob-ipython
-                     ))
-
-
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+(setq org-package-list '(;; org mode babels
+                         ob-async ob-http ob-ipython
+                         ))
 
 (autoload 'org-mode "org")
-
 (eval-after-load "org"
-  '(progn 
+  '(progn
+
+     ;; install the missing packages
+     (dolist (package org-package-list)
+       (unless (package-installed-p package)
+         (package-install package)))
+
      (require 'ob-python)
      (require 'ob-async)
      (require 'ox-latex)
@@ -64,16 +63,15 @@
        (setq-local org-blocks-hidden (not org-blocks-hidden)))
 
      (defun tserg/org-mode-hook ()
-       (with-eval-after-load 'ox-latex)
+       ;; (with-eval-after-load 'ox-latex)
        ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice) https://stackoverflow.com/a/8836108/789593
-         ;; (delete '("\\.pdf\\'" . default) org-file-apps)
-         ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))
-         ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "org-pdfview-open"))
-         )
-       (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+       ;; (delete '("\\.pdf\\'" . default) org-file-apps)
+       ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))
+       ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "org-pdfview-open"))
        (flyspell-mode 1)
+       (toggle-truncate-lines -1)
+       
        (define-key org-mode-map (kbd "<f8>") 'tserg/org-latex-export-to-pdf)
-       (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
        (define-key org-mode-map (kbd "C-c t") 'org-toggle-blocks)
        (define-key org-mode-map (kbd "C-c x") 'org-babel-execute-buffer)
 
@@ -86,7 +84,9 @@
        (define-key org-mode-map (kbd "<M-right>") nil)
        (define-key org-mode-map (kbd "<M-up>") nil)
        (define-key org-mode-map (kbd "<M-down>") nil)
+       )
 
-       (toggle-truncate-lines -1)
-       (add-hook 'org-mode-hook 'tserg/org-mode-hook)
-       ))
+     (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+     (add-hook 'org-mode-hook 'tserg/org-mode-hook)
+     )
+  )
