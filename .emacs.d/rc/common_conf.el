@@ -1,5 +1,6 @@
 ;; Packages list needed--------------------------
-(setq package-list '(;;theme specific
+(setq package-list '(use-package
+                     ;;theme specific
                      auto-dim-other-buffers smart-mode-line nova-theme
 
                      ;;project management
@@ -29,6 +30,8 @@
   (unless (package-installed-p package)
     (package-install package)))
 
+(eval-when-compile
+  (require 'use-package))
 
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
@@ -324,20 +327,17 @@
           (lambda () (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter nil t)))
 
 ;; You can also use it with eshell (and thus get color output from system ls):
+(require 'eshell)
+(add-hook 'eshell-before-prompt-hook
+          (lambda ()
+            (setq xterm-color-preserve-properties t)))
+(add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
+(setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
 
-(eval-after-load "eshell"
-  '(progn
-     (add-hook 'eshell-before-prompt-hook
-               (lambda ()
-                 (setq xterm-color-preserve-properties t)))
-     (add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
-     (setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
-
-     (defun eshell-new()
-       "Open a new instance of eshell."
-       (interactive)
-       (eshell 'N))
-     ))
+(defun eshell-new()
+  "Open a new instance of eshell."
+  (interactive)
+  (eshell 'N))
 
 ;;Background---------------------------------------------------------
 ;; (set-face-background 'default "#353535")

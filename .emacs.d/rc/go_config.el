@@ -1,77 +1,86 @@
 ;; Packages list needed--------------------------
-(setq package-list '(;;ui complete
-                     company
+(setq go-package-list '(;;ui complete
+                        company
 
-                     ;;common utils
-                     ws-butler
+                        ;;common utils
+                        ws-butler
 
-                     ;;code complete
-                     company-lsp company-quickhelp
-                     go-eldoc ;go docs
-                     ))
+                        ;;code complete
+                        company-lsp company-quickhelp
+                        go-eldoc ;go docs
+                        ))
 
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+(use-package go-mode
+  :ensure t ;; auto install on startup only go-mode
 
+  ;;defered config read on .go open
+  :no-require t
+  :defer t
 
-(defun tserg/go-mode-hook()
-  (setq-local tab-width 2)
-  (setq-local indent-tabs-mode t)
-  (ws-butler-mode 1)
-  (whitespace-mode 1)
+  :mode ;;mode associassion
+  ("\\.mod\\'" . 'fundamental-mode)
+  ("\\.go\\'" . 'go-mode)
 
-  (smart-tabs-insinuate 'c++)
+  :bind ;;HotKeys
+  (
+   :map go-mode-map
+        ([f7] . 'lsp-ui-peek-find-references)
+        ("C-<f7>" . 'projectile-grep)
+        ("C-j" . 'xref-find-definitions)
+        ("M-j" . 'xref-pop-marker-stack)
+        ("\C-hj" . 'godoc-at-point)
+        )
 
-  (hs-minor-mode 1)
-  (toggle-truncate-lines nil)
-  (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
-  (font-lock-mode t)
-  (setq font-lock-maximum-decoration t)
-  (setq godoc-at-point-function (quote godoc-gogetdoc))
+  :config
 
-
-  (lsp 1)
-  (lsp-ui-mode 1)
-  (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
-  (setq lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
-  (eldoc-mode nil)
-  (global-eldoc-mode -1)
-  (setq lsp-ui-doc-position (quote top))
-
+  ;; install the missing packages
+  (dolist (package go-package-list)
+    (unless (package-installed-p package)
+      (package-install package)))
 
   (require 'company-lsp)
-  (add-to-list (make-local-variable 'company-backends)
-               '(company-lsp company-files company-abbrev company-dabbrev
-                             company-keywords))
+  
+  (defun tserg/go-mode-hook()
+    (setq-local tab-width 2)
+    (setq-local indent-tabs-mode t)
+    (ws-butler-mode 1)
+    (whitespace-mode 1)
 
-  (setq company-transformers nil
-        company-lsp-async t
-        company-lsp-cache-candidates nil)
+    (smart-tabs-insinuate 'c++)
 
-  (company-quickhelp-mode)
+    (hs-minor-mode 1)
+    (toggle-truncate-lines nil)
+    (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
+    (font-lock-mode t)
+    (setq font-lock-maximum-decoration t)
+    (setq godoc-at-point-function (quote godoc-gogetdoc))
 
-;  (add-hook 'before-save-hook 'gofmt-before-save)
+    (lsp 1)
+    (lsp-ui-mode 1)
+    (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
+    (setq lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
+    (eldoc-mode nil)
+    (global-eldoc-mode -1)
+    (setq lsp-ui-doc-position (quote top))
 
-  (define-key go-mode-map [(control f7)] 'projman-grep)
-  (define-key go-mode-map [f7] 'lsp-ui-peek-find-references)
-  (define-key go-mode-map [(control f7)] 'projectile-grep)
-  (define-key go-mode-map "\C-j" 'xref-find-definitions)
-  (define-key go-mode-map "\M-j" 'xref-pop-marker-stack)
-  (define-key go-mode-map "\C-hj" 'godoc-at-point)
-  (define-key hs-minor-mode-map "\M-h\M-t" 'hs-toggle-hiding)
-  (define-key hs-minor-mode-map "\M-h\M-a" 'hs-hide-all)
-  (define-key hs-minor-mode-map "\M-h\M-s" 'hs-show-all)
+    (add-to-list (make-local-variable 'company-backends)
+                 '(company-lsp company-files company-abbrev company-dabbrev
+                               company-keywords))
 
-  ;; Customize compile command to run go build
-  (if (not (string-match "go" compile-command))
-      (set (make-local-variable 'compile-command)
-           "go build -v && go test -v && go vet"))
+    (setq-local company-transformers nil
+                company-lsp-async t
+                company-lsp-cache-candidates nil)
 
+    (company-quickhelp-mode)
+
+    ;;  (add-hook 'before-save-hook 'gofmt-before-save)
+
+    ;; Customize compile command to run go build
+    (if (not (string-match "go" compile-command))
+        (set (make-local-variable 'compile-command)
+             "go build -v && go test -v && go vet"))
+
+    )
+
+  (add-hook 'go-mode-hook 'tserg/go-mode-hook)
   )
-
-(add-to-list 'auto-mode-alist (cons "\\.mod\\'" 'fundamental-mode))
-(add-to-list 'auto-mode-alist (cons "\\.go\\'" 'go-mode))
-
-(add-hook 'go-mode-hook 'tserg/go-mode-hook)
