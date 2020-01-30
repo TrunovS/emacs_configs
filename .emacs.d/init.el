@@ -26,7 +26,7 @@
 
 (load "~/.emacs.d/rc/common_conf.el");; common-hook
 (load "~/.emacs.d/rc/elisp_conf.el");; elisp-mode
-;; (load "~/.emacs.d/rc/compilation_config.el");; compilation-mode
+(load "~/.emacs.d/rc/compilation_config.el");; compilation-mode
 ;; (load "~/.emacs.d/rc/logs_config.el");; logs-mode
 ;; (load "~/.emacs.d/rc/python_conf.el");; pythons configs
 ;; (load "~/.emacs.d/rc/rust_config.el");; rust configs
