@@ -1,10 +1,10 @@
 ;; Packages list needed--------------------------
-(setq package-list '(;;custom modes
-                     logview
-                     ))
+(setq logs-package-list '(;;custom modes
+                          logview
+                          ))
 
 ; install the missing packages
-(dolist (package package-list)
+(dolist (package logs-package-list)
   (unless (package-installed-p package)
     (package-install package)))
 

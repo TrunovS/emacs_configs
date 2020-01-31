@@ -8,6 +8,7 @@
                         ;;code complete
                         company-lsp company-quickhelp
                         go-eldoc ;go docs
+                        ag ;silver searcher
                         ))
 
 (use-package go-mode
@@ -24,7 +25,7 @@
   :bind ;;HotKeys
   (
    :map go-mode-map
-        ([f7] . 'lsp-ui-peek-find-references)
+        ([f7] . 'projectile-ag)
         ("C-<f7>" . 'projectile-grep)
         ("C-j" . 'xref-find-definitions)
         ("M-j" . 'xref-pop-marker-stack)
