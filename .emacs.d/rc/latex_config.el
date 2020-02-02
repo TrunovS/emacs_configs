@@ -1,11 +1,21 @@
-(defun tserg/latex-mode-hook ()
-  (setq get-buffer-compile-command
-        (lambda (file) (format "pdflatex %s" file)
-          ))
-  (auto-complete-mode 1)
-  ;; (ac-flyspell-workaround)
-  ;; (flyspell-mode 1)
-)
+(use-package tex-mode
+  :ensure nil
 
-(add-hook 'latex-mode-hook 'tserg/latex-mode-hook)
-(add-to-list 'auto-mode-alist '("\\.tex\\'" . latex-mode))
+  :mode
+  ("\\.tex\\'" . latex-mode)
+
+  :no-require t
+  :defer t
+
+  :config
+
+  (defun tserg/latex-mode-hook ()
+    (setq get-buffer-compile-command
+          (lambda (file) (format "pdflatex %s" file)
+            ))
+    ;; (ac-flyspell-workaround)
+    ;; (flyspell-mode 1)
+    )
+
+  (add-hook 'latex-mode-hook 'tserg/latex-mode-hook)
+  )

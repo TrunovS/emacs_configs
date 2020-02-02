@@ -330,8 +330,7 @@
   (advice-add 'popup-delete :after #'my:pop-whitespace)
   )
 
-;;Yasnippet ----------------------------------------------
-(use-package yasnippet
+(use-package yasnippet ;----------------------------------------------
   :ensure t
   :ensure yasnippet-snippets
   :config

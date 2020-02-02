@@ -8,10 +8,11 @@
                      ))
 
 (use-package python
-  :ensure nil
-
   :no-require t
   :defer t
+
+  :mode
+  ("\\.py\\'" . 'python-mode)
 
   :bind ;;HotKeys
   (
@@ -22,12 +23,19 @@
    ("M-j" . 'xref-pop-marker-stack)
    )
 
+  :init
+  (autoload 'python-mode "python");;load only when necessary
+
   :config
+
+  (message "Its python, crap")
 
   ;; install the missing packages
   (dolist (package python-package-list)
     (unless (package-installed-p package)
       (package-install package)))
+
+  (message "Its python all installed, crap")
 
   ;; Python SetPath -------------------------------------------
   ;; (setq ropemacs-enable-shortcuts nil)

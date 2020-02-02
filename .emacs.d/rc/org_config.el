@@ -1,5 +1,6 @@
 (setq org-package-list '(;; org mode babels
-                         ob-async ob-http ob-ipython
+                         ob-async ob-http
+                                  ;; ob-ipython ;this causes load of python mode in setup
                          ))
 
 (use-package org
@@ -39,22 +40,24 @@
     (unless (package-installed-p package)
       (package-install package)))
 
-  (require 'ob-python)
-  (require 'ob-async)
-  (require 'ox-latex)
+  ;; (require 'ob-python)
+  ;; (require 'ob-async)
+  ;; (require 'ox-latex)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (python . t)
-     (ipython . t)
+     ;; (ipython . t)
      (shell . t)
      (latex . t)
      (R . t)
      (http . t)
      ))
 
-  (setq ob-async-no-async-languages-alist '("ipython") ;; Fix an incompatibility ob-async and ob-ipython packages
+  (setq
+   ;; Fix an incompatibility ob-async and ob-ipython packages
+   ;; ob-async-no-async-languages-alist '("ipython")
         org-export-odt-preferred-output-format "docx"
         org-odt-preferred-output-format "docx"
         org-startup-folded nil

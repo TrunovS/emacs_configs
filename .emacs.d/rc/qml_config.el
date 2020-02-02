@@ -1,26 +1,41 @@
 ;; Packages list needed--------------------------
-(setq package-list '(qml-mode
+(setq qml-package-list '(qml-mode
 
-                     company
-                     company-qml
+                         company-qml
+                         ))
 
-                     company-quickhelp
-                     ))
+(use-package qml-mode
+  :ensure t
 
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+  :no-require t
+  :defer t
 
+  :mode
+  ("\\.qml\\'" . qml-mode)
 
-(defun tserg/qml-mode-hook ()
-  (require 'company-qml)
-  (add-to-list (make-local-variable 'company-backends)
-               '(company-qml))
-  (company-quickhelp-mode 1)
-  (define-key c-mode-base-map "\C-j" 'xref-find-definitions)
-  (define-key c-mode-base-map "\M-j" 'xref-pop-marker-stack)
-  )
+  :bind
+  ("\C-j" . 'xref-find-definitions)
+  ("\M-j" . 'xref-pop-marker-stack)
 
-(add-to-list 'auto-mode-alist '("\\.qml\\'" . qml-mode-hook))
-(add-hook 'qml-mode-hook 'tserg/qml-mode-hook)
+  :config
+
+  (autoload 'qml-mode "qml-mode")
+  (eval-after-load 'qml
+    '(progn
+       ;; install the missing packages
+       (dolist (package qml-package-list)
+         (unless (package-installed-p package)
+           (package-install package)))
+
+       (require 'company-qml)
+
+       (defun tserg/qml-mode-hook ()
+         (add-to-list (make-local-variable 'company-backends)
+                      '(company-qml))
+         (company-quickhelp-mode 1)
+         )
+
+       (add-hook 'qml-mode-hook 'tserg/qml-mode-hook)
+       )
+    )
+)

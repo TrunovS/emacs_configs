@@ -28,16 +28,19 @@
 (load "~/.emacs.d/rc/elisp_conf.el");; elisp-mode
 (load "~/.emacs.d/rc/compilation_config.el");; compilation-mode
 (load "~/.emacs.d/rc/logs_config.el");; logs-mode
+
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
 (load "~/.emacs.d/rc/rust_config.el");; rust configs
 (load "~/.emacs.d/rc/go_config.el");; go configs
+(load "~/.emacs.d/rc/qml_config.el");; qml-mode
+
 (load "~/.emacs.d/rc/c++_config.el");; c-mode
-;; (load "~/.emacs.d/rc/qt_config.el");; qt-mode
-;; (load "~/.emacs.d/rc/qml_config.el");; qml-mode
-;; (load "~/.emacs.d/rc/latex_config.el");; latex-mode
+(load "~/.emacs.d/rc/qt_config.el");; qt-mode
+
+(load "~/.emacs.d/rc/latex_config.el");; latex-mode
 ;; (load "~/.emacs.d/rc/fb_config.el");; fbread-mode
 (load "~/.emacs.d/rc/org_config.el");; org-mode
-;; (load "~/.emacs.d/rc/R_config.el");; R-lang-mode
+(load "~/.emacs.d/rc/R_config.el");; R-lang-mode
 
 (add-hook 'java-mode-hook       'hs-minor-mode)
 (add-hook 'lisp-mode-hook       'hs-minor-mode)

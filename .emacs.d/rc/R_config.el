@@ -1,8 +1,17 @@
-(setq package-list '(ess
-                     ess-R-data-view
-                     ))
+(setq R-package-list '(ess
+                       ess-R-data-view
+                       ))
 
-; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+(use-package ess
+  :ensure t
+  :no-require t
+  :init
+  (autoload 'ess-mode "ess")
+
+  :config
+
+  ;; install the missing packages
+  (dolist (package R-package-list)
+    (unless (package-installed-p package)
+      (package-install package)))
+  )

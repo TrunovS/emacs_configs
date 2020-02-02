@@ -4,15 +4,11 @@
 (setq c-mode-package-list '(;;project management
                             projectile
 
-                            ;;ui complete
-                            company
-
                             ;;common utils
-                            ws-butler iedit smart-tabs-mode
+                            ws-butler smart-tabs-mode
 
                             ;;code complete
                             lsp-mode lsp-ui
-                            company-quickhelp
                             company-lsp
                             company-c-headers ;C
 
@@ -20,6 +16,7 @@
                             ))
 
 (use-package cc-mode
+  :ensure nil
   :no-require t ;; lazy config read
 
   :mode ;;mode associassion
@@ -28,19 +25,16 @@
   ("\\.cxx\\'" . c++-mode)
 
   :bind ;;HotKeys
-  (
-   :map c-mode-base-map
-        ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
-        ("M-j" . xref-pop-marker-stack)
+  ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
+  ("M-j" . xref-pop-marker-stack)
 
-        ([f2] . projectile-find-other-file)
-        ("C-<f7>" . projectile-grep)
-        ([f7] . lsp-ui-peek-find-references)
-        )
+  ([f2] . projectile-find-other-file)
+  ("C-<f7>" . projectile-grep)
+  ([f7] . projectile-ag)
 
-  :init ;;do before download
+  :init
   (autoload 'c-mode "cc-mode") ;;load only when necessary
-  
+
   :config ;; do after download
 
   ;; install the missing packages
@@ -48,7 +42,7 @@
     (unless (package-installed-p package)
       (package-install package)))
 
-  (require 'company-lsp) ;;   :after (company-lsp projectile)? 
+  (require 'company-lsp) ;;   :after (company-lsp projectile)?
   (require 'projectile)
   ;; For switch between header and source -----------------
   ;; Switch fromm *.<impl> to *.<head> and vice versa
