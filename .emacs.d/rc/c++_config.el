@@ -25,13 +25,15 @@
   ("\\.cxx\\'" . c++-mode)
 
   :bind ;;HotKeys
-  ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
-  ("M-j" . xref-pop-marker-stack)
+  (
+   :map c++-mode-map
+        ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
+        ("M-j" . xref-pop-marker-stack)
 
-  ([f2] . projectile-find-other-file)
-  ("C-<f7>" . projectile-grep)
-  ([f7] . projectile-ag)
-
+        ([f2] . projectile-find-other-file)
+        ("C-<f7>" . projectile-grep)
+        ([f7] . projectile-ag)
+        )
   :init
   (autoload 'c-mode "cc-mode") ;;load only when necessary
 
@@ -111,27 +113,30 @@
     (indent-region (line-beginning-position) (line-end-position))
     )
 
+  (smart-tabs-insinuate 'c++ 'c)
+
   (defun tserg/c-mode-common-hook()
     (setq-local indent-tabs-mode t)
     ;; base-style
     (setq c-set-style "linux"
           c-basic-offset 2
           c-argdecl-indent 0
-          )
+          cua-auto-tabify-rectangles nil)
     (setq-local tab-width 2) ;A TAB is equivilent to 2 spaces
     (c-set-offset 'substatement-open 0)
     (c-set-offset 'block-close 0)
-    (smart-tabs-insinuate 'c++)
 
     (ws-butler-mode 1)
     (whitespace-mode 1)
     (hs-minor-mode 1)
-    (flyspell-prog-mode 1)
+    ;; (flyspell-prog-mode 1)
     (toggle-truncate-lines nil)
     ;; (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
 
     (font-lock-mode t)
     (setq font-lock-maximum-decoration t)
+
+    (smart-tabs-mode 1)
 
     (lsp 1)
     (lsp-ui-mode 1)

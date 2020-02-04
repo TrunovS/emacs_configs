@@ -7,13 +7,13 @@
                      projectile ag counsel-projectile
 
                      ;;ui complete
-                     ivy ivy-posframe counsel
+                     ivy ivy-posframe counsel ivi-rich
                      company
 
                      ;;common utils
                      uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy autopair
                      yasnippet yasnippet-snippets
-                     dumb-jump xterm-color interleave dired-narrow smex
+                     dumb-jump xterm-color interleave dired-narrow smex wgrep
 
                      ;;VCS management
                      ahg magit
@@ -180,6 +180,7 @@
                   " Fly*"
                   " Fly"
                   " Abbrev"
+                  " ARev"
                   " ws"
                   " wb"
                   ))
@@ -199,11 +200,13 @@
   :ensure t
   :ensure ivy-posframe
   :ensure counsel
+  :ensure ivy-rich
 
   :config
   (ivy-mode 1)
   (ivy-posframe-mode 1)
   (counsel-mode 1)
+  (ivy-rich-mode 1)
 
   (setq-default ivy-use-virtual-buffers t)
   (setq-default ivy-count-format "(%d/%d) ")

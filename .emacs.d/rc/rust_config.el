@@ -22,12 +22,13 @@
 
   :bind
   (
-   ([f7] . 'projectile-ag)
-   ("C-<f7>" . 'projectile-grep)
-   ("C-j" . 'racer-find-definition)
-   ("M-j" . 'xref-pop-marker-stack)
-   ("\C-hj" . 'racer-describe)
-   )
+   :map rust-mode-map
+        ([f7] . 'projectile-ag)
+        ("C-<f7>" . 'projectile-grep)
+        ("C-j" . 'racer-find-definition)
+        ("M-j" . 'xref-pop-marker-stack)
+        ("\C-hj" . 'racer-describe)
+        )
 
   :config
 

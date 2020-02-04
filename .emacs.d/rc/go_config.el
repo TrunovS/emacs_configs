@@ -3,7 +3,7 @@
                         company
 
                         ;;common utils
-                        ws-butler
+                        ws-butler smart-tabs-mode
 
                         ;;code complete
                         company-lsp company-quickhelp
@@ -40,14 +40,18 @@
       (package-install package)))
 
   (require 'company-lsp)
-  
+
+  (smart-tabs-add-language-support go go-mode-hook
+    ((c-indent-line . c-basic-offset)
+     (c-indent-region . c-basic-offset)))
+
+  (smart-tabs-insinuate 'go)
+
   (defun tserg/go-mode-hook()
     (setq-local tab-width 2)
     (setq-local indent-tabs-mode t)
     (ws-butler-mode 1)
     (whitespace-mode 1)
-
-    (smart-tabs-insinuate 'c++)
 
     (hs-minor-mode 1)
     (toggle-truncate-lines nil)
