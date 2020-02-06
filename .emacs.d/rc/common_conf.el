@@ -7,7 +7,7 @@
                      projectile ag counsel-projectile
 
                      ;;ui complete
-                     ivy ivy-posframe counsel ivi-rich
+                     ivy ivy-posframe counsel ivy-rich
                      company
 
                      ;;common utils
