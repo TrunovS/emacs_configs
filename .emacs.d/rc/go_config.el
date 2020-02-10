@@ -55,7 +55,7 @@
 
     (hs-minor-mode 1)
     (toggle-truncate-lines nil)
-    (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
+    ;; (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
     (font-lock-mode t)
     (setq font-lock-maximum-decoration t)
     (setq godoc-at-point-function (quote godoc-gogetdoc))
@@ -72,9 +72,9 @@
                  '(company-lsp company-files company-abbrev company-dabbrev
                                company-keywords))
 
-    (setq-local company-transformers nil
-                company-lsp-async t
-                company-lsp-cache-candidates nil)
+    (setq company-transformers nil
+          company-lsp-async t
+          company-lsp-cache-candidates nil)
 
     (company-quickhelp-mode)
 

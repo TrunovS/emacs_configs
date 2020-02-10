@@ -81,6 +81,7 @@
         truncate-partial-width-windows t
         make-backup-files nil;; do (not )ot make backup files
         create-lockfiles nil
+        auto-save-default nil
         )
   (menu-bar-mode -1)
   (tool-bar-mode -1)
