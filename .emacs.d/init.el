@@ -6,7 +6,14 @@
  '(custom-safe-themes
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default)))
- )
+)
+
+
+(defvar last-file-name-handler-alist file-name-handler-alist)
+(setq gc-cons-threshold 402653184
+      gc-cons-percentage 0.6
+      file-name-handler-alist nil)
+
 
 ;;Package--------------------------------------------------
 (require 'package)
@@ -49,6 +56,15 @@
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+
+;; (setq gc-cons-threshold 50000000)
+
+(add-hook 'emacs-startup-hook 'my/set-gc-threshold)
+(defun my/set-gc-threshold ()
+  "Reset `gc-cons-threshold' to its default value."
+  (setq gc-cons-threshold 16777216 ;; 800000
+        gc-cons-percentage 0.1
+        file-name-handler-alist last-file-name-handler-alist))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

@@ -41,7 +41,7 @@
       (package-install package)))
 
   ;; (require 'ob-python)
-  ;; (require 'ob-async)
+  (require 'ob-async)
   ;; (require 'ox-latex)
 
   (org-babel-do-load-languages

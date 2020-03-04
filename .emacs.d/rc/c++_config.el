@@ -30,9 +30,7 @@
         ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
         ("M-j" . xref-pop-marker-stack)
 
-        ([f2] . projectile-find-other-file)
-        ("C-<f7>" . projectile-grep)
-        ([f7] . projectile-ag)
+        ([f2] . ff-find-other-file)
         )
   :init
   (autoload 'c-mode "cc-mode") ;;load only when necessary
@@ -129,6 +127,7 @@
     (ws-butler-mode 1)
     (whitespace-mode 1)
     (hs-minor-mode 1)
+    (yas-minor-mode 1)
     ;; (flyspell-prog-mode 1)
     (toggle-truncate-lines nil)
     ;; (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26

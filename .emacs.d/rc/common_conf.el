@@ -62,14 +62,18 @@
   :ensure t
 
   :init
-  (add-to-list 'default-frame-alist '(font . "Hack-10"))
+  (setq initial-major-mode 'fundamental-mode)
+  (setq frame-inhibit-implied-resize t)
+  (add-to-list 'default-frame-alist '(font . "Hack-9"))
 
   :config
   (load-theme 'nova t)
   (global-hl-line-mode t)
   (show-paren-mode 1)
   (autopair-global-mode)
+  (global-auto-revert-mode 1)   ;; auto refresh when file changes
 
+  (setq-default inhibit-compacting-font-caches t)
   (setq-default indent-tabs-mode nil)
 
   (setq show-paren-style 'expression
@@ -114,6 +118,7 @@
   :ensure nil
   :after ediff
   :config
+
   (set-face-attribute 'diff-added nil
                       :foreground "white" :background "DarkGreen")
   (set-face-attribute 'diff-removed nil
@@ -123,6 +128,7 @@
 
   ;;EDiff---------------------------------------------------------
   (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   )
 
 (when (require 'so-long nil :noerror)
@@ -216,6 +222,19 @@
   ;;               '((t . ivy--regex-fuzzy)))
   (setq-default ivy-posframe-display-functions-alist
                 '((t . ivy-posframe-display-at-frame-center)))
+
+  (defun ivy-with-thing-at-point (cmd)
+    (let ((ivy-initial-inputs-alist
+           (list
+            (cons cmd (thing-at-point 'symbol)))))
+      (funcall cmd)))
+
+  (defun counsel-ag-thing-at-point ()
+    (interactive)
+    (ivy-with-thing-at-point 'counsel-ag))
+
+
+  (global-set-key [(control f7)] 'counsel-ag-thing-at-point)    
   )
 
 ;; Project manager --------------------------
@@ -246,6 +265,24 @@
 ;; magit --------------------------------------------
 (use-package magit
   :ensure t
+
+  :no-require t
+  :defer t
+  :init
+
+  ;; WORKAROUND https://github.com/magit/magit/issues/2395
+  (define-derived-mode magit-staging-mode magit-status-mode "Magit staging"
+    "Mode for showing staged and unstaged changes."
+    :group 'magit-status)
+  (defun magit-staging-refresh-buffer ()
+    (magit-insert-section (status)
+                          (magit-insert-untracked-files)
+                          (magit-insert-unstaged-changes)
+                          (magit-insert-staged-changes)))
+  (defun magit-staging ()
+    (interactive)
+    (magit-mode-setup #'magit-staging-mode))
+
   :config
   (set-face-attribute 'magit-diff-context-highlight nil
                       :foreground "nil" :background "nil")
@@ -362,7 +399,9 @@
 (setq dired-listing-switches "-lta");;-lt
 (setq directory-free-space-program nil)
 (setq-default dired-dwim-target 1)
+(add-hook 'dired-mode-hook 'auto-revert-mode) ;; auto refresh dired when file changes
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
+
 
 ;;emacs Mercurial--------------------------------------------------
 (use-package ahg
@@ -530,7 +569,6 @@
 
 (global-set-key [f3] 'projectile-dired)
 (global-set-key [f4] 'eshell-new)
-(global-set-key [(control f7)] 'projectile-grep)
 (global-set-key [f7] 'projectile-ag)
 (global-set-key [(control f8)] 'compile)
 (global-set-key [f8] 'projectile-compile-project)
