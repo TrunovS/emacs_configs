@@ -7,7 +7,7 @@
                      projectile ag counsel-projectile
 
                      ;;ui complete
-                     ivy ivy-posframe counsel ivy-rich
+                     ivy ivy-posframe counsel
                      company
 
                      ;;common utils
@@ -116,7 +116,6 @@
 
 (use-package diff-mode
   :ensure nil
-  :after ediff
   :config
 
   (set-face-attribute 'diff-added nil
@@ -127,6 +126,7 @@
                       :foreground "white" :background "dim gray")
 
   ;;EDiff---------------------------------------------------------
+  (require 'ediff)
   (setq ediff-split-window-function 'split-window-horizontally)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   )
@@ -207,15 +207,14 @@
   :ensure t
   :ensure ivy-posframe
   :ensure counsel
-  :ensure ivy-rich
 
   :config
   (ivy-mode 1)
   (ivy-posframe-mode 1)
   (counsel-mode 1)
-  (ivy-rich-mode 1)
 
   (setq-default ivy-use-virtual-buffers t)
+  (setq-default ivy-initial-inputs-alist nil) ; remove initial ^ input.)
   (setq-default ivy-count-format "(%d/%d) ")
   ;; (setq-default ivy-initial-inputs-alist nil)
   ;; (setq-default ivy-re-builders-alist
@@ -323,7 +322,7 @@
 (use-package whitespace
   :ensure nil
   :ensure ws-butler
-  :after popup
+  :ensure popup
 
   :config
   (setq whitespace-style (quote (face tabs trailing empty tab-mark)));lines
@@ -403,7 +402,7 @@
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
 
 
-;;emacs Mercurial--------------------------------------------------
+;; Mercurial--------------------------------------------------
 (use-package ahg
   :ensure t
   :config
@@ -443,8 +442,8 @@
   (add-hook 'eshell-before-prompt-hook
             (lambda ()
               (setq xterm-color-preserve-properties t)))
-  (add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
-  (setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
+  ;; (add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
+  ;; (setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
 
   (defun eshell-new()
     "Open a new instance of eshell."

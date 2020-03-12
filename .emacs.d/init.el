@@ -24,7 +24,10 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-(package-initialize)
+
+(when (< emacs-major-version 27)
+  (package-initialize))
+
 ; fetch the list of packages available
 (unless package-archive-contents
   (package-refresh-contents))
