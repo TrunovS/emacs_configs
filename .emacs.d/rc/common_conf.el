@@ -73,6 +73,7 @@
   (autopair-global-mode)
   (global-auto-revert-mode 1)   ;; auto refresh when file changes
 
+  (setq-default enable-remote-dir-locals t)
   (setq-default inhibit-compacting-font-caches t)
   (setq-default indent-tabs-mode nil)
 
