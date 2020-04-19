@@ -64,7 +64,13 @@
   :init
   (setq initial-major-mode 'fundamental-mode)
   (setq frame-inhibit-implied-resize t)
-  (add-to-list 'default-frame-alist '(font . "Hack-9"))
+
+  (cond ((eq system-type 'darwin) ;mac os
+         (add-to-list 'default-frame-alist '(font . "Hack-12"))
+         (menu-bar-mode 1))
+        (t (add-to-list 'default-frame-alist '(font . "Hack-9"))
+           (menu-bar-mode -1))
+        )
 
   :config
   (load-theme 'nova t)
@@ -88,7 +94,7 @@
         create-lockfiles nil
         auto-save-default nil
         )
-  (menu-bar-mode -1)
+
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (fset 'yes-or-no-p 'y-or-n-p)
@@ -240,6 +246,7 @@
 ;; Project manager --------------------------
 (use-package projectile
   :ensure t
+  :ensure ag
 
   :init
   (projectile-mode +1)
@@ -251,6 +258,7 @@
   (setq-default projectile-mode-line-function
                 '(lambda ()
                    (format " Proj[%s]" (projectile-project-name))))
+  (setq-default ag-group-matches nil)
   )
 
 ;; Dumb jump ---------------------------------
