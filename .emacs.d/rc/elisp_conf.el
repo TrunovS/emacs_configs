@@ -11,13 +11,6 @@
 (use-package elisp-mode
   :ensure nil
 
-  :bind
-  (
-   :map lisp-mode-map
-        ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
-        ("M-j" . xref-pop-marker-stack)
-   )
-
   :config
 
   ;; install the missing packages

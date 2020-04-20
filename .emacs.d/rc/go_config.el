@@ -27,8 +27,7 @@
    :map go-mode-map
         ([f7] . 'projectile-ag)
         ("C-<f7>" . 'projectile-grep)
-        ("C-j" . 'xref-find-definitions)
-        ("M-j" . 'xref-pop-marker-stack)
+        ("\C-xj" . 'xref-find-definitions)
         ("\C-hj" . 'godoc-at-point)
         )
 

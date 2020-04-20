@@ -264,10 +264,33 @@
 ;; Dumb jump ---------------------------------
 (use-package dumb-jump
   :ensure t
+
+  :bind ;;HotKeys
+  (
+   ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
+   ("C-j" . dumb-jump-go)
+   ("M-j" . xref-pop-marker-stack)
+   )
+
   :config
   (setq-default dumb-jump-max-find-time 10)
   (setq-default dumb-jump-prefer-searcher 'ag)
   (setq-default dumb-jump-selector 'ivy)
+
+  (require 'counsel)
+  (defun dumb-jump-transformer (str)
+    "Highlight file and line number in STR."
+    (when (string-match "\\`\\([^:]+\\):\\([^:]+\\):" str)
+      (ivy-add-face-text-property (match-beginning 1) (match-end 1)
+                                  'ivy-grep-info
+                                  str)
+      (ivy-add-face-text-property (match-beginning 2) (match-end 2)
+                                  'ivy-grep-line-number
+                                  str))
+    str)
+
+
+  (ivy-set-display-transformer 'dumb-jump-go  'dumb-jump-transformer)
   )
 
 ;; magit --------------------------------------------
@@ -554,7 +577,7 @@
 (global-set-key "\C-xcc" 'mywithcp1251)
 (global-set-key "\C-xcu" 'mywithutf8)
 (global-set-key "\C-xp" 'goto-match-paren)
-(global-set-key "\C-xj" 'dumb-jump-go)
+;(global-set-key "\C-j" 'dumb-jump-go)
 (global-set-key "\M-o" 'other-window)
 (global-set-key "\C-xa" 'align)
 (global-set-key "\M-q" 'kill-buffer-and-window)
