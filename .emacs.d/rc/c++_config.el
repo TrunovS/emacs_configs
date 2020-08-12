@@ -153,10 +153,11 @@
     (add-to-list (make-local-variable 'company-backends)
                  '(company-lsp
                    company-c-headers
-                               company-files company-dabbrev))
+                   company-files company-dabbrev))
 
     (setq-local my-project-root (projectile-ensure-project (projectile-project-root)))
-    (setq-local company-c-headers-path-user (cons my-project-root '()))
+    ;; (setq-local company-c-headers-path-user (cons my-project-root '()))
+    (setq-local company-c-headers-path-user (cons default-directory '()))
     ;; Disable client-side cache because the LSP server does a better job.
     (setq company-transformers nil
           company-lsp-async t

@@ -77,9 +77,11 @@
   (global-hl-line-mode t)
   (show-paren-mode 1)
   (autopair-global-mode)
-  (global-auto-revert-mode 1)   ;; auto refresh when file changes
 
+  (global-auto-revert-mode 1)   ;; auto refresh when file changes
+  (setq-default auto-revert-remote-files t)
   (setq-default enable-remote-dir-locals t)
+
   (setq-default inhibit-compacting-font-caches t)
   (setq-default indent-tabs-mode nil)
 
@@ -220,6 +222,11 @@
   (ivy-posframe-mode 1)
   (counsel-mode 1)
 
+  ;; (set-face-attribute 'ivy-posframe-border nil
+  ;;                     :foreground "white" :background "white")
+
+                                        ;(setq ivy-posframe-border ((t (:inherit default :background "black"))))
+  (setq-default ivy-display-style 'fancy)
   (setq-default ivy-use-virtual-buffers t)
   (setq-default ivy-initial-inputs-alist nil) ; remove initial ^ input.)
   (setq-default ivy-count-format "(%d/%d) ")
@@ -227,7 +234,8 @@
   ;; (setq-default ivy-re-builders-alist
   ;;               '((t . ivy--regex-fuzzy)))
   (setq-default ivy-posframe-display-functions-alist
-                '((t . ivy-posframe-display-at-frame-center)))
+                '((compile  . ivy-posframe-display-at-frame-center)
+                  (t . ivy-posframe-display-at-frame-center)))
 
   (defun ivy-with-thing-at-point (cmd)
     (let ((ivy-initial-inputs-alist
@@ -237,10 +245,10 @@
 
   (defun counsel-ag-thing-at-point ()
     (interactive)
-    (ivy-with-thing-at-point 'counsel-ag))
+    (ivy-with-thing-at-point 'counsel-projectile-ag))
 
 
-  (global-set-key [(control f7)] 'counsel-ag-thing-at-point)    
+  (global-set-key [(control f7)] 'counsel-ag-thing-at-point)
   )
 
 ;; Project manager --------------------------
@@ -273,24 +281,36 @@
    )
 
   :config
+
   (setq-default dumb-jump-max-find-time 10)
-  (setq-default dumb-jump-prefer-searcher 'ag)
+  ;; (setq-default dumb-jump-prefer-searcher 'ag)
+  (setq-default dumb-jump-force-searcher 'ag)
   (setq-default dumb-jump-selector 'ivy)
 
   (require 'counsel)
   (defun dumb-jump-transformer (str)
     "Highlight file and line number in STR."
-    (when (string-match "\\`\\([^:]+\\):\\([^:]+\\):" str)
-      (ivy-add-face-text-property (match-beginning 1) (match-end 1)
-                                  'ivy-grep-info
-                                  str)
-      (ivy-add-face-text-property (match-beginning 2) (match-end 2)
-                                  'ivy-grep-line-number
-                                  str))
-    str)
+    (if (string-match "\\`\\([^:]+\\):\\([^:]+\\):" str)
+      (let (
+            (abs_path (substring str (match-beginning 1) (match-end 1)))
+            (fcolumn (substring str (match-beginning 2) (match-end 2)))
+            (ftooltip (substring str (match-end 2) nil))
+            (r_dir (car (last (split-string (projectile-ensure-project (projectile-project-root))
+                                            ":"))))
+            )
+        (setq relative_dir (file-relative-name abs_path r_dir))
+        (concat relative_dir ":" fcolumn ftooltip)
+        )
+      ;; (ivy-add-face-text-property (match-beginning 1) (match-end 1)
+      ;;                             'ivy-grep-info
+      ;;                             str)
+      ;; (ivy-add-face-text-property (match-beginning 2) (match-end 2)
+      ;;                             'ivy-grep-line-number
+      ;;                             str)
+      str)
+    )
 
-
-  (ivy-set-display-transformer 'dumb-jump-go  'dumb-jump-transformer)
+  (ivy-set-display-transformer 'dumb-jump-ivy-jump-to-selected  'dumb-jump-transformer)
   )
 
 ;; magit --------------------------------------------
@@ -549,6 +569,66 @@
   (interactive)
   (base64-decode-region (region-beginning) (region-end))
   (decode-coding-region (region-beginning) (region-end) 'utf-8)
+  )
+
+(defun base64-to-base64url (str)
+  (setq str (replace-regexp-in-string "=+$" "" str))
+  (setq str (replace-regexp-in-string "+" "-" str))
+  (setq str (replace-regexp-in-string "/" "_" str)))
+
+(defun base64url-to-base64 (str)
+  (setq str (replace-regexp-in-string "-" "+" str))
+  (setq str (replace-regexp-in-string "_" "/" str))
+  (let ((mod (% (length str) 4)))
+    (cond
+     ((= mod 1) (concat str "==="))
+     ((= mod 2) (concat str "=="))
+     ((= mod 3) (concat str "="))
+     (t str))))
+
+(defun base64url-encode-string (str)
+  (base64-to-base64url (base64-encode-string str t)))
+
+(defun base64url-decode-string (str)
+  (base64-decode-string (base64url-to-base64 str)))
+
+(defun base64url-decode-region (beg end)
+  (interactive "r")
+  (save-excursion
+    (let ((new-text (base64url-decode-string (buffer-substring-no-properties beg end))))
+      (kill-region beg end)
+      (insert new-text))))
+
+(defun base64url-encode-region (beg end)
+  (interactive "r")
+  (save-excursion
+    (let ((new-text (base64url-encode-string (buffer-substring-no-properties beg end))))
+      (kill-region beg end)
+      (insert new-text))))
+
+(defun tserg/base64url-encode ()
+  (interactive)
+  (encode-coding-region (region-beginning) (region-end) 'binary)
+  (base64url-encode-region (region-beginning) (region-end))
+  )
+
+(defun tserg/base64url-decode ()
+  (interactive)
+  (base64url-decode-region (region-beginning) (region-end))
+  (decode-coding-region (region-beginning) (region-end) 'utf-8)
+  )
+
+(defun html-decode-region (beg end)
+  (interactive "r")
+  (save-excursion
+    (let ((new-text (xml-substitute-special (buffer-substring-no-properties beg end))))
+      (kill-region beg end)
+      (insert new-text)))
+  )
+
+(defun tserg/html-decode-region ()
+  (interactive)
+  (html-decode-region (region-beginning) (region-end))
   )
 
 ;; xml pretty print----------------------------------------
