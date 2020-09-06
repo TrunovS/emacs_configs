@@ -5,6 +5,10 @@
 
 (use-package org
   :ensure nil
+  :ensure ob-async
+  :ensure ob-http
+  :ensure ob-restclient
+
   :no-require t ;;defered config read
   :defer t ;;defered config read
 
@@ -35,11 +39,6 @@
 
   :config
 
-  ;; install the missing packages
-  (dolist (package org-package-list)
-    (unless (package-installed-p package)
-      (package-install package)))
-
   ;; (require 'ob-python)
   (require 'ob-async)
   ;; (require 'ox-latex)
@@ -53,8 +52,8 @@
      (latex . t)
      (R . t)
      (http . t)
-     ))
-
+     )
+)
   (setq
    ;; Fix an incompatibility ob-async and ob-ipython packages
    ;; ob-async-no-async-languages-alist '("ipython")
@@ -70,12 +69,38 @@
 
   (defvar org-blocks-hidden nil)
 
-  (set-face-attribute 'org-block nil
+  (cond ((< emacs-major-version 27)
+         (set-face-attribute 'org-block nil
+                             :foreground nil
+                             :background (color-darken-name (face-background 'default) 5))
+         (set-face-attribute 'org-code nil
+                             :foreground nil
+                             :background (color-darken-name (face-background 'default) 5))
+         )
+        (set-face-attribute 'org-block-begin-line nil
                       :foreground nil
-                      :background (color-darken-name (face-background 'default) 4))
-  (set-face-attribute 'org-code nil
-                      :foreground nil
-                      :background (color-darken-name (face-background 'default) 4))
+                      :overline "black"
+                      :background (color-lighten-name (face-background 'default) 5)
+                      :extend t)
+        (set-face-attribute 'org-block-end-line nil
+                            :foreground nil
+                            :overline nil
+                            :underline "black"
+                            :background (color-lighten-name (face-background 'default) 5)
+                            :extend t)
+        (set-face-attribute 'org-meta-line nil
+                            :foreground nil
+                            :background (color-lighten-name (face-background 'default) 5)
+                            :extend t)
+        (set-face-attribute 'org-block nil
+                            :foreground nil
+                            :background (color-darken-name (face-background 'default) 5)
+                            :extend t)
+        (set-face-attribute 'org-code nil
+                            :foreground nil
+                            :background (color-darken-name (face-background 'default) 5)
+                            :extend t)
+        )
 
   (defun tserg/org-latex-export-to-pdf ()
     (interactive)
