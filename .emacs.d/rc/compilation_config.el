@@ -11,6 +11,13 @@
     (unless (package-installed-p package)
       (package-install package)))
 
+  (setq tserg/filepath-font-lock-keywords
+      (let* (
+            (filepath-regexp "[\/A-Za-z\\0-9 _@:]+\\.[a-zA-Z]+[:0-9]*\(?[,0-9]*"))
+
+        `(
+          (,filepath-regexp . font-lock-constant-face)
+          )))
 
   ;; multi-compile-----------------------------
   (require 'multi-compile)
@@ -41,6 +48,7 @@
   ;; Long Lines processing--------------------------------------------
   (defun tserg/compilation-long-hook ()
     ;; (fundamental-mode)
+    (setq font-lock-defaults '((tserg/filepath-font-lock-keywords)))
     (flyspell-mode -1)
     (yas/minor-mode -1)
     (toggle-truncate-lines 0)

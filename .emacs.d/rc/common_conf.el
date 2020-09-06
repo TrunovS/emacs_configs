@@ -1,5 +1,5 @@
 ;; Packages list needed--------------------------
-(setq package-list '(use-package
+(setq package-list '(quelpa-use-package
                      ;;theme specific
                      auto-dim-other-buffers smart-mode-line nova-theme
 
@@ -31,7 +31,16 @@
     (package-install package)))
 
 (eval-when-compile
-  (require 'use-package))
+  (require 'use-package)
+  (require 'quelpa-use-package)
+  )
+
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://github.com/quelpa/quelpa-use-package.git"))
+
+
 
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
@@ -40,6 +49,12 @@
 (use-package tramp
   :ensure nil
   :config
+  (setq-default auto-revert-remote-files t)
+  (setq-default enable-remote-dir-locals t)
+  (setq-default vc-handled-backends '(Hg Git))
+  (setq-default remote-file-name-inhibit-cache nil)
+  (setq-default tramp-completion-reread-directory-timeout nil)
+
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
   )
 
@@ -79,8 +94,6 @@
   (autopair-global-mode)
 
   (global-auto-revert-mode 1)   ;; auto refresh when file changes
-  (setq-default auto-revert-remote-files t)
-  (setq-default enable-remote-dir-locals t)
 
   (setq-default inhibit-compacting-font-caches t)
   (setq-default indent-tabs-mode nil)
@@ -293,20 +306,15 @@
     (if (string-match "\\`\\([^:]+\\):\\([^:]+\\):" str)
       (let (
             (abs_path (substring str (match-beginning 1) (match-end 1)))
-            (fcolumn (substring str (match-beginning 2) (match-end 2)))
+            (flinam (substring str (match-beginning 2) (match-end 2)))
             (ftooltip (substring str (match-end 2) nil))
             (r_dir (car (last (split-string (projectile-ensure-project (projectile-project-root))
                                             ":"))))
             )
         (setq relative_dir (file-relative-name abs_path r_dir))
-        (concat relative_dir ":" fcolumn ftooltip)
+        (concat (propertize relative_dir 'face 'ivy-grep-info) ":"
+                (propertize flinam 'face 'ivy-grep-line-number) ftooltip)
         )
-      ;; (ivy-add-face-text-property (match-beginning 1) (match-end 1)
-      ;;                             'ivy-grep-info
-      ;;                             str)
-      ;; (ivy-add-face-text-property (match-beginning 2) (match-end 2)
-      ;;                             'ivy-grep-line-number
-      ;;                             str)
       str)
     )
 
@@ -642,6 +650,29 @@
     (sgml-pretty-print beg end)
     (nxml-mode)
     (auto-fill-mode fill)))
+
+
+(defun tserg/revert-all-buffers ()
+  "Refresh all open buffers from their respective files."
+  (interactive)
+  (let* ((list (buffer-list))
+         (buffer (car list)))
+    (while buffer
+      (let ((filename (buffer-file-name buffer)))
+        ;; Revert only buffers containing files, which are not modified;
+        ;; do not try to revert non-file buffers like *Messages*.
+        (when filename
+          (if (file-exists-p filename)
+              ;; If the file exists, revert the buffer.
+              (with-demoted-errors "Error: %S"
+                (with-current-buffer buffer
+                  (revert-buffer :ignore-auto :noconfirm)))
+            ;; If the file doesn't exist, kill the buffer.
+            (let (kill-buffer-query-functions) ; No query done when killing buffer
+              (kill-buffer buffer)
+              (message "Killed non-existing file buffer: %s" buffer))))
+        (setq buffer (pop list)))))
+   (message "Finished reverting non-file buffers."))
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
 (global-set-key "\M-x" 'counsel-M-x)
