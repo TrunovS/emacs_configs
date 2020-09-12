@@ -1,8 +1,4 @@
 ;; Packages list needed--------------------------
-(setq logs-package-list '(;;custom modes
-                          logview
-                          ))
-
 (use-package logview
   :ensure t ;; auto install on startup only
 
@@ -10,19 +6,10 @@
   :no-require t
   :defer t
 
-  :bind ;;HotKeys
-  (
-   :map logview-mode-map
-   ("M-c" . 'org-copy-visible)
-   )
-
   :config ;; do after download
 
-  ;; install the missing packages
-  (dolist (package logs-package-list)
-    (unless (package-installed-p package)
-      (package-install package)))
-
+  (setq-default logview-copy-visible-text-only t)
+  (setq-default logview-auto-revert-mode t)
 
   (setq-default logview-additional-timestamp-formats
                 '((("yyyy-MMM-dd HH:mm:ss.SSSSSS"

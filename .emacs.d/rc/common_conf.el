@@ -50,6 +50,7 @@
   :ensure nil
   :config
   (setq-default auto-revert-remote-files t)
+  ;; auto-revert-use-notify nil?
   (setq-default enable-remote-dir-locals t)
   (setq-default vc-handled-backends '(Hg Git))
   (setq-default remote-file-name-inhibit-cache nil)
@@ -101,6 +102,7 @@
   (setq show-paren-style 'expression
         column-number-mode t
         visible-bell t
+        ring-bell-function 'ignore
         inhibit-startup-message t
         scroll-step 1
         toggle-truncate-lines t ;; dont fit long line in buffer
@@ -236,9 +238,10 @@
   (counsel-mode 1)
 
   ;; (set-face-attribute 'ivy-posframe-border nil
-  ;;                     :foreground "white" :background "white")
+  ;;                     :foreground nil :background "black")
+  (set-face-attribute 'ivy-posframe nil
+                       :foreground nil :background (color-darken-name (face-background 'default) 7))
 
-                                        ;(setq ivy-posframe-border ((t (:inherit default :background "black"))))
   (setq-default ivy-display-style 'fancy)
   (setq-default ivy-use-virtual-buffers t)
   (setq-default ivy-initial-inputs-alist nil) ; remove initial ^ input.)
@@ -293,6 +296,8 @@
    ("M-j" . xref-pop-marker-stack)
    )
 
+  :functions (tserg/fontify-with-mode tserg/fontify-using-faces)
+
   :config
 
   (setq-default dumb-jump-max-find-time 10)
@@ -301,6 +306,7 @@
   (setq-default dumb-jump-selector 'ivy)
 
   (require 'counsel)
+
   (defun dumb-jump-transformer (str)
     "Highlight file and line number in STR."
     (if (string-match "\\`\\([^:]+\\):\\([^:]+\\):" str)
@@ -311,9 +317,11 @@
             (r_dir (car (last (split-string (projectile-ensure-project (projectile-project-root))
                                             ":"))))
             )
+
         (setq relative_dir (file-relative-name abs_path r_dir))
-        (concat (propertize relative_dir 'face 'ivy-grep-info) ":"
-                (propertize flinam 'face 'ivy-grep-line-number) ftooltip)
+        (concat (propertize relative_dir 'face 'link) ":"
+                (propertize flinam 'face 'link)
+                (tserg/fontify-using-faces (tserg/fontify-with-mode major-mode ftooltip)))
         )
       str)
     )
@@ -344,9 +352,9 @@
 
   :config
   (set-face-attribute 'magit-diff-context-highlight nil
-                      :foreground "nil" :background "nil")
+                      :foreground nil :background nil)
   (set-face-attribute 'magit-diff-context nil
-                      :foreground "nil" :background "nil")
+                      :foreground nil :background nil)
   ;; (set-face-attribute 'magit-diff-added-highlight nil
   ;;                     :foreground "red" :background "nil")
   )
@@ -391,8 +399,8 @@
   (setq whitespace-line-column 90)
 
   (set-face-attribute 'whitespace-line nil :foreground "nil" :overline t)
-  (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background "nil")
-  (set-face-attribute 'whitespace-trailing nil :foreground "black" :background "nil")
+  (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
+  (set-face-attribute 'whitespace-trailing nil :foreground "black" :background nil)
 
   (setq ws-butler-keep-whitespace-before-point nil)
 
@@ -444,14 +452,22 @@
   )
 ;; (load-file "~/.emacs.d/unicad.el")
 
-;;Cygwin customize ---------------------------------
-(cond ((eq system-type 'cygwin)
+;;Systems customize ---------------------------------
+(cond ((eq system-type 'cygwin) ;; Cygwin
        (load "~/.emacs.d/lisp/cygwin-mount.el")
        (load "~/.emacs.d/lisp/windows-path.el")
        (require 'windows-path)
        (windows-path-activate)
        (set-file-name-coding-system 'utf-8)
+       (message "Cygwin")
        )
+      ((string-equal system-type "darwin") ;; Mac OS X
+       (progn
+         (setq mac-option-key-is-meta nil)
+         (setq mac-command-key-is-meta t)
+         (setq mac-command-modifier 'meta)
+         (setq mac-option-modifier nil)
+         (message "Mac OS X")))
       )
 
 ;;Dired-----------------------------------------------------------
@@ -639,6 +655,28 @@
   (html-decode-region (region-beginning) (region-end))
   )
 
+
+(defun tserg/fontify-with-mode (mode text)
+  (with-temp-buffer
+    (erase-buffer)
+    (insert text)
+    (delay-mode-hooks (funcall mode))
+    (font-lock-default-function (funcall mode))
+    (font-lock-default-fontify-region (point-min)
+                                      (point-max)
+                                      nil)
+    (buffer-string)))
+
+;; needed for font locked buffers
+(defun tserg/fontify-using-faces (text)
+  (let ((pos 0))
+    (while (setq next (next-single-property-change pos 'face text))
+      (put-text-property pos next 'font-lock-face (get-text-property pos 'face text) text)
+      (setq pos next))
+    (add-text-properties 0  (length text) '(fontified t) text)
+    text))
+
+
 ;; xml pretty print----------------------------------------
 (defun xml-pretty-print (beg end &optional arg)
   "Reformat the region between BEG and END.
@@ -672,7 +710,7 @@
               (kill-buffer buffer)
               (message "Killed non-existing file buffer: %s" buffer))))
         (setq buffer (pop list)))))
-   (message "Finished reverting non-file buffers."))
+  (message "Finished reverting non-file buffers."))
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
 (global-set-key "\M-x" 'counsel-M-x)

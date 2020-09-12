@@ -1,8 +1,3 @@
-(setq org-package-list '(;; org mode babels
-                         ob-async ob-http
-                                  ;; ob-ipython ;this causes load of python mode in setup
-                         ))
-
 (use-package org
   :ensure nil
   :ensure ob-async
@@ -77,30 +72,31 @@
                              :foreground nil
                              :background (color-darken-name (face-background 'default) 5))
          )
-        (set-face-attribute 'org-block-begin-line nil
-                      :foreground nil
-                      :overline "black"
-                      :background (color-lighten-name (face-background 'default) 5)
-                      :extend t)
-        (set-face-attribute 'org-block-end-line nil
-                            :foreground nil
-                            :overline nil
-                            :underline "black"
-                            :background (color-lighten-name (face-background 'default) 5)
-                            :extend t)
-        (set-face-attribute 'org-meta-line nil
-                            :foreground nil
-                            :background (color-lighten-name (face-background 'default) 5)
-                            :extend t)
-        (set-face-attribute 'org-block nil
-                            :foreground nil
-                            :background (color-darken-name (face-background 'default) 5)
-                            :extend t)
-        (set-face-attribute 'org-code nil
-                            :foreground nil
-                            :background (color-darken-name (face-background 'default) 5)
-                            :extend t)
-        )
+        (t
+         (set-face-attribute 'org-block-begin-line nil
+                             :foreground nil
+                             :overline "black"
+                             :background (color-lighten-name (face-background 'default) 5)
+                             :extend t)
+         (set-face-attribute 'org-block-end-line nil
+                             :foreground nil
+                             :overline nil
+                             :underline "black"
+                             :background (color-lighten-name (face-background 'default) 5)
+                             :extend t)
+         (set-face-attribute 'org-meta-line nil
+                             :foreground nil
+                             :background (color-lighten-name (face-background 'default) 5)
+                             :extend t)
+         (set-face-attribute 'org-block nil
+                             :foreground nil
+                             :background (color-darken-name (face-background 'default) 5)
+                             :extend t)
+         (set-face-attribute 'org-code nil
+                             :foreground nil
+                             :background (color-darken-name (face-background 'default) 5)
+                             :extend t)
+        ))
 
   (defun tserg/org-latex-export-to-pdf ()
     (interactive)
