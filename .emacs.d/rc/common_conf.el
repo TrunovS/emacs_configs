@@ -40,8 +40,6 @@
    :fetcher git
    :url "https://github.com/quelpa/quelpa-use-package.git"))
 
-
-
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
 
@@ -49,7 +47,7 @@
 (use-package tramp
   :ensure nil
   :config
-  (setq-default auto-revert-remote-files t)
+  ;; (setq-default auto-revert-remote-files t)
   ;; auto-revert-use-notify nil?
   (setq-default enable-remote-dir-locals t)
   (setq-default vc-handled-backends '(Hg Git))
@@ -119,6 +117,8 @@
   ;; fixing some perfomance issues with long lines of base64 text
   (setq-default auto-window-vscroll nil)
   (setq-default line-move-visual nil)
+  ;; (setq-default bidi-paragraph-direction 'left-to-right)
+  ;; (setq-default bidi-inhibit-bpa nil)
 
   (set-face-background 'default "#353535")
   (set-face-attribute 'cursor  nil :background "white")
@@ -127,6 +127,8 @@
   (set-face-attribute 'highlight nil
                       :background (color-darken-name (face-background 'default) 10))
 
+  (setq frame-resize-pixelwise t)
+  (toggle-frame-maximized)
   )
 
 (use-package auto-dim-other-buffers
@@ -246,9 +248,9 @@
   (setq-default ivy-use-virtual-buffers t)
   (setq-default ivy-initial-inputs-alist nil) ; remove initial ^ input.)
   (setq-default ivy-count-format "(%d/%d) ")
-  ;; (setq-default ivy-initial-inputs-alist nil)
   ;; (setq-default ivy-re-builders-alist
-  ;;               '((t . ivy--regex-fuzzy)))
+  ;;               '((ivy-switch-buffer . ivy--regex-plus)
+  ;;                 (t . ivy--regex-fuzzy)))
   (setq-default ivy-posframe-display-functions-alist
                 '((compile  . ivy-posframe-display-at-frame-center)
                   (t . ivy-posframe-display-at-frame-center)))
@@ -362,6 +364,8 @@
 ;; Company complete --------------------------------------------
 (use-package company
   :ensure t
+  :ensure company-fuzzy
+  :ensure flx
 
   :bind
   ("M-." . company-complete)
@@ -377,10 +381,14 @@
            company-dabbrev)
           ))
 
+  (global-company-fuzzy-mode 1)
+  (setq company-fuzzy-sorting-backend 'flx)
+
+  (setq company-require-match nil)
+  (setq company-tooltip-align-annotations t)
   (setq company-dabbrev-ignore-case 1)
   (setq company-dabbrev-downcase nil)
-  (setq company-dabbrev-char-regexp "\\sw\\|\\s_")
-
+  ;; (setq company-dabbrev-char-regexp "\\sw\\|\\s_")
   (setq dabbrev-case-distinction '1)
   (setq dabbrev-case-fold-search 'nil)
   (setq dabbrev-case-replace 'nil)

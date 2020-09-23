@@ -9,7 +9,6 @@
 
                             ;;code complete
                             lsp-mode lsp-ui
-                            company-lsp
                             company-c-headers ;C
 
                             dash
@@ -43,7 +42,6 @@
     (unless (package-installed-p package)
       (package-install package)))
 
-  (require 'company-lsp) ;;   :after (company-lsp projectile)?
   (require 'projectile)
   ;; For switch between header and source -----------------
   ;; Switch fromm *.<impl> to *.<head> and vice versa
@@ -151,7 +149,7 @@
     (setq-local lsp-ui-doc-position (quote top))
 
     (add-to-list (make-local-variable 'company-backends)
-                 '(company-lsp
+                 '(company-capf
                    company-c-headers
                    company-files company-dabbrev))
 
@@ -160,8 +158,6 @@
     (setq-local company-c-headers-path-user (cons default-directory '()))
     ;; Disable client-side cache because the LSP server does a better job.
     (setq company-transformers nil
-          company-lsp-async t
-          company-lsp-cache-candidates nil
           )
 
     (company-quickhelp-mode 1)

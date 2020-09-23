@@ -66,7 +66,7 @@
 (defun my/set-gc-threshold ()
   "Reset `gc-cons-threshold' to its default value."
   (setq gc-cons-threshold 16777216 ;; 800000
-        gc-cons-percentage 0.1
+        gc-cons-percentage 0.2
         file-name-handler-alist last-file-name-handler-alist))
 
 (custom-set-faces
