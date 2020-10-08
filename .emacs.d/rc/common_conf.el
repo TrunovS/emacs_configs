@@ -4,14 +4,16 @@
                      auto-dim-other-buffers smart-mode-line nova-theme
 
                      ;;project management
-                     projectile ag counsel-projectile
+                     projectile ag counsel-projectile ggtags
 
                      ;;ui complete
                      ivy ivy-posframe counsel
-                     company
+                     company-posframe company-fuzzy
+                     company-quickhelp
 
                      ;;common utils
-                     uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy autopair
+                     auto-highlight-symbol
+                     uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy flx autopair
                      yasnippet yasnippet-snippets
                      dumb-jump xterm-color interleave dired-narrow smex wgrep
 
@@ -20,9 +22,6 @@
 
                      ;;custom modes
                      dockerfile-mode docker-compose-mode undo-tree yaml-mode
-
-                     ;;code complete
-                     company-quickhelp
                      ))
 
 ; install the missing packages
@@ -131,6 +130,12 @@
   (toggle-frame-maximized)
   )
 
+(use-package auto-highlight-symbol
+  :ensure t
+  :config
+  (global-auto-highlight-symbol-mode 1)
+  )
+
 (use-package auto-dim-other-buffers
   :ensure t
   :config
@@ -201,6 +206,7 @@
   (sml/setup)
   (setq sml/shortener-func (lambda (_dir _max-length) ""))
   (dolist (item '(" ivy-posframe"
+                  " company-posframe"
                   " company"
                   " ivy"
                   " hs"
@@ -216,6 +222,9 @@
                   " ARev"
                   " ws"
                   " wb"
+                  " ComFuz"
+                  " HS"
+                  " GG"
                   ))
     (add-to-list 'rm-blacklist item)
     )
@@ -248,9 +257,10 @@
   (setq-default ivy-use-virtual-buffers t)
   (setq-default ivy-initial-inputs-alist nil) ; remove initial ^ input.)
   (setq-default ivy-count-format "(%d/%d) ")
-  ;; (setq-default ivy-re-builders-alist
-  ;;               '((ivy-switch-buffer . ivy--regex-plus)
-  ;;                 (t . ivy--regex-fuzzy)))
+  (setq-default ivy-re-builders-alist
+                '((ivy-switch-buffer . ivy--regex-fuzzy)
+                  (counsel-M-x . ivy--regex-fuzzy)
+                  (t . ivy--regex-plus)))
   (setq-default ivy-posframe-display-functions-alist
                 '((compile  . ivy-posframe-display-at-frame-center)
                   (t . ivy-posframe-display-at-frame-center)))
@@ -279,6 +289,7 @@
 
   :config
 
+  (setq-default projectile-hg-command "hg files -0 .")
   (setq-default projectile-indexing-method 'alien);;hybrid
   (setq-default projectile-completion-system 'ivy)
   (setq-default projectile-mode-line-function
@@ -361,13 +372,18 @@
   ;;                     :foreground "red" :background "nil")
   )
 
+(use-package ggtags
+  :ensure t
+  )
+
 ;; Company complete --------------------------------------------
 (use-package company
   :ensure t
+  :ensure company-posframe
   :ensure company-fuzzy
   :ensure flx
 
-  :bind
+  :bind*
   ("M-." . company-complete)
 
   :init
@@ -378,9 +394,12 @@
   (setq company-backends
         '((company-files          ; files & directory
            company-yasnippet
-           company-dabbrev)
+           company-capf
+           company-dabbrev
+           )
           ))
 
+  (company-posframe-mode 1)
   (global-company-fuzzy-mode 1)
   (setq company-fuzzy-sorting-backend 'flx)
 
@@ -388,7 +407,9 @@
   (setq company-tooltip-align-annotations t)
   (setq company-dabbrev-ignore-case 1)
   (setq company-dabbrev-downcase nil)
-  ;; (setq company-dabbrev-char-regexp "\\sw\\|\\s_")
+  (setq company-dabbrev-char-regexp "\\sw\\|\\s_")
+  (setq company-dabbrev-ignore-buffers "log$")
+
   (setq dabbrev-case-distinction '1)
   (setq dabbrev-case-fold-search 'nil)
   (setq dabbrev-case-replace 'nil)
@@ -414,8 +435,7 @@
 
   (defun my:force-modes (rule-mode &rest modes)
     "switch on/off several modes depending of state of
-    the controlling minor mode
-  "
+    the controlling minor mode"
     (let ((rule-state (if rule-mode 1 -1)
                       ))
       (mapcar (lambda (k) (funcall k rule-state)) modes)

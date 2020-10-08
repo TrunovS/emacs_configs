@@ -8,7 +8,6 @@
                             ws-butler smart-tabs-mode
 
                             ;;code complete
-                            lsp-mode lsp-ui
                             company-c-headers ;C
 
                             dash
@@ -123,6 +122,7 @@
     (c-set-offset 'substatement-open 0)
     (c-set-offset 'block-close 0)
 
+    (ggtags-mode 1)
     (ws-butler-mode 1)
     (whitespace-mode 1)
     (hs-minor-mode 1)
@@ -136,41 +136,21 @@
 
     (smart-tabs-mode 1)
 
-    (lsp 1)
-    (lsp-ui-mode 1)
-    (setq-local lsp-prefer-flymake 'nil)
-    (setq lsp-ui-doc-include-signature nil  ; don't include type signature in the child frame
-          lsp-ui-sideline-enable nil ; don't show symbol on the right of info
-          lsp-enable-on-type-formatting  nil ; don't format code smart\dumbly
-          lsp-before-save-edits nil) ; don't format code smart\dumbly on save
     (eldoc-mode nil)
     (global-eldoc-mode -1)
     (flymake-mode -1)
-    (setq-local lsp-ui-doc-position (quote top))
+    (company-fuzzy-mode -1)
 
     (add-to-list (make-local-variable 'company-backends)
-                 '(company-capf
-                   company-c-headers
-                   company-files company-dabbrev))
+                 '(company-c-headers))
+    ;; (add-to-list 'company-fuzzy-full-input-backends 'company-c-headers)
 
     (setq-local my-project-root (projectile-ensure-project (projectile-project-root)))
     ;; (setq-local company-c-headers-path-user (cons my-project-root '()))
     (setq-local company-c-headers-path-user (cons default-directory '()))
-    ;; Disable client-side cache because the LSP server does a better job.
-    (setq company-transformers nil
-          )
 
     (company-quickhelp-mode 1)
     )
 
   (add-hook 'c-mode-common-hook 'tserg/c-mode-common-hook)
   )
-
-;; lsp remote ----------------------------
-;; (require 'lsp)
-;; (lsp-register-client
-;;  (make-lsp-client :new-connection (lsp-tramp-connection
-;; 				                           "/")
-;;                   :major-modes '(c-mode c++-mode)
-;;                       :remote? t
-;;                       :server-id 'clangd-remote))
