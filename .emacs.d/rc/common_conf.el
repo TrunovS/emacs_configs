@@ -132,6 +132,10 @@
 
 (use-package auto-highlight-symbol
   :ensure t
+
+  :init
+  (setq auto-highlight-symbol-mode-map (make-sparse-keymap))
+
   :config
   (global-auto-highlight-symbol-mode 1)
   )
