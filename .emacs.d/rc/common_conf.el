@@ -137,7 +137,9 @@
   (setq auto-highlight-symbol-mode-map (make-sparse-keymap))
 
   :config
+
   (global-auto-highlight-symbol-mode 1)
+  ;; (assq-delete-all 'auto-highlight-symbol-mode-map minor-mode-map-alist)
   )
 
 (use-package auto-dim-other-buffers
@@ -247,6 +249,8 @@
   :ensure ivy-posframe
   :ensure counsel
 
+  :functions (grep-like-transformer tserg/fontify-with-mode tserg/fontify-using-faces)
+
   :config
   (ivy-mode 1)
   (ivy-posframe-mode 1)
@@ -272,12 +276,15 @@
   (defun ivy-with-thing-at-point (cmd)
     (let ((ivy-initial-inputs-alist
            (list
-            (cons cmd (thing-at-point 'symbol)))))
+            (cons cmd (thing-at-point 'word)))))
       (funcall cmd)))
 
   (defun counsel-ag-thing-at-point ()
     (interactive)
     (ivy-with-thing-at-point 'counsel-projectile-ag))
+
+  ;; (ivy-set-display-transformer 'counsel-ag 'counsel-git-grep-transformer)
+  (ivy-set-display-transformer 'counsel-ag 'grep-like-transformer)
 
 
   (global-set-key [(control f7)] 'counsel-ag-thing-at-point)
@@ -313,7 +320,7 @@
    ("M-j" . xref-pop-marker-stack)
    )
 
-  :functions (tserg/fontify-with-mode tserg/fontify-using-faces)
+  :functions (grep-like-transformer tserg/fontify-with-mode tserg/fontify-using-faces)
 
   :config
 
@@ -323,27 +330,7 @@
   (setq-default dumb-jump-selector 'ivy)
 
   (require 'counsel)
-
-  (defun dumb-jump-transformer (str)
-    "Highlight file and line number in STR."
-    (if (string-match "\\`\\([^:]+\\):\\([^:]+\\):" str)
-      (let (
-            (abs_path (substring str (match-beginning 1) (match-end 1)))
-            (flinam (substring str (match-beginning 2) (match-end 2)))
-            (ftooltip (substring str (match-end 2) nil))
-            (r_dir (car (last (split-string (projectile-ensure-project (projectile-project-root))
-                                            ":"))))
-            )
-
-        (setq relative_dir (file-relative-name abs_path r_dir))
-        (concat (propertize relative_dir 'face 'link) ":"
-                (propertize flinam 'face 'link)
-                (tserg/fontify-using-faces (tserg/fontify-with-mode major-mode ftooltip)))
-        )
-      str)
-    )
-
-  (ivy-set-display-transformer 'dumb-jump-ivy-jump-to-selected  'dumb-jump-transformer)
+  (ivy-set-display-transformer 'dumb-jump-ivy-jump-to-selected  'grep-like-transformer)
   )
 
 ;; magit --------------------------------------------
@@ -396,15 +383,15 @@
   :config
   ;; set default `company-backends'
   (setq company-backends
-        '((company-files          ; files & directory
-           company-yasnippet
-           company-capf
-           company-dabbrev
+        '((company-capf
+           company-files          ; files & directory
+           company-yasnippet ; this one can be blocking and performance slow
+           company-dabbrev ; this one can be blocking and performance slow
            )
           ))
 
   (company-posframe-mode 1)
-  (global-company-fuzzy-mode 1)
+  (global-company-fuzzy-mode 0)
   (setq company-fuzzy-sorting-backend 'flx)
 
   (setq company-require-match nil)
@@ -708,6 +695,63 @@
     (add-text-properties 0  (length text) '(fontified t) text)
     text))
 
+(defun grep-like-transformer (str)
+  "Highlight file and line number in STR."
+  (if (string-match "\\`\\([^:]+\\):\\([^:]+\\):" str)
+      (let (
+            (abs_path (substring str (match-beginning 1) (match-end 1)))
+            (flinam (substring str (match-beginning 2) (match-end 2)))
+            (ftooltip (substring str (match-end 2) nil))
+            (r_dir (car (last (split-string (projectile-ensure-project (projectile-project-root))
+                                            ":"))))
+            )
+        (setq relative_dir (file-relative-name abs_path r_dir))
+        (concat (propertize relative_dir 'face 'link) ":"
+                (propertize flinam 'face 'link)
+                (tserg/fontify-using-faces (tserg/fontify-with-mode major-mode ftooltip)))
+        )
+    str)
+  )
+
+;TODO: use this with occure to colorize found code lines with .
+(defun tserg/get-major-mode-by-filename (name)
+  (let* ((remote-id (file-remote-p name))
+         (case-insensitive-p (file-name-case-insensitive-p name)))
+    ;; Remove backup-suffixes from file name.
+    (setq name (file-name-sans-versions name))
+    ;; Remove remote file name identification.
+    (when (and (stringp remote-id)
+               (string-match (regexp-quote remote-id) name))
+      (setq name (substring name (match-end 0))))
+    (loop
+     ;; Find first matching alist entry.
+     (setq mode
+           (if case-insensitive-p
+               ;; Filesystem is case-insensitive.
+               (let ((case-fold-search t))
+                 (assoc-default name auto-mode-alist
+                                'string-match))
+             ;; Filesystem is case-sensitive.
+             (or
+              ;; First match case-sensitively.
+              (let ((case-fold-search nil))
+                (assoc-default name auto-mode-alist
+                               'string-match))
+              ;; Fallback to case-insensitive match.
+              (and auto-mode-case-fold
+                   (let (((custom-autoload symbol load noset)se-fold-search t))
+                     (assoc-default name auto-mode-alist
+                                    'string-match))))))
+     (if (and mode
+              (consp mode)
+              (cadr mode))
+         (setq mode (car mode)
+               name (substring name 0 (match-beginning 0)))
+       )
+     (when mode
+       (return mode)))
+    )
+  )
 
 ;; xml pretty print----------------------------------------
 (defun xml-pretty-print (beg end &optional arg)
@@ -744,6 +788,25 @@
         (setq buffer (pop list)))))
   (message "Finished reverting non-file buffers."))
 
+(defvar-local tserg/occur-edit-buffers nil
+  "Save buffers in which occur performed changes.")
+
+(add-hook 'occur-edit-mode-hook
+          (defun tserg/occur-eddit-save-edits ()
+            (add-hook 'after-change-functions
+                      'occur-edit-remember-buffer+ nil t)))
+
+(defun occur-edit-remember-buffer+ (&rest _)
+  (let* ((m (get-text-property (line-beginning-position) 'occur-target))
+         (buf (and (markerp m) (marker-buffer m))))
+    (when buf
+      (pushnew buf tserg/occur-edit-buffers))))
+
+(define-advice occur-cease-edit (:before () save-edits)
+  (dolist (buf tserg/occur-edit-buffers)
+    (with-current-buffer buf
+      (save-buffer))))
+
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
 (global-set-key "\M-x" 'counsel-M-x)
 (global-set-key "\C-c\C-g" 'google-this)
@@ -759,7 +822,6 @@
 (global-set-key "\C-xcu" 'mywithutf8)
 (global-set-key "\C-xp" 'goto-match-paren)
 ;(global-set-key "\C-j" 'dumb-jump-go)
-(global-set-key "\M-o" 'other-window)
 (global-set-key "\C-xa" 'align)
 (global-set-key "\M-q" 'kill-buffer-and-window)
 (global-set-key "\M-c" 'clipboard-kill-ring-save)
@@ -786,8 +848,6 @@
 (global-set-key [f8] 'projectile-compile-project)
 (global-set-key [f9] 'replace-string)
 (global-set-key [f10] 'kmacro-end-and-call-macro)
-(global-set-key [f11] 'kmacro-start-macro)
-(global-set-key [f12] 'kmacro-end-macro)
 
 (global-set-key "\C-cms" 'magit-status)
 (global-set-key "\C-cml" 'magit-log-all)

@@ -6,13 +6,17 @@
                         ws-butler smart-tabs-mode
 
                         ;;code complete
-                        company-lsp company-quickhelp
+                        ;; company-lsp - deprecated
+                        company-quickhelp
                         go-eldoc ;go docs
                         ag ;silver searcher
                         ))
 
 (use-package go-mode
   :ensure t ;; auto install on startup only go-mode
+
+  :ensure lsp-mode
+  :ensure lsp-ui
 
   ;;defered config read on .go open
   :no-require t
@@ -27,6 +31,7 @@
    :map go-mode-map
         ([f7] . 'projectile-ag)
         ("C-<f7>" . 'projectile-grep)
+        ([remap dumb-jump-go] . xref-find-definitions)
         ("\C-xj" . 'xref-find-definitions)
         ("\C-hj" . 'godoc-at-point)
         )
@@ -38,13 +43,32 @@
     (unless (package-installed-p package)
       (package-install package)))
 
-  (require 'company-lsp)
-
   (smart-tabs-add-language-support go go-mode-hook
     ((c-indent-line . c-basic-offset)
      (c-indent-region . c-basic-offset)))
 
   (smart-tabs-insinuate 'go)
+
+  (defun lsp-ui-peek--peek-display (src1 src2)
+    (-let* ((win-width (frame-width))
+            (lsp-ui-peek-list-width (/ (frame-width) 2))
+            (string (-some--> (-zip-fill "" src1 src2)
+                      (--map (lsp-ui-peek--adjust win-width it) it)
+                      (-map-indexed 'lsp-ui-peek--make-line it)
+                      (-concat it (lsp-ui-peek--make-footer))))
+            )
+      (setq lsp-ui-peek--buffer (get-buffer-create " *lsp-peek--buffer*"))
+      (posframe-show lsp-ui-peek--buffer
+                     :string (mapconcat 'identity string "")
+                     :min-width (frame-width)
+                     :poshandler #'posframe-poshandler-frame-center)))
+
+  (defun lsp-ui-peek--peek-destroy ()
+    (when (bufferp lsp-ui-peek--buffer)
+      (posframe-delete lsp-ui-peek--buffer))
+    (setq lsp-ui-peek--buffer nil
+          lsp-ui-peek--last-xref nil)
+    (set-window-start (get-buffer-window) lsp-ui-peek--win-start))
 
   (defun tserg/go-mode-hook()
     (setq-local tab-width 2)
@@ -61,19 +85,30 @@
 
     (lsp 1)
     (lsp-ui-mode 1)
+    (setq lsp-log-io nil)
     (setq lsp-ui-doc-include-signature nil)  ; don't include type signature in the child frame
     (setq lsp-ui-sideline-enable nil)  ; don't show symbol on the right of info
     (eldoc-mode nil)
     (global-eldoc-mode -1)
     (setq lsp-ui-doc-position (quote top))
 
-    (add-to-list (make-local-variable 'company-backends)
-                 '(company-lsp company-files company-abbrev company-dabbrev
-                               company-keywords))
+    ;; (setq lsp-log-io t)
+    ;; (setq lsp-server-trace "verbose")
 
-    (setq company-transformers nil
-          company-lsp-async t
-          company-lsp-cache-candidates nil)
+    ;; (lsp-register-client
+    ;;  (make-lsp-client :new-connection (lsp-tramp-connection "gopls")
+    ;;                   :major-modes '(go-mode)
+    ;;                   :remote? t
+    ;;                   :server-id 'gopls-remote))
+
+
+    (advice-add #'lsp-ui-peek--peek-new :override #'lsp-ui-peek--peek-display)
+    (advice-add #'lsp-ui-peek--peek-hide :override #'lsp-ui-peek--peek-destroy)
+
+
+    (add-to-list (make-local-variable 'company-backends)
+                 '(company-capf company-files ;; company-abbrev company-dabbrev
+                              company-keywords))
 
     (company-quickhelp-mode)
 

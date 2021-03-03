@@ -105,11 +105,28 @@
   ;; Reuse Compilation ----------------------------------------
   (add-to-list 'display-buffer-alist
                `(,(rx bos "*compilation*" eos)
-                 (display-buffer-reuse-window
-                  display-buffer-in-side-window)
+                 (display-buffer-reuse-window display-buffer-in-side-window)
                  (reusable-frames . visible)
                  (side            . right)
-                 (window-width   . 0.4)))
+                 (window-width   . 0.4)
+                 ))
+
+  (add-hook 'compilation-finish-functions
+            (lambda (buf str)
+              (if (null (string-match ".*exited abnormally.*" str))
+                  ;;no errors, make the compilation window go away in a few seconds
+                  (progn
+                    (run-at-time
+                     "1 sec" nil 'delete-windows-on
+                     (get-buffer-create "*compilation*"))
+                    (message "No Compilation Errors!"))
+                (progn
+                  (setq comp_win (get-buffer-window "*compilation*"))
+                  (run-at-time
+                   "1 sec" nil 'maximize-window comp_win)
+                  (select-window comp_win)
+                  (message "Compilation Errors!"))
+                )))
 
   (add-hook 'compilation-mode-hook 'tserg/compilation-long-hook)
 
