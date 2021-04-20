@@ -92,6 +92,13 @@
     (global-eldoc-mode -1)
     (setq lsp-ui-doc-position (quote top))
 
+    (advice-add #'lsp-ui-peek--peek-new :override #'lsp-ui-peek--peek-display)
+    (advice-add #'lsp-ui-peek--peek-hide :override #'lsp-ui-peek--peek-destroy)
+
+    (add-to-list (make-local-variable 'company-backends)
+                 '(company-capf company-files ;; company-abbrev company-dabbrev
+                                company-keywords))
+
     ;; (setq lsp-log-io t)
     ;; (setq lsp-server-trace "verbose")
 
@@ -101,14 +108,6 @@
     ;;                   :remote? t
     ;;                   :server-id 'gopls-remote))
 
-
-    (advice-add #'lsp-ui-peek--peek-new :override #'lsp-ui-peek--peek-display)
-    (advice-add #'lsp-ui-peek--peek-hide :override #'lsp-ui-peek--peek-destroy)
-
-
-    (add-to-list (make-local-variable 'company-backends)
-                 '(company-capf company-files ;; company-abbrev company-dabbrev
-                              company-keywords))
 
     (company-quickhelp-mode)
 

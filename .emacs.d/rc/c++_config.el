@@ -26,7 +26,7 @@
   (
    :map c++-mode-map
         ;; ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
-        ("\C-xj" . 'xref-find-definitions)
+        ;; ("\C-xj" . 'xref-find-definitions)
         ("M-j" . xref-pop-marker-stack)
 
         ([f2] . ff-find-other-file)

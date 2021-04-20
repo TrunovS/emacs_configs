@@ -108,7 +108,7 @@
                  (display-buffer-reuse-window display-buffer-in-side-window)
                  (reusable-frames . visible)
                  (side            . right)
-                 (window-width   . 0.4)
+                 ;; (window-width   . 0.1)
                  ))
 
   (add-hook 'compilation-finish-functions

@@ -116,8 +116,8 @@
   ;; fixing some perfomance issues with long lines of base64 text
   (setq-default auto-window-vscroll nil)
   (setq-default line-move-visual nil)
-  ;; (setq-default bidi-paragraph-direction 'left-to-right)
-  ;; (setq-default bidi-inhibit-bpa nil)
+  (setq-default bidi-paragraph-direction 'left-to-right)
+  (setq-default bidi-inhibit-bpa nil)
 
   (set-face-background 'default "#353535")
   (set-face-attribute 'cursor  nil :background "white")
@@ -126,8 +126,8 @@
   (set-face-attribute 'highlight nil
                       :background (color-darken-name (face-background 'default) 10))
 
-  (setq frame-resize-pixelwise t)
-  (toggle-frame-maximized)
+  ;; (setq frame-resize-pixelwise t)
+  ;; (toggle-frame-maximized)
   )
 
 (use-package auto-highlight-symbol
@@ -170,23 +170,6 @@
 
 (when (require 'so-long nil :noerror)
    (global-so-long-mode 1))
-
-;; grep setup-------------
-(add-to-list 'display-buffer-alist
-             `("^\\*[A-Za-z ]*grep.*\\*$"
-               (display-buffer-reuse-window
-                display-buffer-in-side-window)
-               (reusable-frames . visible)
-               (side            . top)
-               (window-height   . 0.3)))
-
-(add-to-list 'display-buffer-alist
-             `("^\\*[A-Za-z ]*search.*\\*$"
-               (display-buffer-reuse-window
-                display-buffer-in-side-window)
-               (reusable-frames . visible)
-               (side            . top)
-               (window-width   . 0.3)))
 
 ;; Load sessions--------------
 (setq desktop-restore-eager 7
@@ -243,13 +226,57 @@
   (exec-path-from-shell-initialize)
   )
 
+;; pop up buffers management-----------------
+(use-package popper
+  :ensure t
+  :bind (("C-'"   . popper-toggle-latest)
+         ("M-'"   . popper-cycle)
+         ("C-M-'" . popper-toggle-type))
+  :init
+
+  (add-to-list 'display-buffer-alist
+               `("^\\*[A-Za-z ]*grep.*\\*$"
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (reusable-frames . visible)
+                 (side            . top)
+                 (window-height   . 0.3)))
+
+  (add-to-list 'display-buffer-alist
+               `("^\\*[A-Za-z ]*search.*\\*$"
+                 (display-buffer-reuse-window
+                  display-buffer-in-side-window)
+                 (reusable-frames . visible)
+                 (side            . top)
+                 (window-width   . 0.3)))
+
+  (setq popper-reference-buffers
+        '("\\*Messages\\*"
+          "Output\\*$"
+          "^\\*[A-Za-z ]*search.*\\*$"
+          help-mode
+          compilation-mode))
+  (popper-mode +1)
+  (setq popper-display-control nil)
+  )
+
 ;; IVY competition --------------------------
 (use-package ivy
   :ensure t
   :ensure ivy-posframe
+  :ensure ivy-xref
   :ensure counsel
+  :ensure counsel-projectile
 
   :functions (grep-like-transformer tserg/fontify-with-mode tserg/fontify-using-faces)
+
+  :bind
+  (
+   :map global-map
+        ("M-x" . counsel-M-x)
+        ("\C-cf" . projectile-find-file)
+        ;; ("\C-cf" . counsel-projectile)
+  )
 
   :config
   (ivy-mode 1)
@@ -261,6 +288,7 @@
   (set-face-attribute 'ivy-posframe nil
                        :foreground nil :background (color-darken-name (face-background 'default) 7))
 
+  ;; (setq-default ivy-dynamic-exhibit-delay-ms 250)
   (setq-default ivy-display-style 'fancy)
   (setq-default ivy-use-virtual-buffers t)
   (setq-default ivy-initial-inputs-alist nil) ; remove initial ^ input.)
@@ -269,23 +297,34 @@
                 '((ivy-switch-buffer . ivy--regex-fuzzy)
                   (counsel-M-x . ivy--regex-fuzzy)
                   (t . ivy--regex-plus)))
+
+  (setq-default counsel-projectile-find-file-matcher #'ivy--re-filter)
+  (setq-default counsel-projectile-find-file-more-chars 3)
+  (setq-default counsel-projectile-sort-files nil)
+  (setq-default counsel-projectile-ag-initial-input '(ivy-thing-at-point))
+
+  ;TODO: uncomment this, to move to xref backend
+  ;; ;; xref initialization is different in Emacs 27 - there are two different
+  ;; ;; variables which can be set rather than just one
+  ;; (if (>= emacs-major-version 27)
+  ;;   (setq xref-show-definitions-function #'ivy-xref-show-defs)
+  ;;   ;; Necessary in Emacs <27. In Emacs 27 it will affect all xref-based
+  ;;   ;; commands other than xref-find-definitions (e.g. project-find-regexp)
+  ;;   ;; as well
+  ;;   (setq xref-show-xrefs-function #'ivy-xref-show-xrefs)
+  ;;   )
+
+  (ivy-set-actions
+   'projectile-find-file
+   '(("s" projectile-switch-project "switch project")
+     ))
+
   (setq-default ivy-posframe-display-functions-alist
-                '((compile  . ivy-posframe-display-at-frame-center)
+                '(
                   (t . ivy-posframe-display-at-frame-center)))
 
-  (defun ivy-with-thing-at-point (cmd)
-    (let ((ivy-initial-inputs-alist
-           (list
-            (cons cmd (thing-at-point 'word)))))
-      (funcall cmd)))
-
-  (defun counsel-ag-thing-at-point ()
-    (interactive)
-    (ivy-with-thing-at-point 'counsel-projectile-ag))
 
   ;; (ivy-set-display-transformer 'counsel-ag 'counsel-git-grep-transformer)
-  (ivy-set-display-transformer 'counsel-ag 'grep-like-transformer)
-
 
   (global-set-key [(control f7)] 'counsel-ag-thing-at-point)
   )
@@ -307,20 +346,32 @@
                 '(lambda ()
                    (format " Proj[%s]" (projectile-project-name))))
   (setq-default ag-group-matches nil)
+  (setq-default ag-ignore-list `("*orig"))
+  (setq-default projectile-globally-ignored-files '("*orig" "*log" "*o" "*a"))
+  (setq-default projectile-globally-ignored-file-suffixes nil)
   )
 
 ;; Dumb jump ---------------------------------
 (use-package dumb-jump
   :ensure t
+  :defer t
 
   :bind ;;HotKeys
   (
-   ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
-   ("C-j" . dumb-jump-go)
-   ("M-j" . xref-pop-marker-stack)
+   :map global-map
+        ([remap electric-newline-and-maybe-indent] . xref-find-definitions)
+        ("C-j" . dumb-jump-go)
+        ("C-x j" . xref-find-definitions)
+        ("M-j" . xref-pop-marker-stack)
    )
 
   :functions (grep-like-transformer tserg/fontify-with-mode tserg/fontify-using-faces)
+
+  :init
+
+  (require 'xref)
+  (setq xref-backend-functions (delq 'etags--xref-backend xref-backend-functions))
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 
   :config
 
@@ -330,6 +381,7 @@
   (setq-default dumb-jump-selector 'ivy)
 
   (require 'counsel)
+  (require 'projectile)
   (ivy-set-display-transformer 'dumb-jump-ivy-jump-to-selected  'grep-like-transformer)
   )
 
@@ -337,10 +389,7 @@
 (use-package magit
   :ensure t
 
-  :no-require t
-  :defer t
   :init
-
   ;; WORKAROUND https://github.com/magit/magit/issues/2395
   (define-derived-mode magit-staging-mode magit-status-mode "Magit staging"
     "Mode for showing staged and unstaged changes."
@@ -353,6 +402,13 @@
   (defun magit-staging ()
     (interactive)
     (magit-mode-setup #'magit-staging-mode))
+
+  :bind
+  (
+   :map global-map
+        ("\C-cms" . magit-status)
+        ("\C-cml" . magit-log-all)
+        )
 
   :config
   (set-face-attribute 'magit-diff-context-highlight nil
@@ -387,11 +443,12 @@
            company-files          ; files & directory
            company-yasnippet ; this one can be blocking and performance slow
            company-dabbrev ; this one can be blocking and performance slow
+           company-dabbrev-code ; this one can be blocking and performance slow
            )
           ))
 
   (company-posframe-mode 1)
-  (global-company-fuzzy-mode 0)
+  (global-company-fuzzy-mode 1)
   (setq company-fuzzy-sorting-backend 'flx)
 
   (setq company-require-match nil)
@@ -695,16 +752,20 @@
     (add-text-properties 0  (length text) '(fontified t) text)
     text))
 
+(print (if (projectile-project-p) (projectile-project-root) default-directory))
+
+;TODO: Handle path more accurate
 (defun grep-like-transformer (str)
   "Highlight file and line number in STR."
   (if (string-match "\\`\\([^:]+\\):\\([^:]+\\):" str)
-      (let (
+      (let* (
             (abs_path (substring str (match-beginning 1) (match-end 1)))
             (flinam (substring str (match-beginning 2) (match-end 2)))
             (ftooltip (substring str (match-end 2) nil))
-            (r_dir (car (last (split-string (projectile-ensure-project (projectile-project-root))
-                                            ":"))))
+            (root_dir (if (projectile-project-p) (projectile-project-root) default-directory))
+            (r_dir (car (last (split-string root_dir ":"))))
             )
+        (message "str [%s], Abs path [%s], r_dir [%s]" str abs_path r_dir)
         (setq relative_dir (file-relative-name abs_path r_dir))
         (concat (propertize relative_dir 'face 'link) ":"
                 (propertize flinam 'face 'link)
@@ -808,7 +869,6 @@
       (save-buffer))))
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
-(global-set-key "\M-x" 'counsel-M-x)
 (global-set-key "\C-c\C-g" 'google-this)
 (global-set-key "\C-cb" 'switch-to-buffer-other-frame)
 (global-set-key "\M-n" 'forward-paragraph)
@@ -827,7 +887,6 @@
 (global-set-key "\M-c" 'clipboard-kill-ring-save)
 (global-set-key "\M-d" 'delete-region)
 (global-set-key "\C-xg" 'universal-coding-system-argument)
-(global-set-key "\C-cf" 'counsel-projectile)
 (global-set-key "\M-/" 'comment-or-uncomment-region)
 (define-key global-map (kbd "C-c ;") 'iedit-mode)
 
@@ -849,6 +908,4 @@
 (global-set-key [f9] 'replace-string)
 (global-set-key [f10] 'kmacro-end-and-call-macro)
 
-(global-set-key "\C-cms" 'magit-status)
-(global-set-key "\C-cml" 'magit-log-all)
 (global-set-key "\C-xm" nil)

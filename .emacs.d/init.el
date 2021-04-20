@@ -9,10 +9,10 @@
 )
 
 
-(defvar last-file-name-handler-alist file-name-handler-alist)
-(setq gc-cons-threshold 402653184
-      gc-cons-percentage 0.6
-      file-name-handler-alist nil)
+;; (defvar last-file-name-handler-alist file-name-handler-alist)
+;; (setq gc-cons-threshold 402653184
+;;       gc-cons-percentage 0.6
+;;       file-name-handler-alist nil)
 
 
 ;;Package--------------------------------------------------
@@ -62,12 +62,12 @@
 
 ;; (setq gc-cons-threshold 50000000)
 
-(add-hook 'emacs-startup-hook 'my/set-gc-threshold)
-(defun my/set-gc-threshold ()
-  "Reset `gc-cons-threshold' to its default value."
-  (setq gc-cons-threshold 16777216 ;; 800000
-        gc-cons-percentage 0.2
-        file-name-handler-alist last-file-name-handler-alist))
+;; (add-hook 'emacs-startup-hook 'my/set-gc-threshold)
+;; (defun my/set-gc-threshold ()
+;;   "Reset `gc-cons-threshold' to its default value."
+;;   (setq gc-cons-threshold 16777216 ;; 800000
+;;         gc-cons-percentage 0.2
+;;         file-name-handler-alist last-file-name-handler-alist))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
