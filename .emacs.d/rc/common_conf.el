@@ -253,7 +253,9 @@
   (setq popper-reference-buffers
         '("\\*Messages\\*"
           "Output\\*$"
+          "^magit.*$"
           "^\\*[A-Za-z ]*search.*\\*$"
+          "^\\*ivy.*$"
           help-mode
           compilation-mode))
   (popper-mode +1)
@@ -275,7 +277,6 @@
    :map global-map
         ("M-x" . counsel-M-x)
         ("\C-cf" . projectile-find-file)
-        ;; ("\C-cf" . counsel-projectile)
   )
 
   :config
@@ -325,8 +326,6 @@
 
 
   ;; (ivy-set-display-transformer 'counsel-ag 'counsel-git-grep-transformer)
-
-  (global-set-key [(control f7)] 'counsel-ag-thing-at-point)
   )
 
 ;; Project manager --------------------------
@@ -902,7 +901,7 @@
 
 (global-set-key [f3] 'projectile-dired)
 (global-set-key [f4] 'eshell-new)
-(global-set-key [f7] 'projectile-ag)
+(global-set-key [f7] 'counsel-projectile-ag)
 (global-set-key [(control f8)] 'compile)
 (global-set-key [f8] 'projectile-compile-project)
 (global-set-key [f9] 'replace-string)

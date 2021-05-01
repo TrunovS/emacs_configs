@@ -29,7 +29,7 @@
   :bind ;;HotKeys
   (
    :map go-mode-map
-        ([f7] . 'projectile-ag)
+
         ("C-<f7>" . 'projectile-grep)
         ([remap dumb-jump-go] . xref-find-definitions)
         ("\C-xj" . 'xref-find-definitions)
