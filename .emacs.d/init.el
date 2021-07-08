@@ -17,24 +17,20 @@
 
 ;;Package--------------------------------------------------
 (require 'package)
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+;; (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
-;; (add-to-list 'package-archives '("melpa" . "https://elpa.zilongshanren.com/melpa/") t)
-;; (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
-(when (< emacs-major-version 27)
-  (package-initialize))
-
+(package-initialize)
 ; fetch the list of packages available
 (unless package-archive-contents
+  (message "Refresing package repository")
   (package-refresh-contents))
 
 ;; install the missing packages
 
-(load "~/.emacs.d/rc/common_conf.el");; common-hook
+(load "~/.emacs.d/rc/common_conf");; common-hook
 (load "~/.emacs.d/rc/elisp_conf.el");; elisp-mode
 (load "~/.emacs.d/rc/compilation_config.el");; compilation-mode
 (load "~/.emacs.d/rc/logs_config.el");; logs-mode
@@ -68,6 +64,11 @@
 ;;   (setq gc-cons-threshold 16777216 ;; 800000
 ;;         gc-cons-percentage 0.2
 ;;         file-name-handler-alist last-file-name-handler-alist))
+
+(message "*** Emacs loaded in %s with %d garbage collections."
+     (format "%.2f seconds"
+             (float-time
+              (time-subtract after-init-time before-init-time))) gcs-done)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

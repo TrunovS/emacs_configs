@@ -25,9 +25,10 @@
                      ))
 
 ; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+(dolist (new_package package-list)
+  (unless (package-installed-p new_package)
+    (message "Installing new package %s" new_package)
+    (package-install new_package)))
 
 (eval-when-compile
   (require 'use-package)
@@ -277,12 +278,13 @@
    :map global-map
         ("M-x" . counsel-M-x)
         ("\C-cf" . projectile-find-file)
-  )
-
-  :config
+        )
+  :init
   (ivy-mode 1)
   (ivy-posframe-mode 1)
   (counsel-mode 1)
+  
+  :config
 
   ;; (set-face-attribute 'ivy-posframe-border nil
   ;;                     :foreground nil :background "black")
@@ -546,6 +548,7 @@
       )
 
 ;;Dired-----------------------------------------------------------
+(require 'dired)
 (setq dired-listing-switches "-lta");;-lt
 (setq directory-free-space-program nil)
 (setq-default dired-dwim-target 1)
@@ -764,7 +767,7 @@
             (root_dir (if (projectile-project-p) (projectile-project-root) default-directory))
             (r_dir (car (last (split-string root_dir ":"))))
             )
-        (message "str [%s], Abs path [%s], r_dir [%s]" str abs_path r_dir)
+        ;(message "str [%s], Abs path [%s], r_dir [%s]" str abs_path r_dir)
         (setq relative_dir (file-relative-name abs_path r_dir))
         (concat (propertize relative_dir 'face 'link) ":"
                 (propertize flinam 'face 'link)
