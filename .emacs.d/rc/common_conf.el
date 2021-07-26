@@ -40,6 +40,9 @@
    :fetcher git
    :url "https://github.com/quelpa/quelpa-use-package.git"))
 
+(use-package use-package-ensure-system-package
+  :ensure t)
+
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
 
@@ -167,6 +170,10 @@
   (require 'ediff)
   (setq ediff-split-window-function 'split-window-horizontally)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+  (defun tserg/ediff-before-setup ()
+    (select-frame (make-frame)))
+ (add-hook 'ediff-before-setup-hook 'tserg/ediff-before-setup)
   )
 
 (when (require 'so-long nil :noerror)
@@ -257,6 +264,7 @@
           "^magit.*$"
           "^\\*[A-Za-z ]*search.*\\*$"
           "^\\*ivy.*$"
+          "^\\*.*\\*$"
           help-mode
           compilation-mode))
   (popper-mode +1)
@@ -278,12 +286,15 @@
    :map global-map
         ("M-x" . counsel-M-x)
         ("\C-cf" . projectile-find-file)
+   :map ivy-minibuffer-map
+        ("C-c C-n" . ivy-restrict-to-matches)
+        ("C-M-j" . ivy-immediate-done)  ;select what i typed
         )
   :init
   (ivy-mode 1)
   (ivy-posframe-mode 1)
   (counsel-mode 1)
-  
+
   :config
 
   ;; (set-face-attribute 'ivy-posframe-border nil
@@ -299,7 +310,7 @@
   (setq-default ivy-re-builders-alist
                 '((ivy-switch-buffer . ivy--regex-fuzzy)
                   (counsel-M-x . ivy--regex-fuzzy)
-                  (t . ivy--regex-plus)))
+                  (t . ivy--regex-fuzzy)))
 
   (setq-default counsel-projectile-find-file-matcher #'ivy--re-filter)
   (setq-default counsel-projectile-find-file-more-chars 3)
@@ -319,7 +330,7 @@
 
   (ivy-set-actions
    'projectile-find-file
-   '(("s" projectile-switch-project "switch project")
+   '(("p" projectile-switch-project "switch project")
      ))
 
   (setq-default ivy-posframe-display-functions-alist
@@ -430,6 +441,7 @@
   :ensure company-posframe
   :ensure company-fuzzy
   :ensure flx
+  :ensure company-flx
 
   :bind*
   ("M-." . company-complete)
@@ -449,6 +461,7 @@
           ))
 
   (company-posframe-mode 1)
+
   (global-company-fuzzy-mode 1)
   (setq company-fuzzy-sorting-backend 'flx)
 
@@ -554,6 +567,37 @@
 (setq-default dired-dwim-target 1)
 (add-hook 'dired-mode-hook 'auto-revert-mode) ;; auto refresh dired when file changes
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
+
+(use-package prodigy
+  :ensure t
+
+  :config
+
+  (prodigy-define-service
+   :name "ServiceProvider"
+   :command "ssh"
+   :args '("-t" "work_wsl" "/mnt/c/code/UPGo/UPGServiceProvider/UPGServiceProvider.exe --debug | cat -e")
+   :ready-message "Launching SP as a console application"
+   :stop-signal 'sigkill
+   :kill-process-buffer-on-stop t)
+
+  (prodigy-define-service
+    :name "BankAdapter"
+    :command "ssh"
+    :args '("-t" "work_wsl" "/mnt/c/code/UPG_Main/x64/Debug/UPGBankAdapter.exe --debug | cat -e")
+    :ready-message "HandlerRouting was setup"
+    :stop-signal 'sigkill
+    :kill-process-buffer-on-stop 1)
+
+  (prodigy-define-service
+    :name "DocSigner"
+    :command "ssh"
+    :args '("-t" "work_wsl" "/mnt/c/code/UPG_Main/x64/Debug/UPGDocSigner.exe --debug | cat -e")
+    :ready-message "HandlerRouting was setup"
+    :stop-signal 'sigkill
+    :kill-process-buffer-on-stop t)
+  )
+
 
 
 ;; Mercurial--------------------------------------------------

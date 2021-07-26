@@ -35,6 +35,7 @@
 (load "~/.emacs.d/rc/compilation_config.el");; compilation-mode
 (load "~/.emacs.d/rc/logs_config.el");; logs-mode
 
+(load "~/.emacs.d/rc/js_config.el");; json configs
 (load "~/.emacs.d/rc/python_conf.el");; pythons configs
 (load "~/.emacs.d/rc/rust_config.el");; rust configs
 (load "~/.emacs.d/rc/go_config.el");; go configs

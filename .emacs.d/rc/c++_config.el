@@ -122,7 +122,7 @@
     (c-set-offset 'substatement-open 0)
     (c-set-offset 'block-close 0)
 
-    (ggtags-mode 1)
+    ;; (ggtags-mode 1) ; bad performance when using tramp
     (ws-butler-mode 1)
     (whitespace-mode 1)
     (hs-minor-mode 1)
@@ -134,15 +134,18 @@
     (font-lock-mode t)
     (setq font-lock-maximum-decoration t)
 
-    (smart-tabs-mode 1)
+    (smart-tabs-advice c-indent-line c-basic-offset)
+    (smart-tabs-advice c-indent-region c-basic-offset)
+    (smart-tabs-mode-enable)
 
     (eldoc-mode nil)
     (global-eldoc-mode -1)
     (flymake-mode -1)
-    (company-fuzzy-mode -1)
 
     (add-to-list (make-local-variable 'company-backends)
                  '(company-c-headers))
+
+    (company-fuzzy-mode 1)
     ;; (add-to-list 'company-fuzzy-full-input-backends 'company-c-headers)
 
     (setq-local my-project-root (projectile-ensure-project (projectile-project-root)))
