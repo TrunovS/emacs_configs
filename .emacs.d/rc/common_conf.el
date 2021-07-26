@@ -309,6 +309,7 @@
   (setq-default ivy-count-format "(%d/%d) ")
   (setq-default ivy-re-builders-alist
                 '((ivy-switch-buffer . ivy--regex-fuzzy)
+                  (counsel-ag . ivy--regex-or-literal)
                   (counsel-M-x . ivy--regex-fuzzy)
                   (t . ivy--regex-fuzzy)))
 
@@ -358,8 +359,8 @@
                 '(lambda ()
                    (format " Proj[%s]" (projectile-project-name))))
   (setq-default ag-group-matches nil)
-  (setq-default ag-ignore-list `("*orig"))
-  (setq-default projectile-globally-ignored-files '("*orig" "*log" "*o" "*a"))
+  (setq-default ag-ignore-list `("*.orig"))
+  (setq-default projectile-globally-ignored-files '("*.orig" "*.log" "*.o" "*.a"))
   (setq-default projectile-globally-ignored-file-suffixes nil)
   )
 
