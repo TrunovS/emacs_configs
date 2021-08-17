@@ -107,7 +107,7 @@
                `(,(rx bos "*compilation*" eos)
                  (display-buffer-reuse-window display-buffer-in-side-window)
                  (reusable-frames . visible)
-                 (side            . right)
+                 (side            . top)
                  ;; (window-width   . 0.1)
                  ))
 

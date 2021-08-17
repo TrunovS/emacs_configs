@@ -271,6 +271,13 @@
   (setq popper-display-control nil)
   )
 
+;; frequency completition candidates sorting ---------
+(use-package prescient
+  :ensure t
+  :config
+  (prescient-persist-mode 1)
+  )
+
 ;; IVY competition --------------------------
 (use-package ivy
   :ensure t
@@ -278,6 +285,7 @@
   :ensure ivy-xref
   :ensure counsel
   :ensure counsel-projectile
+  :ensure ivy-prescient
 
   :functions (grep-like-transformer tserg/fontify-with-mode tserg/fontify-using-faces)
 
@@ -294,6 +302,7 @@
   (ivy-mode 1)
   (ivy-posframe-mode 1)
   (counsel-mode 1)
+  (ivy-prescient-mode 1)
 
   :config
 
@@ -308,10 +317,10 @@
   (setq-default ivy-initial-inputs-alist nil) ; remove initial ^ input.)
   (setq-default ivy-count-format "(%d/%d) ")
   (setq-default ivy-re-builders-alist
-                '((ivy-switch-buffer . ivy--regex-fuzzy)
+                '((ivy-switch-buffer . ivy--regex-ignore-order)
                   (counsel-ag . ivy--regex-or-literal)
-                  (counsel-M-x . ivy--regex-fuzzy)
-                  (t . ivy--regex-fuzzy)))
+                  (counsel-M-x . ivy--regex-ignore-order)
+                  (t . ivy--regex-ignore-order)))
 
   (setq-default counsel-projectile-find-file-matcher #'ivy--re-filter)
   (setq-default counsel-projectile-find-file-more-chars 3)
@@ -359,8 +368,8 @@
                 '(lambda ()
                    (format " Proj[%s]" (projectile-project-name))))
   (setq-default ag-group-matches nil)
-  (setq-default ag-ignore-list `("*.orig"))
-  (setq-default projectile-globally-ignored-files '("*.orig" "*.log" "*.o" "*.a"))
+  (setq-default ag-ignore-list `("*orig"))
+  (setq-default projectile-globally-ignored-files '("*orig" "*.log" "*.o$" "*.a$"))
   (setq-default projectile-globally-ignored-file-suffixes nil)
   )
 
@@ -569,8 +578,16 @@
 (add-hook 'dired-mode-hook 'auto-revert-mode) ;; auto refresh dired when file changes
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
 
+;; Service managing -----------------------------------------------
 (use-package prodigy
   :ensure t
+
+  :bind
+  (
+   :map global-map
+   ("\C-css" . prodigy)
+   )
+
 
   :config
 

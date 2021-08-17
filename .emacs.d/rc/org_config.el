@@ -117,7 +117,8 @@
     ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))
     ;; (add-to-list 'org-file-apps '("\\.pdf\\'" . "org-pdfview-open"))
     (flyspell-mode 1)
-    (toggle-truncate-lines -1)
+    ;; (toggle-truncate-lines -1)
+    (visual-line-mode 1)
     )
 
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)

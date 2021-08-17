@@ -21,6 +21,7 @@
   ("\\.h\\'" . c++-mode)
   ("\\.cpp\\'" . c++-mode)
   ("\\.cxx\\'" . c++-mode)
+  ("\\.ixx\\'" . c++-mode) ; c++ module interface files
 
   :bind ;;HotKeys
   (
@@ -42,6 +43,14 @@
       (package-install package)))
 
   (require 'projectile)
+
+  ;; (projectile-update-project-type
+  ;;  'c
+  ;;  :related-files-fn
+  ;;  (list
+  ;;   (projectile-related-files-fn-test-with-suffix "scala" "Spec")
+  ;;   (projectile-related-files-fn-test-with-suffix "scala" "Test")))
+
   ;; For switch between header and source -----------------
   ;; Switch fromm *.<impl> to *.<head> and vice versa
   (defun switch-cc-to-h ()
@@ -148,7 +157,7 @@
     (company-fuzzy-mode 1)
     ;; (add-to-list 'company-fuzzy-full-input-backends 'company-c-headers)
 
-    (setq-local my-project-root (projectile-ensure-project (projectile-project-root)))
+    ;; (setq-local my-project-root (projectile-ensure-project (projectile-project-root)))
     ;; (setq-local company-c-headers-path-user (cons my-project-root '()))
     (setq-local company-c-headers-path-user (cons default-directory '()))
 
