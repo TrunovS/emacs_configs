@@ -84,7 +84,15 @@
 
   (cond ((eq system-type 'darwin) ;mac os
          (add-to-list 'default-frame-alist '(font . "Hack-12"))
-         (menu-bar-mode 1))
+         (menu-bar-mode 1)
+
+         ;; mac os russian mac input setup
+         (use-package russian-mac
+           :quelpa ((russian-mac :fetcher github :repo "juev/russian-mac") :upgrade t)
+           :config
+
+           (setq-default default-input-method "russian-mac"))
+         )
         (t (add-to-list 'default-frame-alist '(font . "Hack-9"))
            (menu-bar-mode -1))
         )
@@ -94,6 +102,7 @@
   (global-hl-line-mode t)
   (show-paren-mode 1)
   (autopair-global-mode)
+  (setq-default frame-resize-pixelwise t)
 
   (global-auto-revert-mode 1)   ;; auto refresh when file changes
 
@@ -111,6 +120,7 @@
         make-backup-files nil;; do (not )ot make backup files
         create-lockfiles nil
         auto-save-default nil
+        wgrep-auto-save-buffer t ;; auto save occur edits
         )
 
   (tool-bar-mode -1)
@@ -143,6 +153,7 @@
   :config
 
   (global-auto-highlight-symbol-mode 1)
+  (global-auto-highlight-symbol-mode 0)
   ;; (assq-delete-all 'auto-highlight-symbol-mode-map minor-mode-map-alist)
   )
 
@@ -187,44 +198,14 @@
       )
 
 ;; mode-line-----------------
-(use-package smart-mode-line
+(use-package simple-modeline
   :ensure t
-
+  :init
+  (setq simple-modeline-segments
+   '((simple-modeline-segment-modified simple-modeline-segment-buffer-name simple-modeline-segment-position)
+     (simple-modeline-segment-input-method simple-modeline-segment-eol simple-modeline-segment-encoding simple-modeline-segment-vc simple-modeline-segment-misc-info simple-modeline-segment-process simple-modeline-segment-major-mode)))
+  :hook (after-init . simple-modeline-mode)
   :config
-  (setq  sml/theme 'dark
-         sml/mode-width 'full
-         sml/name-width 30
-         sml/shorten-modes t
-         sml/show-frame-identification nil
-         sml/shorten-directory t
-         sml/replacer-regexp-list '((".+" ""))
-         )
-
-  (sml/setup)
-  (setq sml/shortener-func (lambda (_dir _max-length) ""))
-  (dolist (item '(" ivy-posframe"
-                  " company-posframe"
-                  " company"
-                  " ivy"
-                  " hs"
-                  " yas"
-                  " pair"
-                  " Undo-Tree"
-                  " counsel"
-                  " ElDoc"
-                  " Dim"
-                  " Fly*"
-                  " Fly"
-                  " Abbrev"
-                  " ARev"
-                  " ws"
-                  " wb"
-                  " ComFuz"
-                  " HS"
-                  " GG"
-                  ))
-    (add-to-list 'rm-blacklist item)
-    )
   )
 
 ;; Set Path----------------------------------
@@ -451,7 +432,7 @@
   :ensure company-posframe
   :ensure company-fuzzy
   :ensure flx
-  :ensure company-flx
+  ;; :ensure company-flx
 
   :bind*
   ("M-." . company-complete)
@@ -472,8 +453,8 @@
 
   (company-posframe-mode 1)
 
-  (global-company-fuzzy-mode 1)
-  (setq company-fuzzy-sorting-backend 'flx)
+  ;; (global-company-fuzzy-mode 0)
+  ;; (setq company-fuzzy-sorting-backend 'flx)
 
   (setq company-require-match nil)
   (setq company-tooltip-align-annotations t)
@@ -671,12 +652,32 @@
 ;; (set-face-background 'default "#353535")
 ;; (set-face-foreground 'default "#efefef")
 
+(defun duplicate-current-line (&optional n)
+  "duplicate current line, make more than 1 copy given a numeric argument"
+  (interactive "p")
+  (save-excursion
+    (let ((nb (or n 1))
+    	  (current-line (thing-at-point 'line)))
+      ;; when on last line, insert a newline first
+      (when (or (= 1 (forward-line 1)) (eq (point) (point-max)))
+    	(insert "\n"))
+
+      ;; now insert as many time as requested
+      (while (> n 0)
+    	(insert current-line)
+    	(decf n)))))
+
+
 (defun my-copy-line ()
   (interactive)
-  (copy-region-as-kill (line-beginning-position) (line-end-position))
-  (end-of-line)
-  (newline)
-  (yank))
+  (save-excursion
+    (let ((current-line (thing-at-point 'line)))
+      (when (or (= 1 (forward-line 1)) (eq (point) (point-max)))
+        (insert "\n"))
+      (insert current-line)
+      )
+    )
+  )
 
 (defun my-kill-line ()
   (interactive)
@@ -913,24 +914,14 @@
         (setq buffer (pop list)))))
   (message "Finished reverting non-file buffers."))
 
-(defvar-local tserg/occur-edit-buffers nil
-  "Save buffers in which occur performed changes.")
-
-(add-hook 'occur-edit-mode-hook
-          (defun tserg/occur-eddit-save-edits ()
-            (add-hook 'after-change-functions
-                      'occur-edit-remember-buffer+ nil t)))
-
-(defun occur-edit-remember-buffer+ (&rest _)
-  (let* ((m (get-text-property (line-beginning-position) 'occur-target))
-         (buf (and (markerp m) (marker-buffer m))))
-    (when buf
-      (pushnew buf tserg/occur-edit-buffers))))
-
-(define-advice occur-cease-edit (:before () save-edits)
-  (dolist (buf tserg/occur-edit-buffers)
-    (with-current-buffer buf
-      (save-buffer))))
+(defun tserg/toggle-maximize-buffer () "Maximize buffer"
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+    (progn
+      (window-configuration-to-register '_)
+      (delete-other-windows)
+      )))
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
 (global-set-key "\C-c\C-g" 'google-this)
@@ -954,6 +945,7 @@
 (global-set-key "\M-/" 'comment-or-uncomment-region)
 (define-key global-map (kbd "C-c ;") 'iedit-mode)
 
+(global-set-key "\C-xm" 'tserg/toggle-maximize-buffer)
 (global-set-key [(meta down)] 'shrink-window)
 (global-set-key [(meta up)] 'enlarge-window)
 (global-set-key [(meta right)] 'enlarge-window-horizontally)
