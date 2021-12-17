@@ -34,6 +34,7 @@
         )
   :init
   (autoload 'c-mode "cc-mode") ;;load only when necessary
+  (setq-default ff-ignore-include t)
 
   :config ;; do after download
 
@@ -154,7 +155,7 @@
     (add-to-list (make-local-variable 'company-backends)
                  '(company-c-headers))
 
-    (company-fuzzy-mode 1)
+    (company-fuzzy-mode nil)
     ;; (add-to-list 'company-fuzzy-full-input-backends 'company-c-headers)
 
     ;; (setq-local my-project-root (projectile-ensure-project (projectile-project-root)))

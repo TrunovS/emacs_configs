@@ -13,9 +13,10 @@
 
                      ;;common utils
                      auto-highlight-symbol
-                     uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy flx autopair
+                     uuidgen exec-path-from-shell google-this ws-butler iedit fuzzy flx
                      yasnippet yasnippet-snippets
-                     dumb-jump xterm-color interleave dired-narrow smex wgrep
+                     dumb-jump xterm-color ;interleave
+                     dired-narrow smex wgrep
 
                      ;;VCS management
                      ahg magit
@@ -31,17 +32,27 @@
     (package-install new_package)))
 
 (eval-when-compile
+  
+ (quelpa
+  '(quelpa-use-package
+    :fetcher git
+    :url "https://github.com/quelpa/quelpa-use-package.git"))
+
   (require 'use-package)
   (require 'quelpa-use-package)
   )
 
-(quelpa
- '(quelpa-use-package
-   :fetcher git
-   :url "https://github.com/quelpa/quelpa-use-package.git"))
 
 (use-package use-package-ensure-system-package
   :ensure t)
+
+;; ;; input method indicator-------------
+;; (setcar (nth 1 mode-line-mule-info) t)
+(defun my:fix-inp (&rest r)
+  (unless current-input-method-title
+    (setq-default current-input-method-title "EN")))
+(advice-add 'toggle-input-method :after 'my:fix-inp)
+(advice-add 'set-input-method :after 'my:fix-inp)
 
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
@@ -81,17 +92,18 @@
   :init
   (setq initial-major-mode 'fundamental-mode)
   (setq frame-inhibit-implied-resize t)
+  ;; (setq font-lock-maximum-decoration `((c-mode . 2) (c++-mode . 2) (t . 1)))
 
   (cond ((eq system-type 'darwin) ;mac os
          (add-to-list 'default-frame-alist '(font . "Hack-12"))
          (menu-bar-mode 1)
 
          ;; mac os russian mac input setup
-         (use-package russian-mac
-           :quelpa ((russian-mac :fetcher github :repo "juev/russian-mac") :upgrade t)
-           :config
+        (use-package russian-mac
+          :quelpa ((russian-mac :fetcher github :repo "juev/russian-mac") :upgrade t)
+          :config
 
-           (setq-default default-input-method "russian-mac"))
+          (setq-default default-input-method "russian-mac"))
          )
         (t (add-to-list 'default-frame-alist '(font . "Hack-9"))
            (menu-bar-mode -1))
@@ -101,7 +113,8 @@
   (load-theme 'nova t)
   (global-hl-line-mode t)
   (show-paren-mode 1)
-  (autopair-global-mode)
+  (electric-pair-mode 1)
+  ;(autopair-global-mode)
   (setq-default frame-resize-pixelwise t)
 
   (global-auto-revert-mode 1)   ;; auto refresh when file changes
@@ -111,6 +124,7 @@
 
   (setq show-paren-style 'expression
         column-number-mode t
+        line-number-mode t
         visible-bell t
         ring-bell-function 'ignore
         inhibit-startup-message t
@@ -128,10 +142,10 @@
   (fset 'yes-or-no-p 'y-or-n-p)
 
   ;; fixing some perfomance issues with long lines of base64 text
-  (setq-default auto-window-vscroll nil)
-  (setq-default line-move-visual nil)
+  ;; (setq-default auto-window-vscroll nil)
+  ;; (setq-default line-move-visual nil)
   (setq-default bidi-paragraph-direction 'left-to-right)
-  (setq-default bidi-inhibit-bpa nil)
+  (setq-default bidi-inhibit-bpa t)
 
   (set-face-background 'default "#353535")
   (set-face-attribute 'cursor  nil :background "white")
@@ -139,6 +153,7 @@
   (set-face-attribute 'hl-line nil :background "dim gray")
   (set-face-attribute 'highlight nil
                       :background (color-darken-name (face-background 'default) 10))
+  (set-face-attribute 'mode-line nil :background (color-darken-name (face-background 'default) 10))
 
   ;; (setq frame-resize-pixelwise t)
   ;; (toggle-frame-maximized)
@@ -152,7 +167,6 @@
 
   :config
 
-  (global-auto-highlight-symbol-mode 1)
   (global-auto-highlight-symbol-mode 0)
   ;; (assq-delete-all 'auto-highlight-symbol-mode-map minor-mode-map-alist)
   )
@@ -191,8 +205,8 @@
    (global-so-long-mode 1))
 
 ;; Load sessions--------------
-(setq desktop-restore-eager 7
-      desktop-load-locked-desktop t
+(setq ;; desktop-restore-eager 7
+      ;; desktop-load-locked-desktop t
       special-display-buffer-names nil;'("*grep*" "*compilation*" "*clang error")
       special-display-regexps nil
       )
@@ -250,6 +264,9 @@
           compilation-mode))
   (popper-mode +1)
   (setq popper-display-control nil)
+
+  ;; (setq popper-display-function #'popper-select-popup-at-bottom)
+  ;; (setq popper-display-function #'display-buffer-in-child-frame)
   )
 
 ;; frequency completition candidates sorting ---------
@@ -281,7 +298,6 @@
         )
   :init
   (ivy-mode 1)
-  (ivy-posframe-mode 1)
   (counsel-mode 1)
   (ivy-prescient-mode 1)
 
@@ -289,8 +305,6 @@
 
   ;; (set-face-attribute 'ivy-posframe-border nil
   ;;                     :foreground nil :background "black")
-  (set-face-attribute 'ivy-posframe nil
-                       :foreground nil :background (color-darken-name (face-background 'default) 7))
 
   ;; (setq-default ivy-dynamic-exhibit-delay-ms 250)
   (setq-default ivy-display-style 'fancy)
@@ -324,9 +338,13 @@
    '(("p" projectile-switch-project "switch project")
      ))
 
+  (require 'ivy-posframe)
+  (set-face-attribute 'ivy-posframe nil
+                      :foreground nil :background (color-darken-name (face-background 'default) 7))
   (setq-default ivy-posframe-display-functions-alist
                 '(
                   (t . ivy-posframe-display-at-frame-center)))
+  (ivy-posframe-mode 1)
 
 
   ;; (ivy-set-display-transformer 'counsel-ag 'counsel-git-grep-transformer)
@@ -349,8 +367,8 @@
                 '(lambda ()
                    (format " Proj[%s]" (projectile-project-name))))
   (setq-default ag-group-matches nil)
-  (setq-default ag-ignore-list `("*orig"))
-  (setq-default projectile-globally-ignored-files '("*orig" "*.log" "*.o$" "*.a$"))
+  (setq-default ag-ignore-list `("*.orig"))
+  (setq-default projectile-globally-ignored-files '("*.orig" "*.log" "*.o$" "*.a$"))
   (setq-default projectile-globally-ignored-file-suffixes nil)
   )
 
@@ -453,8 +471,8 @@
 
   (company-posframe-mode 1)
 
-  ;; (global-company-fuzzy-mode 0)
-  ;; (setq company-fuzzy-sorting-backend 'flx)
+  (global-company-fuzzy-mode 1)
+  (setq company-fuzzy-sorting-backend 'flx)
 
   (setq company-require-match nil)
   (setq company-tooltip-align-annotations t)
@@ -559,6 +577,111 @@
 (add-hook 'dired-mode-hook 'auto-revert-mode) ;; auto refresh dired when file changes
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
 
+;; Use 7z and tar to compress/decompress file if possible.
+(defvar yc/dired-compress-file-suffixes
+   (list
+    ;; Regexforsuffix-Programm-Args.
+    (list (rx "." (or "gz" "Z" "z" "dz" "bz2" "xz" "zip" "rar" "7z")) "7z" "x")
+    (list (rx "." (or "tar.gz" "tgz")) "tar" "xzvf")
+    (list (rx "." (or "tar.bz2" "tbz")) "tar" "xjvf")
+    (list (rx ".tar.xz") "tar" "xJvf"))
+   "nil")
+
+(defun yc/dired-check-process (msg program &rest arguments)
+  (let (err-buffer err (dir default-directory))
+    (message "%s..." msg )
+    (save-excursion
+      ;; Get a clean buffer for error output:
+      (setq err-buffer (get-buffer-create " *dired-check-process output*"))
+      (set-buffer err-buffer)
+      (erase-buffer)
+      (setq default-directory dir   ; caller's default-directory
+            err (not (eq 0 (apply 'process-file program nil t nil
+                                  (if (string= "7z" program) "-y" " ") arguments))))
+      (if err
+          (progn
+            (if (listp arguments)
+                (let ((args "") )
+                  (mapc (lambda (X)
+                          (setq args (concat args X " ")))
+                        arguments)
+                  (setq arguments args)))
+            (dired-log (concat program " " (prin1-to-string arguments) "\n"))
+            (dired-log err-buffer)
+            (or arguments program t))
+        (kill-buffer err-buffer)
+        (message "%s...done" msg)
+        nil))))
+
+
+(defun yc/dired-compress-file (file)
+  ;; Compress or uncompress FILE.
+  ;; Return the name of the compressed or uncompressed file.
+  ;; Return nil if no change in files.
+  (let ((handler (find-file-name-handler file 'dired-compress-file))
+        suffix newname
+        (suffixes yc/dired-compress-file-suffixes))
+
+    ;; See if any suffix rule matches this file name.
+    (while suffixes
+      (let (case-fold-search)
+        (if (string-match (car (car suffixes)) file)
+            (setq suffix (car suffixes) suffixes nil))
+        (setq suffixes (cdr suffixes))))
+    ;; If so, compute desired new name.
+    (if suffix
+        (setq newname (substring file 0 (match-beginning 0))))
+    (cond (handler
+           (funcall handler 'dired-compress-file file))
+          ((file-symlink-p file)
+           nil)
+          ((and suffix (nth 1 suffix))
+           ;; We found an uncompression rule.
+           (if
+               (and (or (not (file-exists-p newname))
+                        (y-or-n-p
+                         (format "File %s already exists.  Replace it? "
+                                 newname)))
+                    (not (yc/dired-check-process (concat "Uncompressing " file)
+                                                 (nth 1 suffix) (nth 2 suffix) file)))
+               newname))
+          (t
+            ;;; We don't recognize the file as compressed, so compress it.
+            ;;; Try gzip; if we don't have that, use compress.
+           (condition-case nil
+               (let ((out-name (concat file ".7z")))
+                 (and (or (not (file-exists-p out-name))
+                          (y-or-n-p
+                           (format "File %s already exists.  Really compress? "
+                                   out-name)))
+                      (not (yc/dired-check-process (concat "Compressing " file)
+                                                   "7z" "a" out-name file))
+                      ;; Rename the compressed file to NEWNAME
+                      ;; if it hasn't got that name already.
+                      (if (and newname (not (equal newname out-name)))
+                          (progn
+                            (rename-file out-name newname t)
+                            newname)
+                        out-name))))))))
+
+(defadvice dired-compress (around yc/dired-compress )
+  "If last action was not a yank, run `browse-kill-ring' instead."
+  (let* (buffer-read-only
+         (from-file (dired-get-filename))
+         (new-file (yc/dired-compress-file from-file)))
+    (if new-file
+        (let ((start (point)))
+          ;; Remove any preexisting entry for the name NEW-FILE.
+          (ignore-errors (dired-remove-entry new-file))
+          (goto-char start)
+          ;; Now replace the current line with an entry for NEW-FILE.
+          (dired-update-file-line new-file) nil)
+      (dired-log (concat "Failed to compress" from-file))
+      from-file))
+  )
+(ad-activate 'dired-compress)
+
+
 ;; Service managing -----------------------------------------------
 (use-package prodigy
   :ensure t
@@ -577,7 +700,15 @@
    :command "ssh"
    :args '("-t" "work_wsl" "/mnt/c/code/UPGo/UPGServiceProvider/UPGServiceProvider.exe --debug | cat -e")
    :ready-message "Launching SP as a console application"
-   :stop-signal 'sigkill
+   :stop-signal 'sigint
+   :kill-process-buffer-on-stop t)
+
+  (prodigy-define-service
+   :name "DocConverter"
+   :command "ssh"
+   :args '("-t" "work_wsl" "/mnt/c/code/UPGo/DocConverter/DocConverter.exe --debug | cat -e")
+   ;; :ready-message "Launching SP as a console application"
+   :stop-signal 'sigint
    :kill-process-buffer-on-stop t)
 
   (prodigy-define-service
@@ -593,7 +724,7 @@
     :command "ssh"
     :args '("-t" "work_wsl" "/mnt/c/code/UPG_Main/x64/Debug/UPGDocSigner.exe --debug | cat -e")
     :ready-message "HandlerRouting was setup"
-    :stop-signal 'sigkill
+    :stop-signal 'quit
     :kill-process-buffer-on-stop t)
   )
 
@@ -915,13 +1046,18 @@
   (message "Finished reverting non-file buffers."))
 
 (defun tserg/toggle-maximize-buffer () "Maximize buffer"
-  (interactive)
-  (if (= 1 (length (window-list)))
-      (jump-to-register '_)
-    (progn
-      (window-configuration-to-register '_)
-      (delete-other-windows)
-      )))
+       (interactive)
+       (let ((val (get-register '_)))
+         (if (null val)
+             (progn
+               (window-configuration-to-register '_)
+               (maximize-window)
+               )
+           (progn
+             (jump-to-register '_)
+             (set-register '_ nil)
+             )
+           )))
 
 ;; GLOBAL HOTKEYS----------------------------------------------------------------------------
 (global-set-key "\C-c\C-g" 'google-this)
@@ -964,4 +1100,7 @@
 (global-set-key [f9] 'replace-string)
 (global-set-key [f10] 'kmacro-end-and-call-macro)
 
-(global-set-key "\C-xm" nil)
+(global-set-key "\C-@" 'profiler-start)
+(global-set-key "\M-@" 'profiler-stop)
+
+;; (global-set-key "\C-xm" nil)

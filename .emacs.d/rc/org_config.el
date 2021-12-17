@@ -16,12 +16,12 @@
         ([f8] . 'tserg/org-latex-export-to-pdf)
         ("C-c t" . 'org-toggle-blocks)
         ("C-c x" . 'org-babel-execute-buffer)
-        
+
         ("S-<left>" . nil)
         ("S-<right>" . nil)
         ("S-<up>" . nil)
         ("S-<down>" . nil)
-        
+
         ("M-<left>" . nil)
         ("M-<right>" . nil)
         ("M-<up>" . nil)
@@ -54,7 +54,7 @@
    ;; ob-async-no-async-languages-alist '("ipython")
         org-export-odt-preferred-output-format "docx"
         org-odt-preferred-output-format "docx"
-        org-startup-folded nil
+        org-startup-folded t
         org-log-done t
         org-src-fontify-natively t
         org-confirm-babel-evaluate nil

@@ -3,13 +3,14 @@
                            company
 
                            ;;common utils
-                           ws-butler autopair
+                           ws-butler ;;autopair
 
                            ;;code complete
                            company-quickhelp
                            ))
 (use-package elisp-mode
   :ensure nil
+  :ensure company
 
   :config
 
@@ -28,6 +29,7 @@
     (font-lock-mode t)
     (setq font-lock-maximum-decoration t)
 
+    (require 'company)
     (add-to-list (make-local-variable 'company-backends)
                  '(company-elisp))
     )

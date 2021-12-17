@@ -24,6 +24,8 @@
   (setq  ;; compilation-scroll-output 1
    compilation-skip-threshold 2;;skip warnings
    compilation-scroll-output 'first-error
+   compilation-ask-about-save nil ;;do not ask to save changed buffers
+   compilation-save-buffers-predicate 'ignore ;;do not auto save changed buffers
    )
 
   (add-hook 'compilation-start-hook
