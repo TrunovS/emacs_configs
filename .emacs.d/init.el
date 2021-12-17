@@ -5,11 +5,17 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" default))
+)
 
 ;; (defvar last-file-name-handler-alist file-name-handler-alist)
 ;; (setq gc-cons-threshold 402653184
 ;;       gc-cons-percentage 0.6
 ;;       file-name-handler-alist nil)
+
+(when (eval-when-compile (version< "28" emacs-version ))
+  (setq-default native-comp-async-report-warnings-errors 'silent))
+
+
 
 
 ;;Package--------------------------------------------------
@@ -18,6 +24,7 @@
 ;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
 
 (package-initialize)
 ; fetch the list of packages available
@@ -96,52 +103,3 @@
  '(flycheck-error-list-highlight ((t (:inherit highlight :background "#504b4b")))))
 
 (provide 'init)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(eglot lsp-mode tramp go-eldoc russian-mac prodigy ivy-prescient ivy-xref prescient popper simple-modeline use-package-ensure-system-package quelpa-use-package yasnippet-snippets xterm-color ws-butler wgrep uuidgen undo-tree smex smart-mode-line nova-theme magit ivy-posframe iedit google-this ggtags fuzzy flx exec-path-from-shell dumb-jump dockerfile-mode docker-compose-mode dired-narrow counsel-projectile company-quickhelp company-posframe company-fuzzy auto-highlight-symbol auto-dim-other-buffers ahg ag))
- '(safe-local-variable-values
-   '((multi-compile-alist
-      ("\\.*"
-       ("Debug x64 " "MSBuild AAStatement.sln  /p:Configuration=Debug /p:Platform=x64 /v:minimal /m:6 /clp:ShowEventId,ShowTimestamp"
-        (multi-compile-locate-file-dir ".hg"))
-       ("Release x64" "MSBuild AAStatement.sln  /p:Configuration=Release /p:Platform=x64 /v:minimal /m:6 /clp:ShowEventId,ShowTimestamp"
-        (multi-compile-locate-file-dir ".hg"))
-       ("pwd" "pwd"
-        (multi-compile-locate-file-dir ".hg"))))
-     (projectile-project-compilation-cmd . "MSBuild AAStatement.sln /p:Configuration=Debug /p:Platform=x64 /v:minimal /m:6 /clp:ShowEventId,ShowTimestamp")
-     (multi-compile-alist
-      ("\\.*"
-       ("UPGDocController" . "ssh work_wsl 'cd /mnt/c/code/UPGo/UPGDocController && wgo build -mod vendor -v && wgo test -v -mod vendor'")
-       ("UPGServiceProviderMount" . "ssh work_wsl 'cd /mnt/c/code/UPGo/UPGServiceProvider; wgo build -mod vendor -v; wgo test . ../upg -v -mod vendor'")
-       ("UPGDocConverterMount" . "ssh work_wsl 'cd /mnt/c/code/UPGo/DocConverter && wgo build -mod vendor -v && wgo test . ../upg -v -mod vendor'")
-       ("UPGServiceProvider" "cd UPGServiceProvider && wgo build -mod vendor -v && wgo test . ../upg -v -mod vendor"
-        (multi-compile-locate-file-dir ".hg"))
-       ("UPGServiceProviderInstaller" "cd setup && iscc UPGServiceProvider.iss"
-        (multi-compile-locate-file-dir ".hg"))
-       ("UPGConverterInstaller" "cd setup_converter && iscc UPGDocConverter.iss"
-        (multi-compile-locate-file-dir ".hg"))
-       ("UPGDocConverter" "cd DocConverter && wgo build -mod vendor -v && wgo test . ../upg -v -mod vendor"
-        (multi-compile-locate-file-dir ".hg"))
-       ("pwd" "pwd"
-        (multi-compile-locate-file-dir ".hg"))))
-     (projectile-project-compilation-cmd . "cd UPGDocController && wgo build -v && wgo test -v && wgo vet")
-     (multi-compile-alist
-      ("\\.*"
-       ("UPGDocController" . "ssh work_wsl 'cd /mnt/c/code/UPGo/UPGDocController && go build -mod vendor -v && go test -v -mod vendor'")
-       ("UPGServiceProviderMount" . "ssh work_wsl 'cd /mnt/c/code/UPGo/UPGServiceProvider; go build -mod vendor -v; go test . ../upg -v -mod vendor'")
-       ("UPGDocConverterMount" . "ssh work_wsl 'cd /mnt/c/code/UPGo/DocConverter && go build -mod vendor -v && go test . ../upg -v -mod vendor'")
-       ("UPGServiceProvider" "cd UPGServiceProvider && go build -mod vendor -v && go test . ../upg -v -mod vendor"
-        (multi-compile-locate-file-dir ".hg"))
-       ("UPGServiceProviderInstaller" "cd setup && iscc UPGServiceProvider.iss"
-        (multi-compile-locate-file-dir ".hg"))
-       ("UPGConverterInstaller" "cd setup_converter && iscc UPGDocConverter.iss"
-        (multi-compile-locate-file-dir ".hg"))
-       ("UPGDocConverter" "cd DocConverter && go build -mod vendor -v && go test . ../upg -v -mod vendor"
-        (multi-compile-locate-file-dir ".hg"))
-       ("pwd" "pwd"
-        (multi-compile-locate-file-dir ".hg"))))
-     (projectile-project-compilation-cmd . "cd UPGDocController && go build -v && go test -v && go vet"))))
