@@ -119,7 +119,7 @@
     (indent-region (line-beginning-position) (line-end-position))
     )
 
-  (smart-tabs-insinuate 'c++ 'c)
+  (smart-tabs-insinuate 'c++ 'c 'java)
 
   (defun tserg/c-mode-common-hook()
     (setq-local indent-tabs-mode t)
@@ -128,7 +128,6 @@
           c-basic-offset 2
           c-argdecl-indent 0
           cua-auto-tabify-rectangles nil)
-    (setq-local tab-width 2) ;A TAB is equivilent to 2 spaces
     (c-set-offset 'substatement-open 0)
     (c-set-offset 'block-close 0)
 
@@ -139,13 +138,10 @@
     (yas-minor-mode 1)
     ;; (flyspell-prog-mode 1)
     (toggle-truncate-lines nil)
-    ;; (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
 
     (font-lock-mode t)
     (setq font-lock-maximum-decoration t)
 
-    (smart-tabs-advice c-indent-line c-basic-offset)
-    (smart-tabs-advice c-indent-region c-basic-offset)
     (smart-tabs-mode-enable)
 
     (eldoc-mode nil)

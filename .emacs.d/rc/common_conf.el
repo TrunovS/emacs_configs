@@ -121,6 +121,7 @@
 
   (setq-default inhibit-compacting-font-caches t)
   (setq-default indent-tabs-mode nil)
+  (setq-default tab-width 2) ;A TAB is equivilent to 2 spaces
 
   (setq show-paren-style 'expression
         column-number-mode t
@@ -393,6 +394,7 @@
   (require 'xref)
   (setq xref-backend-functions (delq 'etags--xref-backend xref-backend-functions))
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  ;; (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
 
   :config
 
@@ -404,6 +406,7 @@
   (require 'counsel)
   (require 'projectile)
   (ivy-set-display-transformer 'dumb-jump-ivy-jump-to-selected  'grep-like-transformer)
+  ;; (ivy-set-display-transformer 'xref-find-definitions  'grep-like-transformer)
   )
 
 ;; magit --------------------------------------------
@@ -796,7 +799,7 @@
       ;; now insert as many time as requested
       (while (> n 0)
     	(insert current-line)
-    	(decf n)))))
+    	(cl-decf n)))))
 
 
 (defun my-copy-line ()
@@ -961,8 +964,8 @@
             (root_dir (if (projectile-project-p) (projectile-project-root) default-directory))
             (r_dir (car (last (split-string root_dir ":"))))
             )
-        ;(message "str [%s], Abs path [%s], r_dir [%s]" str abs_path r_dir)
         (setq relative_dir (file-relative-name abs_path r_dir))
+;        (message "str [%s], Abs path [%s], r_dir [%s], relative_dir [%s], root_dir [%s]" str abs_path r_dir relative_dir root_dir)
         (concat (propertize relative_dir 'face 'link) ":"
                 (propertize flinam 'face 'link)
                 (tserg/fontify-using-faces (tserg/fontify-with-mode major-mode ftooltip)))
@@ -980,7 +983,7 @@
     (when (and (stringp remote-id)
                (string-match (regexp-quote remote-id) name))
       (setq name (substring name (match-end 0))))
-    (loop
+    (cl-loop
      ;; Find first matching alist entry.
      (setq mode
            (if case-insensitive-p
@@ -1006,7 +1009,7 @@
                name (substring name 0 (match-beginning 0)))
        )
      (when mode
-       (return mode)))
+       (cl-return mode)))
     )
   )
 
