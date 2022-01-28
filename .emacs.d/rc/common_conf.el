@@ -1,7 +1,7 @@
 ;; Packages list needed--------------------------
 (setq package-list '(quelpa-use-package
                      ;;theme specific
-                     auto-dim-other-buffers smart-mode-line nova-theme
+                     auto-dim-other-buffers nova-theme
 
                      ;;project management
                      projectile ag counsel-projectile ggtags
@@ -32,7 +32,6 @@
     (package-install new_package)))
 
 (eval-when-compile
-  
  (quelpa
   '(quelpa-use-package
     :fetcher git
@@ -45,14 +44,6 @@
 
 (use-package use-package-ensure-system-package
   :ensure t)
-
-;; ;; input method indicator-------------
-;; (setcar (nth 1 mode-line-mule-info) t)
-(defun my:fix-inp (&rest r)
-  (unless current-input-method-title
-    (setq-default current-input-method-title "EN")))
-(advice-add 'toggle-input-method :after 'my:fix-inp)
-(advice-add 'set-input-method :after 'my:fix-inp)
 
 ;;date time zone----------------
 (setq-default datetime-timezone 'Europe/Moscow)
@@ -88,11 +79,11 @@
 ;; Theme--------------------
 (use-package nova-theme
   :ensure t
+  :ensure rainbow-delimiters
 
   :init
   (setq initial-major-mode 'fundamental-mode)
   (setq frame-inhibit-implied-resize t)
-  ;; (setq font-lock-maximum-decoration `((c-mode . 2) (c++-mode . 2) (t . 1)))
 
   (cond ((eq system-type 'darwin) ;mac os
          (add-to-list 'default-frame-alist '(font . "Hack-12"))
@@ -111,6 +102,10 @@
 
   :config
   (load-theme 'nova t)
+
+  (rainbow-delimiters-mode-enable)
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
   (global-hl-line-mode t)
   (show-paren-mode 1)
   (electric-pair-mode 1)
@@ -213,14 +208,61 @@
       )
 
 ;; mode-line-----------------
-(use-package simple-modeline
+(setq-default mode-line-end-spaces
+              '(""
+                "| "
+                (:eval
+                 (symbol-name buffer-file-coding-system))
+                " | "
+                (:eval
+                 (pcase (coding-system-eol-type buffer-file-coding-system)
+                   ('0 " LF")
+                   ('1 " CRLF")
+                   ('2 " CR")
+                   (_ "")
+                   )
+                 )))
+
+(defun tserg/mode-line/padding ()
+  (let ((r-length (length (format-mode-line mode-line-end-spaces))))
+    (propertize " "
+                'display `(space :align-to (- right ,r-length)))))
+
+(setq-default mode-line-format '("%e" mode-line-front-space
+
+                                 mode-line-client
+
+                                 (:eval ;; input method indicator-------------
+                                  (cond ((not current-input-method-title) "EN|")
+	                                      (t (concat current-input-method-title "|"))))
+
+                                 (:eval ;; read only buffer
+                                  (cond (buffer-read-only " ")
+	                                      (t "  ")))
+
+                                 (:eval ;; modified buffer
+                                  (cond ((buffer-modified-p) " ●")
+	                                      (t " ○")))
+
+                                 (:eval ;; remote vs local indicator
+                                  (cond ((not buffer-file-truename) "")
+                                        ((file-remote-p buffer-file-truename) " @")
+                                        (t ""))
+                                  )
+                                 mode-line-frame-identification mode-line-buffer-identification
+                                 "   " mode-line-position (vc-mode vc-mode) "  " mode-line-modes mode-line-misc-info
+
+                                 (:eval (tserg/mode-line/padding))
+                                 mode-line-end-spaces
+                                 ))
+(setq-default mode-line-compact nil)
+
+(use-package rich-minority
   :ensure t
   :init
-  (setq simple-modeline-segments
-   '((simple-modeline-segment-modified simple-modeline-segment-buffer-name simple-modeline-segment-position)
-     (simple-modeline-segment-input-method simple-modeline-segment-eol simple-modeline-segment-encoding simple-modeline-segment-vc simple-modeline-segment-misc-info simple-modeline-segment-process simple-modeline-segment-major-mode)))
-  :hook (after-init . simple-modeline-mode)
-  :config
+  (setq-default rm-whitelist '("^.*(LSP|lsp).*$"
+                               ))
+  (rich-minority-mode 1)
   )
 
 ;; Set Path----------------------------------
@@ -394,6 +436,7 @@
   (require 'xref)
   (setq xref-backend-functions (delq 'etags--xref-backend xref-backend-functions))
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (setq xref-show-definitions-function #'xref-show-definitions-buffer)
   ;; (setq xref-show-definitions-function #'xref-show-definitions-completing-read)
 
   :config
@@ -577,6 +620,7 @@
 (setq dired-listing-switches "-lta");;-lt
 (setq directory-free-space-program nil)
 (setq-default dired-dwim-target 1)
+(setq-default dired-kill-when-opening-new-dired-buffer t)
 (add-hook 'dired-mode-hook 'auto-revert-mode) ;; auto refresh dired when file changes
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
 
