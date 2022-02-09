@@ -38,6 +38,19 @@
   (require 'ob-async)
   ;; (require 'ox-latex)
 
+  (defun org-babel-execute:js (body params)
+    (let ((jq (cdr (assoc :jq params)))
+          )
+      (with-temp-buffer
+          ;; Insert the JSON into the temp buffer
+          (insert body)
+          ;; Run jq command on the whole buffer, and replace the buffer
+          ;; contents with the result returned from jq
+          (shell-command-on-region (point-min) (point-max) (format "jq -r \"%s\"" jq) nil 't)
+          ;; Return the contents of the temp buffer as the result
+          (buffer-string))
+      ))
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
@@ -47,8 +60,9 @@
      (latex . t)
      (R . t)
      (http . t)
+     (restclient . t)
      )
-)
+   )
   (setq
    ;; Fix an incompatibility ob-async and ob-ipython packages
    ;; ob-async-no-async-languages-alist '("ipython")

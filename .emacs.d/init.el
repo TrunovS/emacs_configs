@@ -25,7 +25,6 @@
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
-
 (package-initialize)
 ; fetch the list of packages available
 (unless package-archive-contents
@@ -45,7 +44,6 @@
   (message "Refresing package repository %.06fsec" (k-time (package-refresh-contents)))
   )
 
-;; install the missing packages
 
 (message "common_conf takes %.02fsec to load" (k-time (load "~/.emacs.d/rc/common_conf.el")));; common-hook
 (message "elisp_conf takes %.02fsec to load" (k-time (load "~/.emacs.d/rc/elisp_conf.el")));; elisp-mode

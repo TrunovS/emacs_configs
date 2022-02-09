@@ -1,5 +1,8 @@
 ;; Packages list needed--------------------------
-(setq package-list '(quelpa-use-package
+(setq package-list '(gnu-elpa-keyring-update
+
+                     quelpa-use-package
+
                      ;;theme specific
                      auto-dim-other-buffers nova-theme
 
@@ -40,6 +43,15 @@
   (require 'use-package)
   (require 'quelpa-use-package)
   )
+
+;; (hercules-def
+;;  ;; read further to see why this works
+;;  :toggle-funs #'ahg-status-mode
+;;  :keymap 'ahg-status-mode-map
+;;  :transient t)
+
+;; ;; tweak binding to taste
+;; (define-key ahg-status-mode-map (kbd "C-c C-v") #'ahg-status-mode)
 
 
 (use-package use-package-ensure-system-package
@@ -192,9 +204,21 @@
   (setq ediff-split-window-function 'split-window-horizontally)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
+  ;; (defvar q-ediff-last-windows nil)
+
+  (defun q-restore-pre-ediff-winconfig ()
+    (progn
+      (ediff-kill-buffer-carefully "*Ediff Control Panel*")
+      (delete-frame)
+      ;; (set-window-configuration q-ediff-last-windows)
+      ))
+
+  (add-hook 'ediff-quit-hook #'q-restore-pre-ediff-winconfig)
+
   (defun tserg/ediff-before-setup ()
+    (setq q-ediff-last-windows (current-window-configuration))
     (select-frame (make-frame)))
- (add-hook 'ediff-before-setup-hook 'tserg/ediff-before-setup)
+  (add-hook 'ediff-before-setup-hook 'tserg/ediff-before-setup)
   )
 
 (when (require 'so-long nil :noerror)
@@ -207,55 +231,6 @@
       special-display-regexps nil
       )
 
-;; mode-line-----------------
-(setq-default mode-line-end-spaces
-              '(""
-                "| "
-                (:eval
-                 (symbol-name buffer-file-coding-system))
-                " | "
-                (:eval
-                 (pcase (coding-system-eol-type buffer-file-coding-system)
-                   ('0 " LF")
-                   ('1 " CRLF")
-                   ('2 " CR")
-                   (_ "")
-                   )
-                 )))
-
-(defun tserg/mode-line/padding ()
-  (let ((r-length (length (format-mode-line mode-line-end-spaces))))
-    (propertize " "
-                'display `(space :align-to (- right ,r-length)))))
-
-(setq-default mode-line-format '("%e" mode-line-front-space
-
-                                 mode-line-client
-
-                                 (:eval ;; input method indicator-------------
-                                  (cond ((not current-input-method-title) "EN|")
-	                                      (t (concat current-input-method-title "|"))))
-
-                                 (:eval ;; read only buffer
-                                  (cond (buffer-read-only " ")
-	                                      (t "  ")))
-
-                                 (:eval ;; modified buffer
-                                  (cond ((buffer-modified-p) " ●")
-	                                      (t " ○")))
-
-                                 (:eval ;; remote vs local indicator
-                                  (cond ((not buffer-file-truename) "")
-                                        ((file-remote-p buffer-file-truename) " @")
-                                        (t ""))
-                                  )
-                                 mode-line-frame-identification mode-line-buffer-identification
-                                 "   " mode-line-position (vc-mode vc-mode) "  " mode-line-modes mode-line-misc-info
-
-                                 (:eval (tserg/mode-line/padding))
-                                 mode-line-end-spaces
-                                 ))
-(setq-default mode-line-compact nil)
 
 (use-package rich-minority
   :ensure t
@@ -264,6 +239,7 @@
                                ))
   (rich-minority-mode 1)
   )
+
 
 ;; Set Path----------------------------------
 (use-package exec-path-from-shell
@@ -305,6 +281,7 @@
           "^\\*.*\\*$"
           help-mode
           compilation-mode))
+
   (popper-mode +1)
   (setq popper-display-control nil)
 
@@ -620,7 +597,7 @@
 (setq dired-listing-switches "-lta");;-lt
 (setq directory-free-space-program nil)
 (setq-default dired-dwim-target 1)
-(setq-default dired-kill-when-opening-new-dired-buffer t)
+(setq-default dired-kill-when-opening-new-dired-buffer nil)
 (add-hook 'dired-mode-hook 'auto-revert-mode) ;; auto refresh dired when file changes
 (define-key dired-mode-map "N" 'dired-narrow-fuzzy)
 
@@ -728,8 +705,36 @@
   )
 (ad-activate 'dired-compress)
 
-
 ;; Service managing -----------------------------------------------
+(use-package dtache
+  :ensure t
+  :ensure consult
+
+  ;; :init
+  ;; (cond ((eq system-type 'darwin) ;mac os
+  ;;        (system-packages-ensure "dtach" "brew install"
+  ;;        ))
+  ;;       ;; ((eq system-type 'gnu/linux) ;mac os
+  ;;       ;;  (ensure-system-package
+  ;;       ;;   ("dtach" . "apt install dtach")
+  ;;       ;;  ))
+  ;;       (t
+  ;;          (message "Can't install dtach for this system type"))
+  ;;       )
+  :hook (after-init . dtache-setup)
+  :bind (
+         ([remap async-shell-command] . dtache-shell-command)
+         ([remap dtache-open-session] . dtache-consult-session)
+         )
+  :config
+
+  ;; (ivy-set-actions
+  ;;  'dtache-consult-session
+  ;;  '(("p" dtache "switch project")
+  ;;    ))
+
+  )
+
 (use-package prodigy
   :ensure t
 
@@ -780,6 +785,20 @@
 ;; Mercurial--------------------------------------------------
 (use-package ahg
   :ensure t
+
+  :bind*
+  (
+   :map ahg-status-mode-map
+        (("P" . (lambda() (interactive) (ahg-do-command "push --new-branch")))
+         ("C b" . (lambda()
+                  (interactive)
+                  (let ((files (ahg-status-get-marked nil)))
+                    (ahg-commit (mapcar 'cddr files) nil "close branch" (list "--close-branch"))))
+          )
+         ([remap ahg-status-dired-find] . (lambda() (interactive) (ahg-do-command "pull")))
+         )
+   )
+
   :config
   (add-to-list 'display-buffer-alist
                `(,(rx "*hg")
@@ -796,6 +815,7 @@
                  (reusable-frames . visible)
                  (side            . right)
                  (window-width   . 0.3)))
+
   )
 
 ;; shell color customization------------------------------------------
