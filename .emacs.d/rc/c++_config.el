@@ -13,9 +13,12 @@
                             dash
                             ))
 
+
 (use-package cc-mode
   :ensure nil
   :no-require t ;; lazy config read
+
+  :ensure ggtags
 
   :mode ;;mode associassion
   ("\\.h\\'" . c++-mode)
@@ -124,14 +127,15 @@
   (defun tserg/c-mode-common-hook()
     (setq-local indent-tabs-mode t)
     ;; base-style
-    (setq c-set-style "linux"
+    (setq c-default-style "linux"
           c-basic-offset 2
           c-argdecl-indent 0
-          cua-auto-tabify-rectangles nil)
+          cua-auto-tabify-rectangles nil
+          fill-column 150) ; Needed for long lines support smart-tabs-mode
     (c-set-offset 'substatement-open 0)
     (c-set-offset 'block-close 0)
 
-    ;; (ggtags-mode 1) ; bad performance when using tramp
+    (ggtags-mode 1) ; bad performance when using tramp
     (ws-butler-mode 1)
     (whitespace-mode 1)
     (hs-minor-mode 1)
@@ -151,7 +155,7 @@
     (add-to-list (make-local-variable 'company-backends)
                  '(company-c-headers))
 
-    (company-fuzzy-mode nil)
+    ;; (company-fuzzy-mode nil)
     ;; (add-to-list 'company-fuzzy-full-input-backends 'company-c-headers)
 
     ;; (setq-local my-project-root (projectile-ensure-project (projectile-project-root)))
@@ -160,6 +164,16 @@
 
     (company-quickhelp-mode 1)
     )
+
+  (defun project-find-module (dir)
+    (when-let ((root (locate-dominating-file dir ".projectile")))
+      (cons 'go-module root)))
+
+  (cl-defmethod project-root ((project (head go-module)))
+    (cdr project))
+
+  (add-hook 'project-find-functions #'project-find-module)
+
 
   (add-hook 'c-mode-common-hook 'tserg/c-mode-common-hook)
   )

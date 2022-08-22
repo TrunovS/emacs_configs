@@ -28,14 +28,27 @@
         ("M-<down>" . nil)
         )
 
-  :init
+  :config
+
   (autoload 'org-mode "org") ;;load only when necessary
   (add-to-list 'file-coding-system-alist (cons "\\.\\(org\\|org_archive\\|/TODO\\)$"  'utf-8))
 
-  :config
+  (use-package org-modern-indent
+  ;; :straight or :load-path here, to taste
+    :quelpa ((org-modern-indent :fetcher github :repo "jdtsmith/org-modern-indent") :upgrade nil)
+    :hook
+    (org-indent-mode . org-modern-indent-mode)
+    )
+
+  (use-package org-bullets-mode
+    :ensure org-bullets
+    :defer t
+    :config
+    :hook org-mode)
 
   ;; (require 'ob-python)
   (require 'ob-async)
+  (require 'org-modern-indent)
   ;; (require 'ox-latex)
 
   (defun org-babel-execute:js (body params)
@@ -74,6 +87,7 @@
         org-confirm-babel-evaluate nil
         org-directory "~/org-docs"
         org-babel-remote-temporary-directory "~/org_tmp"
+        org-startup-indented t
         )
 
   (defvar org-blocks-hidden nil)
@@ -133,7 +147,7 @@
     (flyspell-mode 1)
     ;; (toggle-truncate-lines -1)
     (visual-line-mode 1)
-    )
+  )
 
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
   (add-hook 'org-mode-hook 'tserg/org-mode-hook)

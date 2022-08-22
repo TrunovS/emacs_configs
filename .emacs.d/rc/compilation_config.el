@@ -4,8 +4,12 @@
   :ensure nil
 
   :ensure multi-compile
+  :ensure fancy-compilation
 
   :config
+
+  (setq fancy-compilation-override-colors nil)
+
   ;; (setq tserg/filepath-font-lock-keywords
   ;;     (let* (
   ;;           (filepath-regexp "[\/A-Za-z\\0-9 _@:]+\\.[a-zA-Z]+[:0-9]*\(?[,0-9]*"))
@@ -44,6 +48,7 @@
 
   ;; Long Lines processing--------------------------------------------
   (defun tserg/compilation-long-hook ()
+    (fancy-compilation-mode)
     ;; (fundamental-mode)
     ;; (setq font-lock-defaults '((tserg/filepath-font-lock-keywords)))
     (flyspell-mode -1)

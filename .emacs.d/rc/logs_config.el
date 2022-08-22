@@ -1,12 +1,15 @@
 ;; Packages list needed--------------------------
 (use-package logview
   :ensure t ;; auto install on startup only
+  :ensure vlf
 
   ;;defered config read on associated file open
   :no-require t
   :defer t
 
   :config ;; do after download
+
+  (require 'vlf-setup)
 
   (setq-default logview-copy-visible-text-only t)
   (setq-default logview-auto-revert-mode t)
@@ -52,6 +55,7 @@
     (visual-line-mode 1)
     (logview-choose-submode "UPG" "yyyy-MMM-dd HH:mm:ss.SSSSSS")
     (define-key logview-mode-map "O" 'tserg/find-file-at-point-with-line)
+    ;; (vlf-mode)
     )
 
   (add-hook 'logview-mode-hook 'tserg/log-common-hook)

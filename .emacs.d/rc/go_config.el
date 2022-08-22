@@ -15,12 +15,15 @@
 (use-package go-mode
   :ensure t ;; auto install on startup only go-mode
 
+  :no-require t ;;defered config read
+  :defer t
+
   :ensure lsp-mode
   :ensure lsp-ui
 
   ;;defered config read on .go open
-  :no-require t
-  :defer t
+  ;; :no-require t
+  ;; :defer t
 
   :mode ;;mode associassion
   ("\\.mod\\'" . 'fundamental-mode)
@@ -89,20 +92,29 @@
                  '(company-capf company-files ;; company-abbrev company-dabbrev
                                 company-keywords))
     ;; (require 'lsp)
+    ;; (require 'lsp-mode)
 
     ;; (setq-default lsp-log-io t)
-    ;; ;; (setq-default lsp-server-trace "verbose")
+    ;; (setq-default lsp-server-trace "verbose")
+
+    ;; (lsp-register-custom-settings
+    ;;  '(("gopls.completeUnimported" t t)
+    ;;    ("gopls.staticcheck" t t)))
 
     ;; (lsp-register-client
-    ;;  (make-lsp-client :new-connection (lsp-tramp-connection (lambda ()
-
-    ;;                                                           ;; (cons "gopls" lsp-gopls-server-args)
-    ;;                                                           (cons "gopls"
-    ;;                                                                 '("-debug" "-vv" "-rpc.trace" "-logfile" "/tmp/gopls.log"))
-    ;;                                                           ))
+    ;;  (make-lsp-client :new-connection (lsp-tramp-connection  (lambda ()
+    ;;                                                            ;; (cons "gopls" lsp-gopls-server-args)
+    ;;                                                            (cons "gopls"
+    ;;                                                                  '("-rpc.trace" "-vv"
+    ;;                                                                    "-logfile" "/tmp/gopls.log"
+    ;;                                                                    ))
+    ;;                                                            )
+    ;;                                                         )
     ;;                   :major-modes '(go-mode)
     ;;                   :remote? t
     ;;                   :server-id 'gopls-remote))
+
+
     ;; ;; (setq inhibit-eol-conversion t)
 
     ;; (lsp 1)
@@ -119,7 +131,7 @@
     ;; (advice-add #'lsp-ui-peek--peek-hide :override #'lsp-ui-peek--peek-destroy)
 
 
-    (company-quickhelp-mode)
+    ;; (company-quickhelp-mode)
 
     ;;  (add-hook 'before-save-hook 'gofmt-before-save)
 
@@ -130,7 +142,57 @@
 
     )
 
+  ;; (require 'lsp)
+  ;; (require 'lsp-mode)
+
+  ;; (defun lsp-tramp-connection-over-ssh-port-forwarding (command)
+  ;;   "Like lsp-tcp-connection, but uses SSH portforwarding."
+  ;;   (list
+  ;;    :connect (lambda (filter sentinel name environment-fn)
+  ;;               (let* ((host "localhost")
+  ;;                      (lsp-port (lsp--find-available-port host (cl-incf lsp--tcp-port)))
+  ;;                      (command (with-parsed-tramp-file-name buffer-file-name nil
+  ;;                                 (message "[tcp/ssh hack] running LSP %s on %s / %s" command host localname)
+  ;;                                 (let* ((unix-socket (format "/tmp/lsp-ssh-portforward-%s.sock" lsp-port))
+  ;;                                        (command (list
+  ;;                                                  "ssh"
+  ;;                                                  ;; "-vvv"
+  ;;                                                  "-L" (format "%s:%s" lsp-port unix-socket)
+  ;;                                                  host
+  ;;                                                  "socat"
+  ;;                                                  (format "unix-listen:%s" unix-socket)
+  ;;                                                  (format "system:'\"cd %s && %s\"'" (file-name-directory localname) command)
+  ;;                                                  )))
+  ;;                                   (message "using local command %s" command)
+  ;;                                   command)))
+  ;;                      (final-command (if (consp command) command (list command)))
+  ;;                      (_ (unless (executable-find (cl-first final-command))
+  ;;                           (user-error (format "Couldn't find executable %s" (cl-first final-command)))))
+  ;;                      (process-environment
+  ;;                       (lsp--compute-process-environment environment-fn))
+  ;;                      (proc (make-process :name name :connection-type 'pipe :coding 'no-conversion
+  ;;                                          :command final-command :sentinel sentinel :stderr (format "*%s::stderr*" name) :noquery t))
+  ;;                      (tcp-proc (progn
+  ;;                                  (sleep-for 1) ; prevent a connection before SSH has run socat. Ugh.
+  ;;                                  (lsp--open-network-stream host lsp-port (concat name "::tcp")))))
+
+  ;;                 ;; TODO: Same :noquery issue (see above)
+  ;;                 (set-process-query-on-exit-flag proc nil)
+  ;;                 (set-process-query-on-exit-flag tcp-proc nil)
+  ;;                 (set-process-filter tcp-proc filter)
+  ;;                 (cons tcp-proc proc)))
+  ;;    :test? (lambda () t)))
+
+  ;; (lsp-register-client
+  ;;  (make-lsp-client :new-connection (lsp-tramp-connection-over-ssh-port-forwarding "gopls")
+  ;;                   :major-modes '(go-mode)
+  ;;                   :remote? t
+  ;;                   :server-id 'gopls-remote))
+
+
   (add-hook 'go-mode-hook 'tserg/go-mode-hook)
+
+  ;; (require 'project)
 
   ;; (defun project-find-go-module (dir)
   ;;   (when-let ((root (locate-dominating-file dir "go.mod")))
@@ -147,8 +209,16 @@
   ;; (require 'go-mode)
   ;; (require 'eglot)
 
+  ;; (setq-default eglot-workspace-configuration
+  ;;   '((:gopls .
+  ;;       ((staticcheck . t)
+  ;;        (matcher . "CaseSensitive")))))
+
   ;; (add-to-list 'eglot-server-programs
-  ;;              `(go-mode . ("gopls" "-debug" "-vv" "-logfile" "/tmp/gopls.log")))
+  ;;              `(go-mode .
+  ;;                        ("gopls"   "-rpc.trace" "-vv" "-logfile" "/tmp/gopls.log")
+  ;;                        ;; ("gopls" "-mode=stdio")
+  ;;                        ))
 
   ;; (add-hook 'go-mode-hook 'eglot-ensure)
   )
