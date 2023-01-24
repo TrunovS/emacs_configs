@@ -131,7 +131,7 @@
           c-basic-offset 2
           c-argdecl-indent 0
           cua-auto-tabify-rectangles nil
-          fill-column 150) ; Needed for long lines support smart-tabs-mode
+          fill-column 300) ; Needed for long lines support smart-tabs-mode
     (c-set-offset 'substatement-open 0)
     (c-set-offset 'block-close 0)
 

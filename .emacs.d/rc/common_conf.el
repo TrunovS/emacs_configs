@@ -65,7 +65,6 @@
 (message "tramp takes %.02fsec to load"
          (k-time (use-package tramp
                    :ensure nil
-                   :defer t
                    :config
                    ;; (setq-default auto-revert-remote-files t)
                    ;; auto-revert-use-notify nil?
@@ -111,6 +110,63 @@
                    (wsl-path-activate)
                    )))
 
+(message "epithet takes  %.02fsec to load"
+         (k-time  (use-package epithet
+                    :quelpa ((epithet :fetcher github :repo "oantolin/epithet") :upgrade nil)
+
+                    :config
+                    (add-hook 'compilation-start-hook #'epithet-rename-buffer-ignoring-arguments)
+                    (add-hook 'compilation-finish-functions #'epithet-rename-buffer-ignoring-arguments)
+                    )
+                  ))
+
+
+(message "treesit-parser-manager takes  %.02fsec to load"
+         (k-time  (use-package treesit-parser-manager
+                    :quelpa ((treesit-parser-manager :fetcher url :url "https://codeberg.org/ckruse/treesit-parser-manager/raw/branch/main/treesit-parser-manager.el") :upgrade nil)
+
+                    :commands (treesit-parser-manager-install-grammars
+                               treesit-parser-manager-update-grammars
+                               treesit-parser-manager-install-or-update-grammars
+                               treesit-parser-manager-remove-grammar)
+                    :custom
+
+                    (treesit-parser-manager-grammars
+                     '(("https://github.com/tree-sitter/tree-sitter-cpp"
+                        ("tree-sitter-cpp"))
+
+                       ("https://github.com/tree-sitter/tree-sitter-json"
+                        ("tree-sitter-json"))))
+                    :config
+                    (setq treesit-extra-load-path (list (expand-file-name "tree-sit-parsers" user-emacs-directory)))
+
+;;                    (use-package ts-movement
+;;                     :quelpa ((ts-movement :fetcher github :repo "haritkapadia/ts-movement") :upgrade nil)
+
+;;                     :hook
+;;                     ;; (bash-ts-mode-hook . ts-movement-mode)
+;;                     (c++-mode-hook . ts-movement-mode)
+;;                     (c-ts-mode-hook . ts-movement-mode)
+;;                     ;; (cmake-ts-mode-hook . ts-movement-mode)
+;;                     ;; (csharp-ts-mode-hook . ts-movement-mode)
+;;                     ;; (css-ts-mode-hook . ts-movement-mode)
+;;                     ;; (dockerfile-ts-mode-hook . ts-movement-mode)
+;;                     ;; (go-mod-ts-mode-hook . ts-movement-mode)
+;;                     ;; (go-ts-mode-hook . ts-movement-mode)
+;;                     ;; (java-ts-mode-hook . ts-movement-mode)
+;;                     ;; (js-ts-mode-hook . ts-movement-mode)
+;;                     ;; (json-ts-mode-hook . ts-movement-mode)
+;;                     ;; (python-ts-mode-hook . ts-movement-mode)
+;;                     ;; (ruby-ts-mode-hook . ts-movement-mode)
+;;                     ;; (rust-ts-mode-hook . ts-movement-mode)
+;;                     ;; (toml-ts-mode-hook . ts-movement-mode)
+;;                     ;; (tsx-ts-mode-hook . ts-movement-mode)
+;;                     ;; (typescript-ts-mode-hook . ts-movement-mode)
+;;                     ;; (yaml-ts-mode-hook . ts-movement-mode)
+;;                     )
+                    :hook (emacs-startup . treesit-parser-manager-install-grammars))
+                  ))
+
 ;; Theme--------------------
 
 ;; Good light theme, dark - no so good
@@ -136,25 +192,10 @@
                    (setq initial-major-mode 'fundamental-mode)
 
                    (setq frame-inhibit-implied-resize nil)
+                   (setq mode-require-final-newline nil) ;; Don't automatically add newlines at end of files
 
                    ;;Systems customize ---------------------------------
-                   (cond ((eq system-type 'cygwin) ;; Cygwin
-                          (load "~/.emacs.d/lisp/cygwin-mount.el")
-                          (load "~/.emacs.d/lisp/windows-path.el")
-                          (require 'windows-path)
-                          (windows-path-activate)
-                          (set-file-name-coding-system 'utf-8)
-                          (message "Cygwin")
-                          )
-                    ((eq system-type 'darwin) ;mac os
-                          (setq mac-option-key-is-meta nil)
-                          (setq mac-command-key-is-meta t)
-                          (setq mac-command-modifier 'meta)
-                          (setq mac-option-modifier nil)
-                          (message "Mac OS X")
-                          (add-to-list 'default-frame-alist '(font . "Hack-15"))
-                          (menu-bar-mode 1)
-
+                   (cond ((eq system-type 'darwin) ;mac os
                           ;; mac os russian mac input setup
                           (use-package russian-mac
                             :quelpa ((russian-mac :fetcher github :repo "juev/russian-mac")
@@ -163,8 +204,6 @@
                             :config
                             (setq-default default-input-method "russian-mac"))
                           )
-                         (t (add-to-list 'default-frame-alist '(font . "Hack-9"))
-                            (menu-bar-mode -1))
                          )
 
                    :config
@@ -201,10 +240,6 @@
                          wgrep-auto-save-buffer t ;; auto save occur edits
                          )
 
-                   (tool-bar-mode -1)
-                   (scroll-bar-mode -1)
-                   (fset 'yes-or-no-p 'y-or-n-p)
-
                    ;; fixing some perfomance issues with long lines of base64 text
                    ;; (setq-default auto-window-vscroll nil)
                    ;; (setq-default line-move-visual nil)
@@ -214,10 +249,19 @@
                    (set-face-background 'default "#353535")
                    (set-face-attribute 'cursor  nil :background "white")
                    (set-face-attribute 'region nil :background "#399948f45199")
-                   (set-face-attribute 'hl-line nil :background "dim gray")
+
+                   (set-face-attribute 'hl-line nil :background (color-lighten-name (face-background 'default) 100))
                    (set-face-attribute 'highlight nil
-                                       :background (color-darken-name (face-background 'default) 10))
-                   (set-face-attribute 'mode-line nil :background (color-darken-name (face-background 'default) 5))
+                                       :background (color-darken-name (face-background 'default) 0))
+                   (set-face-attribute 'mode-line nil
+                                       :background (color-darken-name (face-background 'default) 65)
+                                       ;; :box (:line-width -1 :color "#7FC1CA" :style released-button)
+                                       )
+                   ;; (set-face-attribute 'header-line nil
+                   ;;                     :background (face-background 'mode-line)
+                   ;;                     :foreground (face-foreground 'mode-line)
+                   ;;                     ;; :box (:line-width -1 :color "#7FC1CA" :style released-button)
+                   ;;                     )
 
                                         ; ~ kill previously set path = magic tilde in ivy
                    (setq file-name-shadow-properties '(invisible t intangible t))
@@ -238,17 +282,6 @@
                    ))
          )
 
-;; (use-package auto-highlight-symbol
-;;   :ensure t
-
-;;   :init
-;;   (setq auto-highlight-symbol-mode-map (make-sparse-keymap))
-
-;;   :config
-
-;;   (global-auto-highlight-symbol-mode 0)
-;;   ;; (assq-delete-all 'auto-highlight-symbol-mode-map minor-mode-map-alist)
-;;   )
 
 (message "auto-dim-other-buffers emacs takes %.02fsec to load"
          (k-time (use-package auto-dim-other-buffers
@@ -258,8 +291,8 @@
                    :config
                    (auto-dim-other-buffers-mode t)
                    (set-face-attribute 'auto-dim-other-buffers-face nil
-                                       :foreground (color-darken-name (face-foreground 'default) 6)
-                                       :background (color-darken-name (face-background 'default) 3))
+                                       :foreground (color-darken-name (face-foreground 'default) 10)
+                                       :background (color-darken-name (face-background 'default) 25))
                    )
                  )
          )
@@ -751,7 +784,7 @@
             (setq jenkins-viewname "TrunovS_Develop") ;; if you're not using views skip this line
 
             (add-to-list 'display-buffer-alist
-                         `("^\\*.*prodigy.*\\*$"
+                         `("^\\*.*jenkins.*\\*$"
                            (display-buffer-reuse-window
                             display-buffer-in-side-window)
                            (reusable-frames . visible)
@@ -772,7 +805,7 @@
             :ensure flx
             ;; :ensure company-flx
 
-            :defer t
+            :defer 1
 
             :bind*
             ("M-." . company-complete)
@@ -825,8 +858,8 @@
             (setq whitespace-line-column 90)
 
             (set-face-attribute 'whitespace-line nil :foreground "nil" :overline t)
-            (set-face-attribute 'whitespace-tab nil :foreground "dim gray" :background nil)
-            (set-face-attribute 'whitespace-trailing nil :foreground "black" :background nil)
+            (set-face-attribute 'whitespace-tab nil :foreground (color-lighten-name (face-background 'default) 150) :background (face-background 'default))
+            (set-face-attribute 'whitespace-trailing nil :foreground "black" :background (face-background 'default))
 
             (setq ws-butler-keep-whitespace-before-point nil)
 
@@ -874,17 +907,6 @@
             (yas-global-mode 1)
             )
           ))
-
-;; Auto Encode buffer -----------------------------------
-(message "unicad takes %.02fsec to load"
-         (k-time
-          (use-package unicad
-            :ensure nil
-            :load-path "lisp"
-            )
-          ))
-;; (load-file "~/.emacs.d/unicad.el")
-
 
 ;;Dired-----------------------------------------------------------
 (message "dired takes %.02fsec to load"
@@ -1030,7 +1052,7 @@
               :command "ssh"
               :args '("-t" "work_wsl" "/mnt/c/code/UPGo/UPGServiceProvider/UPGServiceProvider.exe --debug | cat -e")
               :ready-message "Launching SP as a console application"
-              :stop-signal 'sigint
+              :stop-signal 'quit
               :kill-process-buffer-on-stop t)
 
             (prodigy-define-service
@@ -1042,18 +1064,34 @@
               :kill-process-buffer-on-stop t)
 
             (prodigy-define-service
-              :name "BankAdapter"
+              :name "Debug_BankAdapter"
               :command "ssh"
               :args '("-t" "work_wsl" "/mnt/c/code/UPG_Main/x64/Debug/UPGBankAdapter.exe --debug | cat -e")
               :ready-message "HandlerRouting was setup"
+              :stop-signal 'quit
+              :kill-process-buffer-on-stop 1)
+
+            (prodigy-define-service
+              :name "Debug_DocSigner"
+              :command "ssh"
+              :args '("-t" "work_wsl" "/mnt/c/code/UPG_Main/x64/Debug/UPGDocSigner.exe --debug | cat -e")
+              :ready-message "HandlerRouting was setup"
+              :stop-signal 'quit
+              :kill-process-buffer-on-stop t)
+
+            (prodigy-define-service
+              :name "Release_bankadapter"
+              :command "ssh"
+              :args '("-t" "work_wsl" "/mnt/c/code/upg_main/x64/release/upgbankadapter.exe --debug | cat -e")
+              :ready-message "handlerrouting was setup"
               :stop-signal 'sigkill
               :kill-process-buffer-on-stop 1)
 
             (prodigy-define-service
-              :name "DocSigner"
+              :name "Release_docsigner"
               :command "ssh"
-              :args '("-t" "work_wsl" "/mnt/c/code/UPG_Main/x64/Debug/UPGDocSigner.exe --debug | cat -e")
-              :ready-message "HandlerRouting was setup"
+              :args '("-t" "work_wsl" "/mnt/c/code/upg_main/x64/release/upgdocsigner.exe --debug | cat -e")
+              :ready-message "handlerrouting was setup"
               :stop-signal 'quit
               :kill-process-buffer-on-stop t)
 
@@ -1073,6 +1111,7 @@
          (k-time
           (use-package ahg
             :ensure t
+            :defer 1
 
             :bind*
             (
@@ -1145,6 +1184,37 @@
           (use-package multi-vterm
             :ensure t
             :defer t
+
+
+            :bind*
+            (
+             :map vterm-mode-map
+                  ([remap vterm-send-M-c] . clipboard-kill-ring-save)
+                  )
+            )
+
+          :config
+          (set-face-attribute 'vterm-color-black nil
+                              :foreground (color-lighten-name (face-background 'default) 200)
+                              :background (color-lighten-name (face-background 'default) 200)
+                              )
+          ))
+
+
+
+(message "fancy-narrow takes %.02fsec to load"
+         (k-time
+          (use-package fancy-narrow
+            :ensure t
+            :defer t
+
+
+            :bind
+            (
+             :map global-map
+                  ("\C-cnn" . fancy-narrow-to-defun)
+                  ("\C-cnr" . fancy-widen)
+                  )
             )
           ))
 

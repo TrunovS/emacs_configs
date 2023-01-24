@@ -12,11 +12,7 @@
 ;;       gc-cons-percentage 0.6
 ;;       file-name-handler-alist nil)
 
-(when (eval-when-compile (version< "28" emacs-version ))
-  (setq-default native-comp-async-report-warnings-errors 'silent))
-
-
-
+;; install the missing packages
 
 ;;Package--------------------------------------------------
 (require 'package)
@@ -25,13 +21,9 @@
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
-(package-initialize)
-; fetch the list of packages available
-(unless package-archive-contents
-  (message "Refresing package repository")
-  (package-refresh-contents))
 (when (eval-when-compile (version< emacs-version "27"))
   (package-initialize))
+;; (package-initialize)
 
 (defmacro k-time (&rest body)
   "Measure and return the time it takes evaluating BODY."
@@ -40,10 +32,12 @@
      (float-time (time-since time))))
 
 ;; ; fetch the list of packages available
-(unless package-archive-contents
-  (message "Refresing package repository %.06fsec" (k-time (package-refresh-contents)))
-  )
-
+(message "Refresing package repository %.06fsec"
+         (k-time
+          (when (not package-archive-contents)
+            (message "Refresing package repository")
+            (package-refresh-contents 1))
+          ))
 
 (message "common_conf takes %.02fsec to load" (k-time (load "~/.emacs.d/rc/common_conf.el")));; common-hook
 (message "elisp_conf takes %.02fsec to load" (k-time (load "~/.emacs.d/rc/elisp_conf.el")));; elisp-mode
@@ -57,7 +51,7 @@
 (message "qml_config takes %.02fsec to load" (k-time (load "~/.emacs.d/rc/qml_config.el")));; qml-mode
 
 (message "c++_config takes %.02fsec to load" (k-time (load "~/.emacs.d/rc/c++_config.el")));; c-mode
-(load "~/.emacs.d/rc/qt_config.el");; qt-mode
+(message "qt_config takes %.02fsec to load" (k-time (load "~/.emacs.d/rc/qt_config.el")));; qt-mode
 
 (message "latex_config takes %.02fsec to load" (k-time (load "~/.emacs.d/rc/latex_config.el")));; latex-mode
 ;; (load "~/.emacs.d/rc/fb_config.el");; fbread-mode
@@ -71,8 +65,6 @@
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
-
-(setq gc-cons-threshold 4000000)
 
 ;; (defun my/set-gc-threshold ()
 ;;   "Reset `gc-cons-threshold' to its default value."

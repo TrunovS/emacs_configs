@@ -5,8 +5,23 @@
 
   :ensure multi-compile
   :ensure fancy-compilation
+  :ensure yasnippet
+
+  :bind
+  (("<f8>"   . multi-compile-run))
 
   :config
+
+  ;; (defun tserg/compile_advice ()
+  ;;   (interactive)
+  ;;   (let* ((proj_name (projectile-project-root))
+  ;;          )
+  ;;     (if (not (string-equal proj_name (expand-file-name default-directory))
+  ;;                (rename-buffer (format "*compilation_%s*" proj_name))
+  ;;                )))
+  ;;   )
+
+  ;; (advice-add 'projectile-project-compile :after #'tserg/compile_advice)
 
   (setq fancy-compilation-override-colors nil)
 
@@ -52,6 +67,7 @@
     ;; (fundamental-mode)
     ;; (setq font-lock-defaults '((tserg/filepath-font-lock-keywords)))
     (flyspell-mode -1)
+    (require 'yasnippet)
     (yas/minor-mode -1)
     (toggle-truncate-lines 0)
     ;; (setq-local auto-hscroll-mode 'current-line);;emacs version >= 26
@@ -137,5 +153,5 @@
 
   (add-hook 'compilation-mode-hook 'tserg/compilation-long-hook)
 
-  (global-set-key [f8] 'multi-compile-run)
+  ;; (global-set-key [f8] 'multi-compile-run)
   )

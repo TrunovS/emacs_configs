@@ -51,8 +51,10 @@
 
 
   (defun tserg/log-common-hook()
+    ;; (so-long-mode 1)
+    (undo-tree-mode nil)
     (toggle-truncate-lines nil)
-    (visual-line-mode 1)
+    (visual-line-mode nil)
     (logview-choose-submode "UPG" "yyyy-MMM-dd HH:mm:ss.SSSSSS")
     (define-key logview-mode-map "O" 'tserg/find-file-at-point-with-line)
     ;; (vlf-mode)
